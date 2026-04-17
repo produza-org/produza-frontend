@@ -1,0 +1,14 @@
+{
+  "app": {
+    "title": "Estrutura Frontend"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "Inglês"
+  }
+}
