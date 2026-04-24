@@ -1,0 +1,29 @@
+---
+description: Layered folders, imports, and agent constraints for produza-frontend
+alwaysApply: true
+---
+
+# Architecture and scope
+
+- The architecture and structuer is detail explained in the /docs, it should be keeped as it is described after every change.
+
+- **`src/app/`**: App shell only—`App`, `providers`, `routes`, route-level pages and layouts. No HTTP clients, env reads, or low-level utils here.
+- **`src/core/`**: `api` (including `apiClient`), `config`, shared domain/backend `types`, global Zustand stores. No reusable UI components.
+- **`src/shared/`**: Reusable `components`, `hooks`, `utils`, `constants`. Re-export from local `index.ts` when it improves imports.
+- **`src/contexts/`**: One concern per file—provider + matching `useX` hook (e.g. `useThemeMode`, `useLanguage`).
+- **`src/theme/`**, **`src/i18n/`**: Theme and i18n only; no business logic.
+
+Prefer **`src/features/<name>/`** when a product area grows (auth, settings, etc.); keep `app/routes` thin by importing feature pages.
+
+# Imports
+
+- Use the **`@/`** alias for all `src` imports (see `vite.config.ts`). Avoid deep relative paths like `../../../core/...`.
+
+# Agent behavior
+
+- Do not add code comments unless the user explicitly asks.
+- Do not add `console.log`; use existing logging patterns if any (`console.warn` / `console.error` only where ESLint allows).
+- Reuse existing `shared` and `contexts` patterns before adding new abstractions.
+- Keep changes minimal and scoped to the request—no drive-by refactors.
+
+User-facing copy: keys and locale files stay aligned with app types (e.g. `AppLanguage` in `LanguageContext`).

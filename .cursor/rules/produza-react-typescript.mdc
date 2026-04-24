@@ -1,0 +1,35 @@
+---
+description: React, MUI, i18n, state, and API patterns for produza-frontend
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React and TypeScript
+
+- Functional components; type exported props and public hook/API return values.
+- Custom hooks: `use` prefix. Context consumers: `useSomething` matching the provider domain.
+- Respect `react-refresh/only-export-components`: avoid mixing non-component exports with components in the same file unless the ESLint rule allows it.
+- Separate types and interfaces from Components files, use a separated file for it.
+
+# MUI
+
+- Import from **`@mui/material/ComponentName`** (not barrel `@mui/material` for everything) for tree-shaking.
+- Prefer **`sx`** for local layout; move repeated `sx` to shared styled helpers or theme overrides when duplication is clear.
+- Global look-and-feel: **`src/theme`** + **`ThemeContext`**—do not call `createTheme` inside random pages.
+
+# i18n
+
+- All user-visible strings go through **react-i18next** (`useTranslation`) and locale files under **`src/i18n`**. No hardcoded UI sentences in components.
+
+# State
+
+- **Zustand**: prefer focused stores per domain (`useAuthStore`, etc.) over one oversized file as the app grows.
+
+# API
+
+- HTTP: use **`apiClient`** from `@/core/api` with paths relative to **`config.apiBaseUrl`** (`@/core/config/env`). Do not duplicate raw `fetch` + base URL assembly in UI files.
+- Type responses with generics or types from **`@/core/types`**.
+
+# Quality
+
+- Match existing **ESLint** and **Prettier** setup; add or update tests under `src/**/*.{test,spec}.{ts,tsx}` when behavior changes.
