@@ -1,14 +1,35 @@
 {
   "app": {
-    "title": "Frontend Structure"
+    "title": "Produza"
   },
   "theme": {
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "toggle": "Toggle color mode"
   },
   "language": {
     "label": "Language",
     "pt": "Portuguese",
     "en": "English"
+  },
+  "layout": {
+    "header": {
+      "productName": "Produza"
+    },
+    "footer": {
+      "copyright": "© {{year}} Produza. All rights reserved.",
+      "version": "Version {{version}}"
+    },
+    "settings": {
+      "open": "Settings",
+      "theme": "Theme"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "rawMaterials": "Raw materials",
+      "groupings": "Groupings",
+      "expandSidebar": "Expand sidebar",
+      "collapseSidebar": "Collapse sidebar"
+    }
   }
 }

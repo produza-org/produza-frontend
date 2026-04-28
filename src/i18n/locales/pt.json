@@ -1,14 +1,35 @@
 {
   "app": {
-    "title": "Estrutura Frontend"
+    "title": "Produza"
   },
   "theme": {
     "light": "Claro",
-    "dark": "Escuro"
+    "dark": "Escuro",
+    "toggle": "Alternar tema"
   },
   "language": {
     "label": "Idioma",
     "pt": "Português",
     "en": "Inglês"
+  },
+  "layout": {
+    "header": {
+      "productName": "Produza"
+    },
+    "footer": {
+      "copyright": "© {{year}} Produza. Todos os direitos reservados.",
+      "version": "Versão {{version}}"
+    },
+    "settings": {
+      "open": "Configurações",
+      "theme": "Tema"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "rawMaterials": "Matérias-primas",
+      "groupings": "Agrupamentos",
+      "expandSidebar": "Expandir menu",
+      "collapseSidebar": "Recolher menu"
+    }
   }
 }

@@ -1,1 +1,1 @@
-export {};
+export { DRAWER_WIDTH_COLLAPSED, DRAWER_WIDTH_EXPANDED } from './layout';
