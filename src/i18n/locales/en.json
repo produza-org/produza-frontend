@@ -31,5 +31,38 @@
       "expandSidebar": "Expand sidebar",
       "collapseSidebar": "Collapse sidebar"
     }
+  },
+  "rawMaterials": {
+    "list": {
+      "title": "Raw materials",
+      "subtitle": "Industrial input management for production.",
+      "add": "Add raw material",
+      "addAria": "Create new raw material",
+      "statTotal": "Total inputs",
+      "statCost": "Total cost",
+      "statActive": "Active status",
+      "statCritical": "Critical stock"
+    },
+    "filters": {
+      "nameLabel": "Raw material name",
+      "namePlaceholder": "e.g. Whole milk",
+      "codeLabel": "Code",
+      "codePlaceholder": "e.g. MP-001",
+      "submit": "Filter"
+    },
+    "table": {
+      "colCode": "Code",
+      "colName": "Raw material",
+      "colQty": "Qty. in stock",
+      "colUnit": "Unit",
+      "colUnitBrl": "BRL unit",
+      "colTotalBrl": "BRL total",
+      "colActions": "Actions",
+      "editAria": "Edit raw material",
+      "deleteAria": "Delete raw material",
+      "pagerSummary": "Showing {{shown}} of {{total}} raw materials",
+      "pagerPrev": "Previous page",
+      "pagerNext": "Next page"
+    }
   }
 }

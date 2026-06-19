@@ -1,4 +1,6 @@
+import '@/theme/mui-augment';
 import { createTheme, type PaletteMode } from '@mui/material/styles';
+import { darkProduzaPalette, lightProduzaPalette } from '@/theme/produzaTokens';
 
 const interStack =
   '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -38,6 +40,7 @@ export function createAppTheme(mode: PaletteMode) {
   return createTheme({
     palette: {
       mode,
+      produza: isLight ? lightProduzaPalette : darkProduzaPalette,
       ...(isLight
         ? {
             primary: {

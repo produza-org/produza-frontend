@@ -31,5 +31,38 @@
       "expandSidebar": "Expandir menu",
       "collapseSidebar": "Recolher menu"
     }
+  },
+  "rawMaterials": {
+    "list": {
+      "title": "Matérias-primas",
+      "subtitle": "Gestão de insumos industriais para a produção.",
+      "add": "Cadastrar matéria-prima",
+      "addAria": "Cadastrar nova matéria-prima",
+      "statTotal": "Total de insumos",
+      "statCost": "Custo total",
+      "statActive": "Status ativo",
+      "statCritical": "Estoque crítico"
+    },
+    "filters": {
+      "nameLabel": "Nome da matéria-prima",
+      "namePlaceholder": "ex.: Leite integral",
+      "codeLabel": "Código",
+      "codePlaceholder": "ex.: MP-001",
+      "submit": "Filtrar"
+    },
+    "table": {
+      "colCode": "Código",
+      "colName": "Matéria-prima",
+      "colQty": "Qtd. em estoque",
+      "colUnit": "Unidade",
+      "colUnitBrl": "R$ unitário",
+      "colTotalBrl": "R$ total",
+      "colActions": "Ações",
+      "editAria": "Editar matéria-prima",
+      "deleteAria": "Excluir matéria-prima",
+      "pagerSummary": "Exibindo {{shown}} de {{total}} matérias-primas",
+      "pagerPrev": "Página anterior",
+      "pagerNext": "Próxima página"
+    }
   }
 }
