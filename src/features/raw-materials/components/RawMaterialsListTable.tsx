@@ -26,11 +26,25 @@ import {
 
 type RawMaterialsListTableProps = {
   rows: RawMaterial[];
+  shown: number;
+  total: number;
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  canPrev: boolean;
+  canNext: boolean;
 };
 
-const TOTAL_MOCK = 124;
-
-export function RawMaterialsListTable({ rows }: RawMaterialsListTableProps) {
+export function RawMaterialsListTable({
+  rows,
+  shown,
+  total,
+  page,
+  totalPages,
+  onPageChange,
+  canPrev,
+  canNext,
+}: RawMaterialsListTableProps) {
   const { t } = useTranslation();
 
   return (
@@ -72,7 +86,15 @@ export function RawMaterialsListTable({ rows }: RawMaterialsListTableProps) {
           </TableBody>
         </DataTable>
       </TableScroll>
-      <RawMaterialsTableFooter shown={rows.length} total={TOTAL_MOCK} />
+      <RawMaterialsTableFooter
+        shown={shown}
+        total={total}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+        canPrev={canPrev}
+        canNext={canNext}
+      />
     </TableShell>
   );
 }

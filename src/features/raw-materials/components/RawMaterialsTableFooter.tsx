@@ -10,28 +10,59 @@ import {
   PagerIconButton,
   PagerRow,
 } from '@/features/raw-materials/components/RawMaterialsListTable.styled';
+import { getPageNumbers } from '@/features/raw-materials/utils/raw-materials-list';
 
 type RawMaterialsTableFooterProps = {
   shown: number;
   total: number;
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  canPrev: boolean;
+  canNext: boolean;
 };
 
-export function RawMaterialsTableFooter({ shown, total }: RawMaterialsTableFooterProps) {
+export function RawMaterialsTableFooter({
+  shown,
+  total,
+  page,
+  totalPages,
+  onPageChange,
+  canPrev,
+  canNext,
+}: RawMaterialsTableFooterProps) {
   const { t } = useTranslation();
+  const pageNumbers = getPageNumbers(page, totalPages);
 
   return (
     <FooterBar>
       <FooterSummary>{t('rawMaterials.table.pagerSummary', { shown, total })}</FooterSummary>
       <PagerRow>
-        <PagerIconButton size="small" disabled aria-label={t('rawMaterials.table.pagerPrev')}>
+        <PagerIconButton
+          size="small"
+          disabled={!canPrev}
+          aria-label={t('rawMaterials.table.pagerPrev')}
+          onClick={() => onPageChange(page - 1)}
+        >
           <KeyboardArrowLeft />
         </PagerIconButton>
-        <PageNumberActive>1</PageNumberActive>
-        <PageNumberButton type="button">2</PageNumberButton>
-        <PageNumberButton type="button">3</PageNumberButton>
-        <PagerEllipsis>...</PagerEllipsis>
-        <PageNumberButton type="button">21</PageNumberButton>
-        <PagerIconButton size="small" aria-label={t('rawMaterials.table.pagerNext')}>
+        {pageNumbers.map((item, index) =>
+          item === 'ellipsis' ? (
+            <PagerEllipsis key={`ellipsis-${index}`}>...</PagerEllipsis>
+          ) : item === page ? (
+            <PageNumberActive key={item}>{item}</PageNumberActive>
+          ) : (
+            <PageNumberButton key={item} type="button" onClick={() => onPageChange(item)}>
+              {item}
+            </PageNumberButton>
+          )
+        )}
+        <PagerIconButton
+          size="small"
+          disabled={!canNext}
+          aria-label={t('rawMaterials.table.pagerNext')}
+          onClick={() => onPageChange(page + 1)}
+        >
           <KeyboardArrowRight />
         </PagerIconButton>
       </PagerRow>

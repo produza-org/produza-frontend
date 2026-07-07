@@ -182,7 +182,7 @@ export const PageNumberButton = styled('button')(({ theme }) => ({
   borderRadius: 4,
   border: 'none',
   backgroundColor: 'transparent',
-  cursor: 'default',
+  cursor: 'pointer',
   '&:hover': { backgroundColor: theme.palette.produza.slate100 },
 }));
 

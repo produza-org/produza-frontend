@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import Box from '@mui/material/Box';
@@ -6,7 +5,10 @@ import { useTheme } from '@mui/material/styles';
 import { RawMaterialsStatCard } from '@/features/raw-materials/components/RawMaterialsStatCard';
 import { RawMaterialsListFilters } from '@/features/raw-materials/components/RawMaterialsListFilters';
 import { RawMaterialsListTable } from '@/features/raw-materials/components/RawMaterialsListTable';
-import { useFilteredRawMaterials } from '@/features/raw-materials/hooks/useFilteredRawMaterials';
+import { formatCurrencyBrl } from '@/features/raw-materials/format';
+import { useRawMaterialsFilters } from '@/features/raw-materials/hooks/useRawMaterialsFilters';
+import { useRawMaterialsList } from '@/features/raw-materials/hooks/useRawMaterialsList';
+import { useRawMaterialsStats } from '@/features/raw-materials/hooks/useRawMaterialsStats';
 import {
   AddMaterialButton,
   HeroRow,
@@ -20,9 +22,10 @@ export function RawMaterialsListPage() {
   const { t } = useTranslation();
   const theme = useTheme();
   const p = theme.palette.produza;
-  const [nameFilter, setNameFilter] = useState('');
-  const [codeFilter, setCodeFilter] = useState('');
-  const filteredRows = useFilteredRawMaterials(nameFilter, codeFilter);
+  const { nameFilter, codeFilter, setNameFilter, setCodeFilter } = useRawMaterialsFilters();
+  const { rows, page, totalFiltered, totalPages, setPage, canPrev, canNext } =
+    useRawMaterialsList();
+  const { totalCount, totalCost, activePercent, criticalCount } = useRawMaterialsStats();
 
   return (
     <PageRoot>
@@ -45,22 +48,22 @@ export function RawMaterialsListPage() {
         <RawMaterialsStatCard
           accentColor={p.primary}
           label={t('rawMaterials.list.statTotal')}
-          value="124"
+          value={String(totalCount)}
         />
         <RawMaterialsStatCard
           accentColor={p.tertiaryFixedDim}
           label={t('rawMaterials.list.statCost')}
-          value="R$ 15.420,50"
+          value={formatCurrencyBrl(totalCost)}
         />
         <RawMaterialsStatCard
           accentColor={p.secondary}
           label={t('rawMaterials.list.statActive')}
-          value="98%"
+          value={`${activePercent}%`}
         />
         <RawMaterialsStatCard
           accentColor={p.error}
           label={t('rawMaterials.list.statCritical')}
-          value="03"
+          value={String(criticalCount).padStart(2, '0')}
           valueErrorTone
         />
       </StatsGrid>
@@ -72,7 +75,16 @@ export function RawMaterialsListPage() {
         onCodeFilterChange={setCodeFilter}
       />
 
-      <RawMaterialsListTable rows={filteredRows} />
+      <RawMaterialsListTable
+        rows={rows}
+        shown={rows.length}
+        total={totalFiltered}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        canPrev={canPrev}
+        canNext={canNext}
+      />
     </PageRoot>
   );
 }

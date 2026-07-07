@@ -1,3 +1,6 @@
 export { RawMaterialsListPage } from './pages/RawMaterialsListPage';
-export { rawMaterialsMock } from './mocks/raw-materials.mock';
+export { RawMaterialsProvider } from './context/RawMaterialsContext';
+export { useRawMaterialsFilters } from './hooks/useRawMaterialsFilters';
+export { useRawMaterialsList } from './hooks/useRawMaterialsList';
+export { useRawMaterialsStats } from './hooks/useRawMaterialsStats';
 export type { RawMaterial } from './types/raw-material';

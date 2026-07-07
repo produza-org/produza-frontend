@@ -1,0 +1,272 @@
+[
+  {
+    "id": "rm-001",
+    "code": "MP-001",
+    "name": "LEITE INTEGRAL",
+    "stockQuantity": 500,
+    "unit": "LITRO",
+    "unitCost": 4.2,
+    "totalCost": 2100
+  },
+  {
+    "id": "rm-002",
+    "code": "MP-002",
+    "name": "AÇÚCAR",
+    "stockQuantity": 1200,
+    "unit": "KG",
+    "unitCost": 3.8,
+    "totalCost": 4560
+  },
+  {
+    "id": "rm-003",
+    "code": "MP-003",
+    "name": "GORDURA PALMA",
+    "stockQuantity": 50,
+    "unit": "KG",
+    "unitCost": 12.5,
+    "totalCost": 625
+  },
+  {
+    "id": "rm-004",
+    "code": "MP-004",
+    "name": "GLUCOSE",
+    "stockQuantity": 75,
+    "unit": "KG",
+    "unitCost": 8.9,
+    "totalCost": 667.5
+  },
+  {
+    "id": "rm-005",
+    "code": "MP-005",
+    "name": "HEXUS CREAM",
+    "stockQuantity": 25,
+    "unit": "KG",
+    "unitCost": 45,
+    "totalCost": 1125
+  },
+  {
+    "id": "rm-006",
+    "code": "MP-006",
+    "name": "ÁGUA",
+    "stockQuantity": 10000,
+    "unit": "LITRO",
+    "unitCost": 0.01,
+    "totalCost": 100
+  },
+  {
+    "id": "rm-007",
+    "code": "MP-007",
+    "name": "SAL REFINADO",
+    "stockQuantity": 800,
+    "unit": "KG",
+    "unitCost": 1.2,
+    "totalCost": 960
+  },
+  {
+    "id": "rm-008",
+    "code": "MP-008",
+    "name": "FERMENTO BIOLÓGICO",
+    "stockQuantity": 15,
+    "unit": "KG",
+    "unitCost": 22,
+    "totalCost": 330
+  },
+  {
+    "id": "rm-009",
+    "code": "MP-009",
+    "name": "MARGARINA",
+    "stockQuantity": 200,
+    "unit": "KG",
+    "unitCost": 9.5,
+    "totalCost": 1900
+  },
+  {
+    "id": "rm-010",
+    "code": "MP-010",
+    "name": "OVOS",
+    "stockQuantity": 0,
+    "unit": "UNID",
+    "unitCost": 0.85,
+    "totalCost": 0
+  },
+  {
+    "id": "rm-011",
+    "code": "MP-011",
+    "name": "AMIDO DE MANDIOCA",
+    "stockQuantity": 30,
+    "unit": "KG",
+    "unitCost": 6.4,
+    "totalCost": 192
+  },
+  {
+    "id": "rm-012",
+    "code": "MP-012",
+    "name": "ESSÊNCIA BAUNILHA",
+    "stockQuantity": 5,
+    "unit": "LITRO",
+    "unitCost": 85,
+    "totalCost": 425
+  },
+  {
+    "id": "rm-013",
+    "code": "MP-013",
+    "name": "CHOCOLATE EM PÓ",
+    "stockQuantity": 120,
+    "unit": "KG",
+    "unitCost": 18.5,
+    "totalCost": 2220
+  },
+  {
+    "id": "rm-014",
+    "code": "MP-014",
+    "name": "LEITE CONDENSADO",
+    "stockQuantity": 300,
+    "unit": "LITRO",
+    "unitCost": 7.8,
+    "totalCost": 2340
+  },
+  {
+    "id": "rm-015",
+    "code": "MP-015",
+    "name": "CREME DE LEITE",
+    "stockQuantity": 180,
+    "unit": "LITRO",
+    "unitCost": 6.2,
+    "totalCost": 1116
+  },
+  {
+    "id": "rm-016",
+    "code": "MP-016",
+    "name": "FARINHA DE TRIGO",
+    "stockQuantity": 2500,
+    "unit": "KG",
+    "unitCost": 2.9,
+    "totalCost": 7250
+  },
+  {
+    "id": "rm-017",
+    "code": "MP-017",
+    "name": "FERMENTO QUÍMICO",
+    "stockQuantity": 40,
+    "unit": "KG",
+    "unitCost": 14.3,
+    "totalCost": 572
+  },
+  {
+    "id": "rm-018",
+    "code": "MP-018",
+    "name": "CORANTE ALIMENTÍCIO",
+    "stockQuantity": 8,
+    "unit": "LITRO",
+    "unitCost": 32,
+    "totalCost": 256
+  },
+  {
+    "id": "rm-019",
+    "code": "MP-019",
+    "name": "AMÊNDOA",
+    "stockQuantity": 60,
+    "unit": "KG",
+    "unitCost": 52,
+    "totalCost": 3120
+  },
+  {
+    "id": "rm-020",
+    "code": "MP-020",
+    "name": "CASTANHA DE CAJU",
+    "stockQuantity": 45,
+    "unit": "KG",
+    "unitCost": 38,
+    "totalCost": 1710
+  },
+  {
+    "id": "rm-021",
+    "code": "MP-021",
+    "name": "AVELÃ",
+    "stockQuantity": 90,
+    "unit": "KG",
+    "unitCost": 48,
+    "totalCost": 4320
+  },
+  {
+    "id": "rm-022",
+    "code": "MP-022",
+    "name": "CARAMELO",
+    "stockQuantity": 150,
+    "unit": "KG",
+    "unitCost": 11.2,
+    "totalCost": 1680
+  },
+  {
+    "id": "rm-023",
+    "code": "MP-023",
+    "name": "GELO REAL",
+    "stockQuantity": 0,
+    "unit": "KG",
+    "unitCost": 25,
+    "totalCost": 0
+  },
+  {
+    "id": "rm-024",
+    "code": "MP-024",
+    "name": "POLVILHO",
+    "stockQuantity": 400,
+    "unit": "KG",
+    "unitCost": 4.1,
+    "totalCost": 1640
+  },
+  {
+    "id": "rm-025",
+    "code": "MP-025",
+    "name": "LEITE EM PÓ",
+    "stockQuantity": 220,
+    "unit": "KG",
+    "unitCost": 16.8,
+    "totalCost": 3696
+  },
+  {
+    "id": "rm-026",
+    "code": "MP-026",
+    "name": "MEL",
+    "stockQuantity": 35,
+    "unit": "KG",
+    "unitCost": 28,
+    "totalCost": 980
+  },
+  {
+    "id": "rm-027",
+    "code": "MP-027",
+    "name": "CANELA",
+    "stockQuantity": 12,
+    "unit": "KG",
+    "unitCost": 42,
+    "totalCost": 504
+  },
+  {
+    "id": "rm-028",
+    "code": "MP-028",
+    "name": "NOZES",
+    "stockQuantity": 80,
+    "unit": "KG",
+    "unitCost": 55,
+    "totalCost": 4400
+  },
+  {
+    "id": "rm-029",
+    "code": "MP-029",
+    "name": "UVAS PASSAS",
+    "stockQuantity": 55,
+    "unit": "KG",
+    "unitCost": 19.5,
+    "totalCost": 1072.5
+  },
+  {
+    "id": "rm-030",
+    "code": "MP-030",
+    "name": "AMIDO DE MILHO",
+    "stockQuantity": 350,
+    "unit": "KG",
+    "unitCost": 5.6,
+    "totalCost": 1960
+  }
+]
