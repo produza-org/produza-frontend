@@ -9,8 +9,8 @@ import {
   PagerEllipsis,
   PagerIconButton,
   PagerRow,
-} from '@/features/raw-materials/components/RawMaterialsListTable.styled';
-import { getPageNumbers } from '@/features/raw-materials/utils/raw-materials-list';
+} from '@/features/raw-materials/components/list/RawMaterialsListTable.styled';
+import { getPageNumbers } from '@/features/raw-materials/utils/list/raw-materials-list';
 
 type RawMaterialsTableFooterProps = {
   shown: number;

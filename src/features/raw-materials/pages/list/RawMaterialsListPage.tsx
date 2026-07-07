@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
-import { RawMaterialsStatCard } from '@/features/raw-materials/components/RawMaterialsStatCard';
-import { RawMaterialsListFilters } from '@/features/raw-materials/components/RawMaterialsListFilters';
-import { RawMaterialsListTable } from '@/features/raw-materials/components/RawMaterialsListTable';
+import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { RawMaterialsStatCard } from '@/features/raw-materials/components/list/RawMaterialsStatCard';
+import { RawMaterialsListFilters } from '@/features/raw-materials/components/list/RawMaterialsListFilters';
+import { RawMaterialsListTable } from '@/features/raw-materials/components/list/RawMaterialsListTable';
 import { formatCurrencyBrl } from '@/features/raw-materials/format';
 import { useRawMaterialsFilters } from '@/features/raw-materials/hooks/useRawMaterialsFilters';
 import { useRawMaterialsList } from '@/features/raw-materials/hooks/useRawMaterialsList';
@@ -13,13 +15,12 @@ import {
   AddMaterialButton,
   HeroRow,
   PageRoot,
-  PageSubtitle,
-  PageTitle,
   StatsGrid,
-} from '@/features/raw-materials/pages/RawMaterialsListPage.styled';
+} from '@/features/raw-materials/pages/list/RawMaterialsListPage.styled';
 
 export function RawMaterialsListPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const p = theme.palette.produza;
   const { nameFilter, codeFilter, setNameFilter, setCodeFilter } = useRawMaterialsFilters();
@@ -39,6 +40,7 @@ export function RawMaterialsListPage() {
           disableElevation
           startIcon={<AddOutlined />}
           aria-label={t('rawMaterials.list.addAria')}
+          onClick={() => navigate('/raw-materials/new')}
         >
           {t('rawMaterials.list.add')}
         </AddMaterialButton>

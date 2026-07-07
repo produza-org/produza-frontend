@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { RAW_MATERIALS_PAGE_SIZE } from '@/features/raw-materials/constants';
 import { useRawMaterialsContext } from '@/features/raw-materials/context/RawMaterialsContext';
-import { filterRawMaterials } from '@/features/raw-materials/utils/raw-materials-list';
+import { filterRawMaterials } from '@/features/raw-materials/utils/list/raw-materials-list';
 
 export function useRawMaterialsList() {
   const { items, nameFilter, codeFilter, page, setPage } = useRawMaterialsContext();

@@ -1,7 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { AppShellLayout } from '@/app/AppShellLayout';
 import { HomePage } from '@/app/HomePage';
-import { RawMaterialsListPage, RawMaterialsProvider } from '@/features/raw-materials';
+import {
+  RawMaterialsListPage,
+  RawMaterialCreatePage,
+  RawMaterialsProvider,
+} from '@/features/raw-materials';
 
 export function AppRoutes() {
   return (
@@ -12,10 +16,13 @@ export function AppRoutes() {
           path="/raw-materials"
           element={
             <RawMaterialsProvider>
-              <RawMaterialsListPage />
+              <Outlet />
             </RawMaterialsProvider>
           }
-        />
+        >
+          <Route index element={<RawMaterialsListPage />} />
+          <Route path="new" element={<RawMaterialCreatePage />} />
+        </Route>
         <Route path="/groupings" element={<HomePage />} />
       </Route>
     </Routes>

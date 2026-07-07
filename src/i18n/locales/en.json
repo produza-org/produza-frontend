@@ -63,6 +63,30 @@
       "pagerSummary": "Showing {{shown}} of {{total}} raw materials",
       "pagerPrev": "Previous page",
       "pagerNext": "Next page"
+    },
+    "form": {
+      "title": "Raw Material Registration",
+      "subtitle": "Industrial input management for production.",
+      "nameLabel": "Raw Material Name",
+      "namePlaceholder": "E.g. Stainless Steel Sheet 304",
+      "codeLabel": "Code",
+      "codePlaceholder": "AAAA-000",
+      "unitLabel": "Unit of Measure",
+      "unitPriceLabel": "Unit Price (BRL)",
+      "unitPricePlaceholder": "0.00",
+      "stockQtyLabel": "Stock Quantity",
+      "stockQtyPlaceholder": "0",
+      "validationTitle": "Validation Rules",
+      "validationText": "Ensure the code is unique and the unit of measure follows the factory ISO industrial standard.",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "units": {
+      "kg": "Kilogram (kg)",
+      "un": "Unit (un)",
+      "m": "Meter (m)",
+      "m2": "Square meter (m²)",
+      "lt": "Liter (lt)"
     }
   }
 }

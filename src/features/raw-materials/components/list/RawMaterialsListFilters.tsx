@@ -8,7 +8,7 @@ import {
   FilterTextField,
   FiltersRoot,
   FiltersRow,
-} from '@/features/raw-materials/components/RawMaterialsListFilters.styled';
+} from '@/features/raw-materials/components/list/RawMaterialsListFilters.styled';
 
 type RawMaterialsListFiltersProps = {
   nameFilter: string;

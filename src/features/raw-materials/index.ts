@@ -1,4 +1,5 @@
-export { RawMaterialsListPage } from './pages/RawMaterialsListPage';
+export { RawMaterialsListPage } from './pages/list/RawMaterialsListPage';
+export { RawMaterialCreatePage } from './pages/create/RawMaterialCreatePage';
 export { RawMaterialsProvider } from './context/RawMaterialsContext';
 export { useRawMaterialsFilters } from './hooks/useRawMaterialsFilters';
 export { useRawMaterialsList } from './hooks/useRawMaterialsList';

@@ -6,7 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { formatCurrencyBrl, formatQuantity } from '@/features/raw-materials/format';
-import { RawMaterialsTableFooter } from '@/features/raw-materials/components/RawMaterialsTableFooter';
+import { RawMaterialsTableFooter } from '@/features/raw-materials/components/list/RawMaterialsTableFooter';
 import {
   ActionsCell,
   ActionsInner,
@@ -22,7 +22,7 @@ import {
   TableShell,
   TotalCell,
   UnitCell,
-} from '@/features/raw-materials/components/RawMaterialsListTable.styled';
+} from '@/features/raw-materials/components/list/RawMaterialsListTable.styled';
 
 type RawMaterialsListTableProps = {
   rows: RawMaterial[];

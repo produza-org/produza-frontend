@@ -63,6 +63,30 @@
       "pagerSummary": "Exibindo {{shown}} de {{total}} matérias-primas",
       "pagerPrev": "Página anterior",
       "pagerNext": "Próxima página"
+    },
+    "form": {
+      "title": "Cadastro de Matéria-Prima",
+      "subtitle": "Gerenciamento de insumos para produção industrial.",
+      "nameLabel": "Nome da Matéria Prima",
+      "namePlaceholder": "Ex: Chapa de Aço Inox 304",
+      "codeLabel": "Código",
+      "codePlaceholder": "AAAA-000",
+      "unitLabel": "Unidade de Medida",
+      "unitPriceLabel": "Preço Unitário (R$)",
+      "unitPricePlaceholder": "0,00",
+      "stockQtyLabel": "Quantidade em Estoque",
+      "stockQtyPlaceholder": "0",
+      "validationTitle": "Regras de Validação",
+      "validationText": "Certifique-se de que o código seja exclusivo e a unidade de medida esteja de acordo com o padrão ISO industrial da unidade fabril.",
+      "cancel": "Cancelar",
+      "save": "Salvar"
+    },
+    "units": {
+      "kg": "Quilograma (kg)",
+      "un": "Unidade (un)",
+      "m": "Metro (m)",
+      "m2": "Metro Quadrado (m²)",
+      "lt": "Litro (lt)"
     }
   }
 }
