@@ -11,7 +11,7 @@ alwaysApply: true
 - **`src/core/`**: `api` (including `apiClient`), `config`, shared domain/backend `types`, global Zustand stores. No reusable UI components.
 - **`src/shared/`**: Reusable `components`, `hooks`, `utils`, `constants`. Re-export from local `index.ts` when it improves imports.
 - **`src/contexts/`**: One concern per file—provider + matching `useX` hook (e.g. `useThemeMode`, `useLanguage`).
-- **`src/theme/`**, **`src/i18n/`**: Theme and i18n only; no business logic.
+- **`src/theme/`**, **`src/i18n/`**: Theme and i18n only; no business logic. Theme may include **`produzaTokens.ts`** / **`mui-augment.ts`** used exclusively by **`createAppTheme`** to expose **`palette.produza`**—features consume tokens via **`useTheme()`**, not local token files.
 
 Prefer **`src/features/<name>/`** when a product area grows (auth, settings, etc.); keep `app/routes` thin by importing feature pages.
 

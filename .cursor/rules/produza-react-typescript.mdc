@@ -14,8 +14,13 @@ alwaysApply: false
 # MUI
 
 - Import from **`@mui/material/ComponentName`** (not barrel `@mui/material` for everything) for tree-shaking.
-- Prefer **`sx`** for local layout; move repeated `sx` to shared styled helpers or theme overrides when duplication is clear.
-- Global look-and-feel: **`src/theme`** + **`ThemeContext`**—do not call `createTheme` inside random pages.
+- Prefer **`sx`** for small one-off layout; when styling grows large or repeats, extract **`styled(...)`** from **`@mui/material/styles`** into colocated **`* .styled.tsx`** (feature-local) or theme-level helpers (global). Reference colors via **`theme.palette`** and the extended **`theme.palette.produza`** (see **`src/theme/produzaTokens.ts`** + **`createAppTheme`**)—do not duplicate Produza / Kinetic Blueprint hex values inside features.
+- Global look-and-feel: **`src/theme`** + **`ThemeContext`**—do not call `createTheme` inside pages or features; extend the theme factory when new design tokens are needed.
+
+# Components and structure
+
+- Prefer **single responsibility**: thin route/page components, presentational children, and small hooks (`use*` in a `hooks/` folder per feature when logic is reused or keeps JSX short).
+- Avoid oversized files: split tables, forms, and shells into focused components instead of one long module.
 
 # i18n
 
