@@ -7,5 +7,5 @@ export function formatRawMaterialCode(raw: string): string {
 }
 
 export function isValidRawMaterialCode(code: string): boolean {
-  return /^[A-Z]{4}-\d{3}$/.test(code);
+  return /^[A-Z]{2,4}-\d{3}$/.test(code);
 }

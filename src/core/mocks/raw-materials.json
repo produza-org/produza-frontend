@@ -3,7 +3,9 @@
     "id": "rm-001",
     "code": "MP-001",
     "name": "LEITE INTEGRAL",
+    "status": "inactive",
     "stockQuantity": 500,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 4.2,
     "totalCost": 2100
@@ -12,7 +14,9 @@
     "id": "rm-002",
     "code": "MP-002",
     "name": "AÇÚCAR",
+    "status": "active",
     "stockQuantity": 1200,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 3.8,
     "totalCost": 4560
@@ -21,7 +25,9 @@
     "id": "rm-003",
     "code": "MP-003",
     "name": "GORDURA PALMA",
+    "status": "inactive",
     "stockQuantity": 50,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 12.5,
     "totalCost": 625
@@ -30,7 +36,9 @@
     "id": "rm-004",
     "code": "MP-004",
     "name": "GLUCOSE",
+    "status": "active",
     "stockQuantity": 75,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 8.9,
     "totalCost": 667.5
@@ -39,7 +47,9 @@
     "id": "rm-005",
     "code": "MP-005",
     "name": "HEXUS CREAM",
+    "status": "active",
     "stockQuantity": 25,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 45,
     "totalCost": 1125
@@ -48,7 +58,9 @@
     "id": "rm-006",
     "code": "MP-006",
     "name": "ÁGUA",
+    "status": "active",
     "stockQuantity": 10000,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 0.01,
     "totalCost": 100
@@ -57,7 +69,9 @@
     "id": "rm-007",
     "code": "MP-007",
     "name": "SAL REFINADO",
+    "status": "inactive",
     "stockQuantity": 800,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 1.2,
     "totalCost": 960
@@ -66,7 +80,9 @@
     "id": "rm-008",
     "code": "MP-008",
     "name": "FERMENTO BIOLÓGICO",
+    "status": "inactive",
     "stockQuantity": 15,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 22,
     "totalCost": 330
@@ -75,7 +91,9 @@
     "id": "rm-009",
     "code": "MP-009",
     "name": "MARGARINA",
+    "status": "inactive",
     "stockQuantity": 200,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 9.5,
     "totalCost": 1900
@@ -84,7 +102,9 @@
     "id": "rm-010",
     "code": "MP-010",
     "name": "OVOS",
+    "status": "inactive",
     "stockQuantity": 0,
+    "minStock": 50,
     "unit": "UNID",
     "unitCost": 0.85,
     "totalCost": 0
@@ -93,7 +113,9 @@
     "id": "rm-011",
     "code": "MP-011",
     "name": "AMIDO DE MANDIOCA",
+    "status": "active",
     "stockQuantity": 30,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 6.4,
     "totalCost": 192
@@ -102,7 +124,9 @@
     "id": "rm-012",
     "code": "MP-012",
     "name": "ESSÊNCIA BAUNILHA",
+    "status": "inactive",
     "stockQuantity": 5,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 85,
     "totalCost": 425
@@ -111,7 +135,9 @@
     "id": "rm-013",
     "code": "MP-013",
     "name": "CHOCOLATE EM PÓ",
+    "status": "active",
     "stockQuantity": 120,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 18.5,
     "totalCost": 2220
@@ -120,7 +146,9 @@
     "id": "rm-014",
     "code": "MP-014",
     "name": "LEITE CONDENSADO",
+    "status": "inactive",
     "stockQuantity": 300,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 7.8,
     "totalCost": 2340
@@ -129,7 +157,9 @@
     "id": "rm-015",
     "code": "MP-015",
     "name": "CREME DE LEITE",
+    "status": "active",
     "stockQuantity": 180,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 6.2,
     "totalCost": 1116
@@ -138,7 +168,9 @@
     "id": "rm-016",
     "code": "MP-016",
     "name": "FARINHA DE TRIGO",
+    "status": "inactive",
     "stockQuantity": 2500,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 2.9,
     "totalCost": 7250
@@ -147,7 +179,9 @@
     "id": "rm-017",
     "code": "MP-017",
     "name": "FERMENTO QUÍMICO",
+    "status": "active",
     "stockQuantity": 40,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 14.3,
     "totalCost": 572
@@ -156,7 +190,9 @@
     "id": "rm-018",
     "code": "MP-018",
     "name": "CORANTE ALIMENTÍCIO",
+    "status": "active",
     "stockQuantity": 8,
+    "minStock": 50,
     "unit": "LITRO",
     "unitCost": 32,
     "totalCost": 256
@@ -165,7 +201,9 @@
     "id": "rm-019",
     "code": "MP-019",
     "name": "AMÊNDOA",
+    "status": "active",
     "stockQuantity": 60,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 52,
     "totalCost": 3120
@@ -174,7 +212,9 @@
     "id": "rm-020",
     "code": "MP-020",
     "name": "CASTANHA DE CAJU",
+    "status": "active",
     "stockQuantity": 45,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 38,
     "totalCost": 1710
@@ -183,7 +223,9 @@
     "id": "rm-021",
     "code": "MP-021",
     "name": "AVELÃ",
+    "status": "inactive",
     "stockQuantity": 90,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 48,
     "totalCost": 4320
@@ -192,7 +234,9 @@
     "id": "rm-022",
     "code": "MP-022",
     "name": "CARAMELO",
+    "status": "active",
     "stockQuantity": 150,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 11.2,
     "totalCost": 1680
@@ -201,7 +245,9 @@
     "id": "rm-023",
     "code": "MP-023",
     "name": "GELO REAL",
+    "status": "inactive",
     "stockQuantity": 0,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 25,
     "totalCost": 0
@@ -210,7 +256,9 @@
     "id": "rm-024",
     "code": "MP-024",
     "name": "POLVILHO",
+    "status": "inactive",
     "stockQuantity": 400,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 4.1,
     "totalCost": 1640
@@ -219,7 +267,9 @@
     "id": "rm-025",
     "code": "MP-025",
     "name": "LEITE EM PÓ",
+    "status": "active",
     "stockQuantity": 220,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 16.8,
     "totalCost": 3696
@@ -228,7 +278,9 @@
     "id": "rm-026",
     "code": "MP-026",
     "name": "MEL",
+    "status": "inactive",
     "stockQuantity": 35,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 28,
     "totalCost": 980
@@ -237,7 +289,9 @@
     "id": "rm-027",
     "code": "MP-027",
     "name": "CANELA",
+    "status": "inactive",
     "stockQuantity": 12,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 42,
     "totalCost": 504
@@ -246,7 +300,9 @@
     "id": "rm-028",
     "code": "MP-028",
     "name": "NOZES",
+    "status": "active",
     "stockQuantity": 80,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 55,
     "totalCost": 4400
@@ -255,7 +311,9 @@
     "id": "rm-029",
     "code": "MP-029",
     "name": "UVAS PASSAS",
+    "status": "inactive",
     "stockQuantity": 55,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 19.5,
     "totalCost": 1072.5
@@ -264,7 +322,9 @@
     "id": "rm-030",
     "code": "MP-030",
     "name": "AMIDO DE MILHO",
+    "status": "active",
     "stockQuantity": 350,
+    "minStock": 50,
     "unit": "KG",
     "unitCost": 5.6,
     "totalCost": 1960

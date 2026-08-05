@@ -4,6 +4,7 @@ import { HomePage } from '@/app/HomePage';
 import {
   RawMaterialsListPage,
   RawMaterialCreatePage,
+  RawMaterialEditPage,
   RawMaterialsProvider,
 } from '@/features/raw-materials';
 
@@ -22,6 +23,7 @@ export function AppRoutes() {
         >
           <Route index element={<RawMaterialsListPage />} />
           <Route path="new" element={<RawMaterialCreatePage />} />
+          <Route path=":id/edit" element={<RawMaterialEditPage />} />
         </Route>
         <Route path="/groupings" element={<HomePage />} />
       </Route>

@@ -20,13 +20,16 @@ describe('raw-material-code', () => {
   });
 
   describe('isValidRawMaterialCode', () => {
-    it('accepts valid codes', () => {
+    it('accepts valid codes with 2 to 4 letters', () => {
+      expect(isValidRawMaterialCode('MP-001')).toBe(true);
+      expect(isValidRawMaterialCode('STA-001')).toBe(true);
       expect(isValidRawMaterialCode('STAH-001')).toBe(true);
     });
 
     it('rejects invalid codes', () => {
-      expect(isValidRawMaterialCode('STA-001')).toBe(false);
+      expect(isValidRawMaterialCode('A-001')).toBe(false);
       expect(isValidRawMaterialCode('STAH-01')).toBe(false);
+      expect(isValidRawMaterialCode('STAH001')).toBe(false);
     });
   });
 });

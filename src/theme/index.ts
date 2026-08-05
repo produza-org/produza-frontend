@@ -36,17 +36,18 @@ const stitchDark = {
 
 export function createAppTheme(mode: PaletteMode) {
   const isLight = mode === 'light';
+  const produza = isLight ? lightProduzaPalette : darkProduzaPalette;
 
   return createTheme({
     palette: {
       mode,
-      produza: isLight ? lightProduzaPalette : darkProduzaPalette,
+      produza,
       ...(isLight
         ? {
             primary: {
               main: stitchLight.primary,
               dark: stitchLight.primaryContainer,
-              light: '#264778',
+              light: produza.primaryMid,
               contrastText: stitchLight.onPrimary,
             },
             secondary: {
@@ -143,7 +144,7 @@ export function createAppTheme(mode: PaletteMode) {
             ? {
                 background: `linear-gradient(145deg, ${stitchLight.primary} 0%, ${stitchLight.primaryContainer} 100%)`,
                 '&:hover': {
-                  background: `linear-gradient(145deg, ${stitchLight.primaryContainer} 0%, #264778 100%)`,
+                  background: `linear-gradient(145deg, ${stitchLight.primaryContainer} 0%, ${produza.primaryMid} 100%)`,
                 },
               }
             : {},

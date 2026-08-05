@@ -28,7 +28,7 @@ export const AddMaterialButton = styled(Button)(({ theme }) => ({
   background: `linear-gradient(145deg, ${theme.palette.produza.primary} 0%, ${theme.palette.produza.primaryContainer} 100%)`,
   boxShadow: '0 10px 15px -3px rgba(0, 23, 54, 0.2)',
   '&:hover': {
-    background: `linear-gradient(145deg, ${theme.palette.produza.primaryContainer} 0%, #264778 100%)`,
+    background: `linear-gradient(145deg, ${theme.palette.produza.primaryContainer} 0%, ${theme.palette.produza.primaryMid} 100%)`,
     opacity: 0.95,
     boxShadow: '0 10px 15px -3px rgba(0, 23, 54, 0.2)',
   },

@@ -26,7 +26,7 @@ import {
   ValidationAlert,
   ValidationAlertText,
   ValidationAlertTitle,
-} from '@/features/raw-materials/components/create/RawMaterialForm.styled';
+} from '@/features/raw-materials/components/form/RawMaterialForm.styled';
 import {
   formatRawMaterialCode,
   isValidRawMaterialCode,
@@ -38,17 +38,22 @@ export type RawMaterialFormValues = {
   unit: string;
   unitCostDisplay: string;
   stockQuantity: string;
+  minStock: string;
+};
+
+export type RawMaterialFormSubmitValues = {
+  name: string;
+  code: string;
+  unit: string;
+  unitCost: number;
+  stockQuantity: number;
+  minStock: number;
 };
 
 type RawMaterialFormProps = {
-  onSubmit: (values: {
-    name: string;
-    code: string;
-    unit: string;
-    unitCost: number;
-    stockQuantity: number;
-  }) => void;
+  onSubmit: (values: RawMaterialFormSubmitValues) => void;
   onCancel: () => void;
+  initialValues?: Partial<RawMaterialFormValues>;
 };
 
 const defaultValues: RawMaterialFormValues = {
@@ -57,13 +62,14 @@ const defaultValues: RawMaterialFormValues = {
   unit: RAW_MATERIAL_UNIT_OPTIONS[0].value,
   unitCostDisplay: '',
   stockQuantity: '',
+  minStock: '',
 };
 
-export function RawMaterialForm({ onSubmit, onCancel }: RawMaterialFormProps) {
+export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMaterialFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { control, handleSubmit } = useForm<RawMaterialFormValues>({
-    defaultValues,
+    defaultValues: { ...defaultValues, ...initialValues },
   });
 
   const unitOptions = useMemo(
@@ -80,8 +86,9 @@ export function RawMaterialForm({ onSubmit, onCancel }: RawMaterialFormProps) {
 
     const unitCost = parseCurrencyBrlInput(values.unitCostDisplay);
     const quantity = parseInt(values.stockQuantity, 10);
+    const minStock = parseInt(values.minStock, 10);
 
-    if (!values.name.trim() || unitCost <= 0 || quantity <= 0) return;
+    if (!values.name.trim() || unitCost <= 0 || quantity <= 0 || minStock <= 0) return;
 
     onSubmit({
       name: values.name.trim(),
@@ -89,6 +96,7 @@ export function RawMaterialForm({ onSubmit, onCancel }: RawMaterialFormProps) {
       unit: values.unit,
       unitCost,
       stockQuantity: quantity,
+      minStock,
     });
   });
 
@@ -139,20 +147,21 @@ export function RawMaterialForm({ onSubmit, onCancel }: RawMaterialFormProps) {
           />
         </FormRow>
 
+        <Controller
+          name="unitCostDisplay"
+          control={control}
+          render={({ field }) => (
+            <FormCurrencyField
+              id="unit-price"
+              label={t('rawMaterials.form.unitPriceLabel')}
+              placeholder={t('rawMaterials.form.unitPricePlaceholder')}
+              value={field.value}
+              onChange={(value) => field.onChange(handleCurrencyInputChange(value))}
+            />
+          )}
+        />
+
         <FormRow>
-          <Controller
-            name="unitCostDisplay"
-            control={control}
-            render={({ field }) => (
-              <FormCurrencyField
-                id="unit-price"
-                label={t('rawMaterials.form.unitPriceLabel')}
-                placeholder={t('rawMaterials.form.unitPricePlaceholder')}
-                value={field.value}
-                onChange={(value) => field.onChange(handleCurrencyInputChange(value))}
-              />
-            )}
-          />
           <Controller
             name="stockQuantity"
             control={control}
@@ -161,6 +170,20 @@ export function RawMaterialForm({ onSubmit, onCancel }: RawMaterialFormProps) {
                 id="stock-qty"
                 label={t('rawMaterials.form.stockQtyLabel')}
                 placeholder={t('rawMaterials.form.stockQtyPlaceholder')}
+                value={field.value}
+                onChange={(value) => field.onChange(sanitizeIntegerInput(value))}
+                inputMode="numeric"
+              />
+            )}
+          />
+          <Controller
+            name="minStock"
+            control={control}
+            render={({ field }) => (
+              <FormTextField
+                id="min-stock"
+                label={t('rawMaterials.form.minStockLabel')}
+                placeholder={t('rawMaterials.form.minStockPlaceholder')}
                 value={field.value}
                 onChange={(value) => field.onChange(sanitizeIntegerInput(value))}
                 inputMode="numeric"

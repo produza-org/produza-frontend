@@ -52,21 +52,53 @@
     },
     "table": {
       "colCode": "Code",
+      "colStatus": "Status",
       "colName": "Raw material",
       "colQty": "Qty. in stock",
+      "colMinStock": "Minimum stock",
       "colUnit": "Unit",
       "colUnitBrl": "BRL unit",
       "colTotalBrl": "BRL total",
       "colActions": "Actions",
+      "actionsMenuAria": "Raw material actions",
+      "editAction": "Edit",
+      "activateAction": "Activate",
+      "deactivateAction": "Deactivate",
+      "deleteAction": "Delete",
       "editAria": "Edit raw material",
       "deleteAria": "Delete raw material",
       "pagerSummary": "Showing {{shown}} of {{total}} raw materials",
       "pagerPrev": "Previous page",
-      "pagerNext": "Next page"
+      "pagerNext": "Next page",
+      "stockStatus": {
+        "critical": "Critical — below minimum stock",
+        "warning": "Concerning — approaching minimum stock",
+        "ok": "Healthy — sufficient stock"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "statusToggle": {
+      "activateTitle": "Activate raw material",
+      "deactivateTitle": "Deactivate raw material",
+      "activateMessage": "Are you sure you want to activate this raw material?",
+      "deactivateMessage": "Are you sure you want to deactivate this raw material?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "delete": {
+      "title": "Delete raw material",
+      "message": "Are you sure you want to delete this raw material?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     },
     "form": {
       "title": "Raw Material Registration",
       "subtitle": "Industrial input management for production.",
+      "editTitle": "Edit Raw Material",
+      "editSubtitle": "Update industrial input details for production.",
       "nameLabel": "Raw Material Name",
       "namePlaceholder": "E.g. Stainless Steel Sheet 304",
       "codeLabel": "Code",
@@ -76,6 +108,8 @@
       "unitPricePlaceholder": "0.00",
       "stockQtyLabel": "Stock Quantity",
       "stockQtyPlaceholder": "0",
+      "minStockLabel": "Minimum stock",
+      "minStockPlaceholder": "0",
       "validationTitle": "Validation Rules",
       "validationText": "Ensure the code is unique and the unit of measure follows the factory ISO industrial standard.",
       "cancel": "Cancel",

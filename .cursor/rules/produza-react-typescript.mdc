@@ -14,7 +14,9 @@ alwaysApply: false
 # MUI
 
 - Import from **`@mui/material/ComponentName`** (not barrel `@mui/material` for everything) for tree-shaking.
-- Prefer **`sx`** for small one-off layout; when styling grows large or repeats, extract **`styled(...)`** from **`@mui/material/styles`** into colocated **`* .styled.tsx`** (feature-local) or theme-level helpers (global). Reference colors via **`theme.palette`** and the extended **`theme.palette.produza`** (see **`src/theme/produzaTokens.ts`** + **`createAppTheme`**)—do not duplicate Produza / Kinetic Blueprint hex values inside features.
+- Prefer **`sx`** for small one-off layout; when styling grows or repeats, extract **`styled(...)`** into colocated **`*.styled.tsx`**.
+- Colors: always **`theme.palette.produza.*`** (and standard MUI palette when appropriate). New hues → add tokens in **`produzaTokens.ts`** first, then consume—never paste brand hex into feature/shared styled files.
+- Avoid light/dark hex forks in components; put both values on the light/dark token objects instead.
 - Global look-and-feel: **`src/theme`** + **`ThemeContext`**—do not call `createTheme` inside pages or features; extend the theme factory when new design tokens are needed.
 
 # Components and structure

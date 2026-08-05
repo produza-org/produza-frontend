@@ -1,29 +1,47 @@
 ---
-description: Layered folders, imports, and agent constraints for produza-frontend
+description: Layered folders, theme tokens, feature layout, and agent constraints for produza-frontend
 alwaysApply: true
 ---
 
 # Architecture and scope
 
-- The architecture and structuer is detail explained in the /docs, it should be keeped as it is described after every change.
+- Keep `/docs` aligned with the real structure after every structural change.
+- **`src/app/`**: App shell only—`App`, `providers`, `routes`. No HTTP clients, env reads, or low-level utils.
+- **`src/core/`**: `api`, `config`, shared `types`, stores, `mocks`. No reusable UI.
+- **`src/shared/`**: Cross-feature `components` (`layout/`, `form/`, `dialog/`, `actions/`, `page/`), `hooks`, `utils`, `constants`. Local `index.ts` barrels; export only the public API.
+- **`src/contexts/`**: One concern per file—provider + matching `useX` hook.
+- **`src/theme/`**, **`src/i18n/`**: Theme and i18n only; no business logic.
 
-- **`src/app/`**: App shell only—`App`, `providers`, `routes`, route-level pages and layouts. No HTTP clients, env reads, or low-level utils here.
-- **`src/core/`**: `api` (including `apiClient`), `config`, shared domain/backend `types`, global Zustand stores. No reusable UI components.
-- **`src/shared/`**: Reusable `components`, `hooks`, `utils`, `constants`. Re-export from local `index.ts` when it improves imports.
-- **`src/contexts/`**: One concern per file—provider + matching `useX` hook (e.g. `useThemeMode`, `useLanguage`).
-- **`src/theme/`**, **`src/i18n/`**: Theme and i18n only; no business logic. Theme may include **`produzaTokens.ts`** / **`mui-augment.ts`** used exclusively by **`createAppTheme`** to expose **`palette.produza`**—features consume tokens via **`useTheme()`**, not local token files.
+# Features
 
-Prefer **`src/features/<name>/`** when a product area grows (auth, settings, etc.); keep `app/routes` thin by importing feature pages.
+Prefer **`src/features/<name>/`** with this layout:
+
+- `pages/`, `components/` (e.g. `list/`, `form/`), `hooks/`, `context/`, `utils/`, `types/`, `constants.ts`
+- Feature `index.ts` exports only what **`app/routes`** needs (pages, provider, public types)—not internal hooks.
+- Shared create/edit form UI lives under **`components/form/`**, not under `components/create/`.
+- Shared page chrome (e.g. `PageRoot`) goes in a shared page styled module—do not import create-page styles from edit.
+- Feature format helpers belong in **`utils/`**, not the feature root.
+
+# Theme colors (do not regress)
+
+- Brand/UI colors: add or extend tokens in **`src/theme/produzaTokens.ts`**, expose via **`createAppTheme`** as **`palette.produza`**.
+- Components/styled files must use **`theme.palette.produza.*`** (or `useTheme().palette.produza`).
+- Do **not** hardcode feature hex (`#1d4ed8`, `#264778`, …) or `theme.palette.mode === 'dark' ? '#…' : '#…'` branches in features/shared UI.
+- Do **not** import `@/theme/produzaTokens` from features—only `createAppTheme` / theme package may.
+
+# Shared components
+
+- Name by role, not one call site (e.g. **`ConfirmModal`**, not `DeleteConfirmModal`, when props are generic).
+- Keep shared UI free of feature domain logic; pass labels/actions via props + i18n at the call site.
 
 # Imports
 
-- Use the **`@/`** alias for all `src` imports (see `vite.config.ts`). Avoid deep relative paths like `../../../core/...`.
+- Use the **`@/`** alias for all `src` imports. Avoid deep relative paths like `../../../core/...`.
 
 # Agent behavior
 
 - Do not add code comments unless the user explicitly asks.
-- Do not add `console.log`; use existing logging patterns if any (`console.warn` / `console.error` only where ESLint allows).
+- Do not add `console.log`; use `console.warn` / `console.error` only where ESLint allows.
 - Reuse existing `shared` and `contexts` patterns before adding new abstractions.
 - Keep changes minimal and scoped to the request—no drive-by refactors.
-
-User-facing copy: keys and locale files stay aligned with app types (e.g. `AppLanguage` in `LanguageContext`).
+- User-facing copy: keys in **both** `en.json` and `pt.json`, aligned with app types (e.g. `AppLanguage`).

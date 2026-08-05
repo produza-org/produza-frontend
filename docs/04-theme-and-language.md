@@ -4,12 +4,12 @@ Global theme (light/dark) and language (Portuguese/English) are implemented with
 
 ## Theme
 
-- **Implementation:** `src/theme/index.ts` exports `createAppTheme(mode)` which calls MUI’s `createTheme()` with `palette.mode: 'light' | 'dark'`.
+- **Implementation:** `src/theme/index.ts` exports `createAppTheme(mode)` which calls MUI’s `createTheme()` with `palette.mode: 'light' | 'dark'`. Brand and feature colors live in `src/theme/produzaTokens.ts` and are exposed as `palette.produza` (typed in `src/theme/mui-augment.ts`).
 - **Context:** `src/contexts/ThemeContext.tsx` provides `mode` and `toggleTheme()`. The provider wraps the app with MUI’s `ThemeProvider` and `CssBaseline`.
 - **Persistence:** The chosen mode is stored in `localStorage` under `app-theme-preference`. On load, that value is used; if missing, the system preference (`prefers-color-scheme: dark`) is used, then fallback to `light`.
-- **Usage:** Call `useThemeMode()` inside the tree wrapped by `ThemeProvider` to get `{ mode, toggleTheme }`.
+- **Usage:** Call `useThemeMode()` inside the tree wrapped by `ThemeProvider` to get `{ mode, toggleTheme }`. In components and styled files, consume brand colors via `theme.palette.produza.*` (or `useTheme().palette.produza`) — do not hardcode feature hex values in UI layers.
 
-To change colors or typography, edit `createAppTheme()` in `src/theme/index.ts` (e.g. `palette.primary`, `typography`).
+To change brand/feature colors, edit `lightProduzaPalette` / `darkProduzaPalette` in `produzaTokens.ts`. For MUI core palette or typography defaults, edit `createAppTheme()` in `src/theme/index.ts`.
 
 ## Language
 

@@ -1,7 +1,5 @@
 export { RawMaterialsListPage } from './pages/list/RawMaterialsListPage';
 export { RawMaterialCreatePage } from './pages/create/RawMaterialCreatePage';
+export { RawMaterialEditPage } from './pages/edit/RawMaterialEditPage';
 export { RawMaterialsProvider } from './context/RawMaterialsContext';
-export { useRawMaterialsFilters } from './hooks/useRawMaterialsFilters';
-export { useRawMaterialsList } from './hooks/useRawMaterialsList';
-export { useRawMaterialsStats } from './hooks/useRawMaterialsStats';
 export type { RawMaterial } from './types/raw-material';

@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
@@ -78,6 +79,21 @@ export const NumericCell = styled(TableCell)(({ theme }) => ({
   fontVariantNumeric: 'tabular-nums',
 }));
 
+export const StockQtyCell = styled(NumericCell, {
+  shouldForwardProp: (p) => p !== '$status',
+})<{ $status: 'critical' | 'warning' | 'ok' }>(({ theme, $status }) => {
+  const colors = {
+    critical: theme.palette.produza.error,
+    warning: theme.palette.produza.warning,
+    ok: theme.palette.produza.success,
+  } as const;
+
+  return {
+    color: colors[$status],
+    fontWeight: 700,
+  };
+});
+
 export const UnitCell = styled(TableCell)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
@@ -107,25 +123,35 @@ export const ActionsInner = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
 }));
 
-export const EditActionButton = styled(IconButton)(({ theme }) => ({
-  padding: '6px',
-  color: theme.palette.produza.secondary,
-  borderRadius: 4,
-  '&:hover': {
-    color: theme.palette.produza.primary,
-    backgroundColor: theme.palette.produza.surfaceContainerLowest,
-  },
+export const StatusCell = styled(TableCell)(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(2),
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
 }));
 
-export const DeleteActionButton = styled(IconButton)(({ theme }) => ({
-  padding: '6px',
-  color: theme.palette.produza.slate400,
-  borderRadius: 4,
-  '&:hover': {
-    color: theme.palette.produza.error,
-    backgroundColor: `${theme.palette.produza.errorContainer}4D`,
-  },
-}));
+export const StatusChip = styled(Chip, {
+  shouldForwardProp: (p) => p !== '$status',
+})<{ $status: 'active' | 'inactive' }>(({ theme, $status }) => {
+  const isActive = $status === 'active';
+  return {
+    height: 24,
+    fontSize: 11,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em',
+    borderRadius: 6,
+    ...(isActive
+      ? {
+          color: theme.palette.produza.success,
+          backgroundColor: theme.palette.produza.successContainer,
+        }
+      : {
+          color: theme.palette.produza.error,
+          backgroundColor: `${theme.palette.produza.errorContainer}99`,
+        }),
+  };
+});
 
 export const FooterBar = styled(Box)(({ theme }) => ({
   paddingLeft: theme.spacing(3),

@@ -2,12 +2,15 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
-import { RawMaterialForm } from '@/features/raw-materials/components/create/RawMaterialForm';
+import {
+  RawMaterialForm,
+  type RawMaterialFormSubmitValues,
+} from '@/features/raw-materials/components/form/RawMaterialForm';
 import { useRawMaterialsContext } from '@/features/raw-materials/context/RawMaterialsContext';
 import {
   PageHeader,
   PageRoot,
-} from '@/features/raw-materials/pages/create/RawMaterialCreatePage.styled';
+} from '@/features/raw-materials/pages/RawMaterialFormPage.styled';
 
 export function RawMaterialCreatePage() {
   const { t } = useTranslation();
@@ -19,13 +22,7 @@ export function RawMaterialCreatePage() {
   }, [navigate]);
 
   const handleSubmit = useCallback(
-    (values: {
-      name: string;
-      code: string;
-      unit: string;
-      unitCost: number;
-      stockQuantity: number;
-    }) => {
+    (values: RawMaterialFormSubmitValues) => {
       createRawMaterial(values);
       navigate('/raw-materials');
     },

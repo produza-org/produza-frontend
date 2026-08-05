@@ -52,21 +52,53 @@
     },
     "table": {
       "colCode": "Código",
+      "colStatus": "Status",
       "colName": "Matéria-prima",
       "colQty": "Qtd. em estoque",
+      "colMinStock": "Estoque mínimo",
       "colUnit": "Unidade",
       "colUnitBrl": "R$ unitário",
       "colTotalBrl": "R$ total",
       "colActions": "Ações",
+      "actionsMenuAria": "Ações da matéria-prima",
+      "editAction": "Editar",
+      "activateAction": "Ativar",
+      "deactivateAction": "Inativar",
+      "deleteAction": "Excluir",
       "editAria": "Editar matéria-prima",
       "deleteAria": "Excluir matéria-prima",
       "pagerSummary": "Exibindo {{shown}} de {{total}} matérias-primas",
       "pagerPrev": "Página anterior",
-      "pagerNext": "Próxima página"
+      "pagerNext": "Próxima página",
+      "stockStatus": {
+        "critical": "Crítico — abaixo do estoque mínimo",
+        "warning": "Preocupante — próximo do estoque mínimo",
+        "ok": "Tranquilo — estoque suficiente"
+      }
+    },
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "statusToggle": {
+      "activateTitle": "Ativar matéria-prima",
+      "deactivateTitle": "Inativar matéria-prima",
+      "activateMessage": "Tem certeza que deseja ativar esta matéria-prima?",
+      "deactivateMessage": "Tem certeza que deseja inativar esta matéria-prima?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
+    },
+    "delete": {
+      "title": "Excluir matéria-prima",
+      "message": "Tem certeza que deseja excluir esta matéria-prima?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "form": {
       "title": "Cadastro de Matéria-Prima",
       "subtitle": "Gerenciamento de insumos para produção industrial.",
+      "editTitle": "Editar Matéria-Prima",
+      "editSubtitle": "Atualize os dados do insumo industrial para produção.",
       "nameLabel": "Nome da Matéria Prima",
       "namePlaceholder": "Ex: Chapa de Aço Inox 304",
       "codeLabel": "Código",
@@ -76,6 +108,8 @@
       "unitPricePlaceholder": "0,00",
       "stockQtyLabel": "Quantidade em Estoque",
       "stockQtyPlaceholder": "0",
+      "minStockLabel": "Estoque mínimo",
+      "minStockPlaceholder": "0",
       "validationTitle": "Regras de Validação",
       "validationText": "Certifique-se de que o código seja exclusivo e a unidade de medida esteja de acordo com o padrão ISO industrial da unidade fabril.",
       "cancel": "Cancelar",
