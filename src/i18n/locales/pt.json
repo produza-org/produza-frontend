@@ -32,6 +32,21 @@
       "collapseSidebar": "Recolher menu"
     }
   },
+  "auth": {
+    "logout": "Sair",
+    "login": {
+      "subtitle": "Entre para continuar",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voce@empresa.com",
+      "emailRequired": "E-mail é obrigatório",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Digite sua senha",
+      "passwordRequired": "Senha é obrigatória",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "unexpectedError": "Algo deu errado. Tente novamente."
+    }
+  },
   "rawMaterials": {
     "list": {
       "title": "Matérias-primas",

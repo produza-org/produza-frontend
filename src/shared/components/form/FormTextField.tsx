@@ -11,9 +11,12 @@ export type FormTextFieldProps = {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'password' | 'email';
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
   autoComplete?: string;
+  error?: boolean;
+  helperText?: string;
+  disabled?: boolean;
 };
 
 export function FormTextField({
@@ -25,6 +28,9 @@ export function FormTextField({
   type = 'text',
   inputMode,
   autoComplete,
+  error = false,
+  helperText,
+  disabled = false,
 }: FormTextFieldProps) {
   return (
     <FieldBlock>
@@ -39,6 +45,9 @@ export function FormTextField({
           fullWidth
           variant="standard"
           type={type}
+          error={error}
+          helperText={helperText}
+          disabled={disabled}
           inputProps={{ inputMode, autoComplete }}
           InputProps={{ disableUnderline: true }}
         />
