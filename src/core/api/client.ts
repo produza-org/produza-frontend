@@ -1,8 +1,47 @@
 import { config } from '@/core/config/env';
+import type { ApiErrorBody } from '@/core/types';
 
 const defaultHeaders: HeadersInit = {
   'Content-Type': 'application/json',
 };
+
+export class ApiError extends Error {
+  readonly status: number;
+  readonly body: ApiErrorBody;
+
+  constructor(body: ApiErrorBody) {
+    super(body.message);
+    this.name = 'ApiError';
+    this.status = body.statusCode;
+    this.body = body;
+  }
+}
+
+function isApiErrorBody(value: unknown): value is ApiErrorBody {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const body = value as Record<string, unknown>;
+  return (
+    typeof body.statusCode === 'number' &&
+    typeof body.error === 'string' &&
+    typeof body.message === 'string'
+  );
+}
+
+async function readApiErrorBody(response: Response): Promise<ApiErrorBody> {
+  const payload: unknown = await response.json().catch(() => null);
+  if (isApiErrorBody(payload)) {
+    return payload;
+  }
+
+  return {
+    statusCode: response.status,
+    error: response.statusText || 'Error',
+    message: `API error: ${response.status} ${response.statusText}`,
+  };
+}
 
 export async function apiClient<T>(
   path: string,
@@ -13,8 +52,10 @@ export async function apiClient<T>(
     ...options,
     headers: { ...defaultHeaders, ...options.headers },
   });
+
   if (!response.ok) {
-    throw new Error(`API error: ${response.status} ${response.statusText}`);
+    throw new ApiError(await readApiErrorBody(response));
   }
+
   return response.json() as Promise<T>;
 }
