@@ -347,7 +347,30 @@
       "colName": "Material",
       "colConsumption": "Consumo unitário",
       "colUnit": "Unidade",
-      "colQtdLote": "QTD. LOTE"
+      "colQtdLote": "QTD. LOTE",
+      "steps": {
+        "title": "Etapas",
+        "plannedLoad": "Carga planejada: {{minutes}} min",
+        "empty": "Nenhuma etapa ainda. Adicione pelo menos uma etapa.",
+        "colName": "Etapa",
+        "namePlaceholder": "ex.: SEPARAÇÃO",
+        "colMinutes": "Minutos planejados",
+        "minutesPlaceholder": "40",
+        "colAssignee": "Responsável",
+        "assigneePlaceholder": "Opcional",
+        "add": "Adicionar etapa",
+        "remove": "Remover etapa",
+        "save": "Salvar etapas",
+        "saving": "Salvando etapas…"
+      },
+      "real": {
+        "title": "Produção real",
+        "label": "Real produzido",
+        "placeholder": "0",
+        "save": "Atualizar real",
+        "saving": "Atualizando…",
+        "variation": "Variação (real − Q): {{value}}"
+      }
     },
     "categories": {
       "COMPONENTE": "COMPONENTE",

@@ -9,7 +9,10 @@ import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { getProductionOrder } from '@/features/production-orders/api';
 import { ProductionOrderDetail } from '@/features/production-orders/components/detail/ProductionOrderDetail';
 import { useProductionOrdersContext } from '@/features/production-orders/context/ProductionOrdersContext';
-import type { ProductionOrder } from '@/features/production-orders/types/production-order';
+import type {
+  ProductionOrder,
+  ProductionStepInput,
+} from '@/features/production-orders/types/production-order';
 import {
   PageHeader,
   PageRoot,
@@ -21,6 +24,7 @@ export function ProductionOrderDetailPage() {
   const { id } = useParams<{ id: string }>();
   const {
     updateProductionOrder,
+    updateProductionOrderSteps,
     recalculateFromRecipe,
     upsertLocalOrder,
   } = useProductionOrdersContext();
@@ -92,6 +96,58 @@ export function ProductionOrderDetailPage() {
     [id, updateProductionOrder]
   );
 
+  const handleUpdateReal = useCallback(
+    async (realProduzido: number) => {
+      if (!id) {
+        return;
+      }
+      setIsMutating(true);
+      setErrorMessage(null);
+      try {
+        const updated = await updateProductionOrder(id, { realProduzido });
+        setOrder(updated);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof ApiError ? error.message : 'UNEXPECTED'
+        );
+      } finally {
+        setIsMutating(false);
+      }
+    },
+    [id, updateProductionOrder]
+  );
+
+  const handleUpdateSteps = useCallback(
+    async (steps: ProductionStepInput[]) => {
+      if (!id || !order) {
+        return;
+      }
+      setIsMutating(true);
+      setErrorMessage(null);
+      try {
+        const nextSteps = await updateProductionOrderSteps(id, { steps });
+        const plannedMinutesTotal = nextSteps.reduce(
+          (sum, step) => sum + step.plannedMinutes,
+          0
+        );
+        const updated: ProductionOrder = {
+          ...order,
+          steps: nextSteps,
+          plannedMinutesTotal,
+        };
+        setOrder(updated);
+        upsertLocalOrder(updated);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof ApiError ? error.message : 'UNEXPECTED'
+        );
+      } finally {
+        setIsMutating(false);
+      }
+    },
+    [id, order, updateProductionOrderSteps, upsertLocalOrder]
+  );
+
   const handleRecalculate = useCallback(async () => {
     if (!id) {
       return;
@@ -154,6 +210,8 @@ export function ProductionOrderDetailPage() {
         isMutating={isMutating}
         errorMessage={errorMessage}
         onUpdateQ={handleUpdateQ}
+        onUpdateReal={handleUpdateReal}
+        onUpdateSteps={handleUpdateSteps}
         onRecalculate={handleRecalculate}
       />
     </PageRoot>

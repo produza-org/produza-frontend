@@ -56,6 +56,6 @@ features/<name>/
 
 Products include a nested recipe editor at `/products/:id/recipe` under `features/products/pages/recipe/` and `components/recipe/`.
 
-Production orders live under `features/production-orders/` with list, create, and detail pages at `/production-orders`, `/production-orders/new`, and `/production-orders/:id`.
+Production orders live under `features/production-orders/` with list, create, and detail pages at `/production-orders`, `/production-orders/new`, and `/production-orders/:id`. The detail page includes floor steps (`FloorStepsPanel`) and actual production (`realProduzido`) alongside QTD. LOTE need lines.
 
 Use barrel `index.ts` in a folder when it helps keep imports short; export only what is part of the folder’s public API.
