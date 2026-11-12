@@ -10,6 +10,7 @@ export type ConfirmModalProps = {
   title?: string;
   cancelLabel: string;
   confirmLabel: string;
+  confirmDisabled?: boolean;
 };
 
 export function ConfirmModal({
@@ -20,6 +21,7 @@ export function ConfirmModal({
   title,
   cancelLabel,
   confirmLabel,
+  confirmDisabled = false,
 }: ConfirmModalProps) {
   return (
     <Modal
@@ -28,10 +30,15 @@ export function ConfirmModal({
       title={title}
       actions={
         <>
-          <ModalCancelButton variant="outlined" onClick={onClose}>
+          <ModalCancelButton variant="outlined" onClick={onClose} disabled={confirmDisabled}>
             {cancelLabel}
           </ModalCancelButton>
-          <ModalConfirmButton variant="contained" disableElevation onClick={onConfirm}>
+          <ModalConfirmButton
+            variant="contained"
+            disableElevation
+            onClick={onConfirm}
+            disabled={confirmDisabled}
+          >
             {confirmLabel}
           </ModalConfirmButton>
         </>

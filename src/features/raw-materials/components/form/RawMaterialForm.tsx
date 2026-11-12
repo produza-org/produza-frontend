@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
+import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import {
   FormCurrencyField,
@@ -27,6 +28,7 @@ import {
   ValidationAlertText,
   ValidationAlertTitle,
 } from '@/features/raw-materials/components/form/RawMaterialForm.styled';
+import type { RawMaterialUnit } from '@/features/raw-materials/types/raw-material';
 import {
   formatRawMaterialCode,
   isValidRawMaterialCode,
@@ -35,7 +37,7 @@ import {
 export type RawMaterialFormValues = {
   name: string;
   code: string;
-  unit: string;
+  unit: RawMaterialUnit;
   unitCostDisplay: string;
   stockQuantity: string;
   minStock: string;
@@ -44,16 +46,18 @@ export type RawMaterialFormValues = {
 export type RawMaterialFormSubmitValues = {
   name: string;
   code: string;
-  unit: string;
+  unit: RawMaterialUnit;
   unitCost: number;
   stockQuantity: number;
   minStock: number;
 };
 
 type RawMaterialFormProps = {
-  onSubmit: (values: RawMaterialFormSubmitValues) => void;
+  onSubmit: (values: RawMaterialFormSubmitValues) => void | Promise<void>;
   onCancel: () => void;
   initialValues?: Partial<RawMaterialFormValues>;
+  isSubmitting?: boolean;
+  errorMessage?: string | null;
 };
 
 const defaultValues: RawMaterialFormValues = {
@@ -65,7 +69,13 @@ const defaultValues: RawMaterialFormValues = {
   minStock: '',
 };
 
-export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMaterialFormProps) {
+export function RawMaterialForm({
+  onSubmit,
+  onCancel,
+  initialValues,
+  isSubmitting = false,
+  errorMessage = null,
+}: RawMaterialFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { control, handleSubmit } = useForm<RawMaterialFormValues>({
@@ -81,6 +91,11 @@ export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMateri
     [t]
   );
 
+  const displayError =
+    errorMessage === 'UNEXPECTED'
+      ? t('rawMaterials.errors.unexpected')
+      : errorMessage;
+
   const submitForm = handleSubmit((values) => {
     if (!isValidRawMaterialCode(values.code)) return;
 
@@ -90,7 +105,7 @@ export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMateri
 
     if (!values.name.trim() || unitCost <= 0 || quantity <= 0 || minStock <= 0) return;
 
-    onSubmit({
+    void onSubmit({
       name: values.name.trim(),
       code: values.code,
       unit: values.unit,
@@ -104,6 +119,12 @@ export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMateri
     <FormCard>
       <FormCardAccent />
       <FormBody onSubmit={submitForm} noValidate>
+        {displayError ? (
+          <Alert severity="error" role="alert">
+            {displayError}
+          </Alert>
+        ) : null}
+
         <Controller
           name="name"
           control={control}
@@ -140,7 +161,7 @@ export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMateri
                 id="unit-measure"
                 label={t('rawMaterials.form.unitLabel')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => field.onChange(value as RawMaterialUnit)}
                 options={unitOptions}
               />
             )}
@@ -201,11 +222,17 @@ export function RawMaterialForm({ onSubmit, onCancel, initialValues }: RawMateri
         </ValidationAlert>
 
         <FormActions>
-          <CancelButton type="button" onClick={onCancel}>
+          <CancelButton type="button" onClick={onCancel} disabled={isSubmitting}>
             {t('rawMaterials.form.cancel')}
           </CancelButton>
-          <SaveButton type="submit" variant="contained" disableElevation startIcon={<SaveOutlined />}>
-            {t('rawMaterials.form.save')}
+          <SaveButton
+            type="submit"
+            variant="contained"
+            disableElevation
+            startIcon={<SaveOutlined />}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? t('rawMaterials.form.saving') : t('rawMaterials.form.save')}
           </SaveButton>
         </FormActions>
       </FormBody>

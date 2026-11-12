@@ -2,8 +2,11 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
+import { ApiError } from '@/core/api';
 import { ConfirmModal } from '@/shared/components/dialog';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { RawMaterialsStatCard } from '@/features/raw-materials/components/list/RawMaterialsStatCard';
@@ -21,44 +24,93 @@ import {
   StatsGrid,
 } from '@/features/raw-materials/pages/list/RawMaterialsListPage.styled';
 
+function toActionError(error: unknown): string {
+  if (error instanceof ApiError) {
+    return error.message;
+  }
+  return 'UNEXPECTED';
+}
+
 export function RawMaterialsListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
   const p = theme.palette.produza;
-  const { items, deleteRawMaterial, toggleRawMaterialStatus } = useRawMaterialsContext();
+  const {
+    items,
+    isLoading,
+    errorMessage,
+    deleteRawMaterial,
+    toggleRawMaterialStatus,
+  } = useRawMaterialsContext();
   const { nameFilter, codeFilter, setNameFilter, setCodeFilter } = useRawMaterialsFilters();
   const { rows, page, totalFiltered, totalPages, setPage, canPrev, canNext } =
     useRawMaterialsList();
   const { totalCount, totalCost, activePercent, criticalCount } = useRawMaterialsStats();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [pendingStatusToggleId, setPendingStatusToggleId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [isMutating, setIsMutating] = useState(false);
 
   const pendingToggleItem = useMemo(
     () => items.find((item) => item.id === pendingStatusToggleId) ?? null,
     [items, pendingStatusToggleId]
   );
 
+  const loadError =
+    errorMessage === 'UNEXPECTED'
+      ? t('rawMaterials.errors.unexpected')
+      : errorMessage;
+
+  const displayActionError =
+    actionError === 'UNEXPECTED'
+      ? t('rawMaterials.errors.unexpected')
+      : actionError;
+
   const handleCloseDeleteModal = () => {
+    if (isMutating) {
+      return;
+    }
     setPendingDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    if (pendingDeleteId) {
-      deleteRawMaterial(pendingDeleteId);
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId || isMutating) {
+      return;
     }
-    setPendingDeleteId(null);
+    setIsMutating(true);
+    setActionError(null);
+    try {
+      await deleteRawMaterial(pendingDeleteId);
+      setPendingDeleteId(null);
+    } catch (error) {
+      setActionError(toActionError(error));
+    } finally {
+      setIsMutating(false);
+    }
   };
 
   const handleCloseStatusToggleModal = () => {
+    if (isMutating) {
+      return;
+    }
     setPendingStatusToggleId(null);
   };
 
-  const handleConfirmStatusToggle = () => {
-    if (pendingStatusToggleId) {
-      toggleRawMaterialStatus(pendingStatusToggleId);
+  const handleConfirmStatusToggle = async () => {
+    if (!pendingStatusToggleId || isMutating) {
+      return;
     }
-    setPendingStatusToggleId(null);
+    setIsMutating(true);
+    setActionError(null);
+    try {
+      await toggleRawMaterialStatus(pendingStatusToggleId);
+      setPendingStatusToggleId(null);
+    } catch (error) {
+      setActionError(toActionError(error));
+    } finally {
+      setIsMutating(false);
+    }
   };
 
   return (
@@ -79,64 +131,95 @@ export function RawMaterialsListPage() {
         </AddMaterialButton>
       </HeroRow>
 
-      <StatsGrid>
-        <RawMaterialsStatCard
-          accentColor={p.primary}
-          label={t('rawMaterials.list.statTotal')}
-          value={String(totalCount)}
-        />
-        <RawMaterialsStatCard
-          accentColor={p.tertiaryFixedDim}
-          label={t('rawMaterials.list.statCost')}
-          value={formatCurrencyBrl(totalCost)}
-        />
-        <RawMaterialsStatCard
-          accentColor={p.secondary}
-          label={t('rawMaterials.list.statActive')}
-          value={`${activePercent}%`}
-        />
-        <RawMaterialsStatCard
-          accentColor={p.error}
-          label={t('rawMaterials.list.statCritical')}
-          value={String(criticalCount).padStart(2, '0')}
-          valueErrorTone
-        />
-      </StatsGrid>
+      {loadError ? (
+        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
+          {loadError}
+        </Alert>
+      ) : null}
 
-      <RawMaterialsListFilters
-        nameFilter={nameFilter}
-        codeFilter={codeFilter}
-        onNameFilterChange={setNameFilter}
-        onCodeFilterChange={setCodeFilter}
-      />
+      {displayActionError ? (
+        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
+          {displayActionError}
+        </Alert>
+      ) : null}
 
-      <RawMaterialsListTable
-        rows={rows}
-        shown={rows.length}
-        total={totalFiltered}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={setPage}
-        canPrev={canPrev}
-        canNext={canNext}
-        onDeleteRequest={setPendingDeleteId}
-        onStatusToggleRequest={setPendingStatusToggleId}
-      />
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            py: 8,
+          }}
+        >
+          <CircularProgress size={32} aria-label={t('rawMaterials.list.loading')} />
+        </Box>
+      ) : (
+        <>
+          <StatsGrid>
+            <RawMaterialsStatCard
+              accentColor={p.primary}
+              label={t('rawMaterials.list.statTotal')}
+              value={String(totalCount)}
+            />
+            <RawMaterialsStatCard
+              accentColor={p.tertiaryFixedDim}
+              label={t('rawMaterials.list.statCost')}
+              value={formatCurrencyBrl(totalCost)}
+            />
+            <RawMaterialsStatCard
+              accentColor={p.secondary}
+              label={t('rawMaterials.list.statActive')}
+              value={`${activePercent}%`}
+            />
+            <RawMaterialsStatCard
+              accentColor={p.error}
+              label={t('rawMaterials.list.statCritical')}
+              value={String(criticalCount).padStart(2, '0')}
+              valueErrorTone
+            />
+          </StatsGrid>
+
+          <RawMaterialsListFilters
+            nameFilter={nameFilter}
+            codeFilter={codeFilter}
+            onNameFilterChange={setNameFilter}
+            onCodeFilterChange={setCodeFilter}
+          />
+
+          <RawMaterialsListTable
+            rows={rows}
+            shown={rows.length}
+            total={totalFiltered}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            canPrev={canPrev}
+            canNext={canNext}
+            onDeleteRequest={setPendingDeleteId}
+            onStatusToggleRequest={setPendingStatusToggleId}
+          />
+        </>
+      )}
 
       <ConfirmModal
         open={pendingDeleteId !== null}
         onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
+        onConfirm={() => {
+          void handleConfirmDelete();
+        }}
         title={t('rawMaterials.delete.title')}
         message={t('rawMaterials.delete.message')}
         cancelLabel={t('rawMaterials.delete.cancel')}
         confirmLabel={t('rawMaterials.delete.confirm')}
+        confirmDisabled={isMutating}
       />
 
       <ConfirmModal
         open={pendingToggleItem !== null}
         onClose={handleCloseStatusToggleModal}
-        onConfirm={handleConfirmStatusToggle}
+        onConfirm={() => {
+          void handleConfirmStatusToggle();
+        }}
         title={
           pendingToggleItem?.status === 'active'
             ? t('rawMaterials.statusToggle.deactivateTitle')
@@ -149,6 +232,7 @@ export function RawMaterialsListPage() {
         }
         cancelLabel={t('rawMaterials.statusToggle.cancel')}
         confirmLabel={t('rawMaterials.statusToggle.confirm')}
+        confirmDisabled={isMutating}
       />
     </PageRoot>
   );
