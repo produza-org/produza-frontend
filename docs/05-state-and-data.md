@@ -10,6 +10,6 @@
 ## API layer
 
 - **core/api/client.ts** – Single HTTP client (e.g. `apiClient(path, options)`). Uses `core/config/env` for base URL. Attaches `Authorization: Bearer` from `useAuthStore` when a token is present, and clears the session on HTTP 401.
-- **Feature API** – Each feature can define its own API functions (e.g. `features/auth/api/login.ts`) that call the core client. This keeps endpoints and request/response types close to the feature and leaves the core client generic. Auth endpoints live under `features/auth/api/`. Raw materials endpoints live under `features/raw-materials/api/` and are loaded through `RawMaterialsProvider` (no localStorage seed).
+- **Feature API** – Each feature can define its own API functions (e.g. `features/auth/api/login.ts`) that call the core client. This keeps endpoints and request/response types close to the feature and leaves the core client generic. Auth endpoints live under `features/auth/api/`. Raw materials endpoints live under `features/raw-materials/api/` and are loaded through `RawMaterialsProvider` (no localStorage seed). Products endpoints live under `features/products/api/` and are loaded through `ProductsProvider`.
 
 Do not put feature-specific URLs or types in `core`; keep them in the feature and use the shared client from `core/api`.

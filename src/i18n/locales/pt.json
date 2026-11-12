@@ -27,6 +27,7 @@
     "nav": {
       "dashboard": "Dashboard",
       "rawMaterials": "Matérias-primas",
+      "products": "Produtos",
       "groupings": "Agrupamentos",
       "expandSidebar": "Expandir menu",
       "collapseSidebar": "Recolher menu"
@@ -142,6 +143,89 @@
       "m": "Metro (m)",
       "m2": "Metro Quadrado (m²)",
       "lt": "Litro (lt)"
+    }
+  },
+  "products": {
+    "errors": {
+      "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "list": {
+      "title": "Produtos",
+      "subtitle": "Catálogo de produtos acabados para a produção.",
+      "add": "Cadastrar produto",
+      "addAria": "Cadastrar novo produto",
+      "loading": "Carregando produtos",
+      "statTotal": "Total de produtos",
+      "statActive": "Status ativo",
+      "statAvgYield": "Rendimento médio",
+      "statAvgExpansion": "Expansão média"
+    },
+    "filters": {
+      "nameLabel": "Nome do produto",
+      "namePlaceholder": "ex.: POTE 1,5L COCO BRANCO",
+      "submit": "Filtrar"
+    },
+    "table": {
+      "colStatus": "Status",
+      "colName": "Produto",
+      "colFinalSize": "Tamanho final",
+      "colUnit": "Unidade",
+      "colYield": "Rendimento",
+      "colExpansionFactor": "Fator de expansão",
+      "colActions": "Ações",
+      "actionsMenuAria": "Ações do produto",
+      "editAction": "Editar",
+      "activateAction": "Ativar",
+      "deactivateAction": "Inativar",
+      "deleteAction": "Excluir",
+      "pagerSummary": "Exibindo {{shown}} de {{total}} produtos",
+      "pagerPrev": "Página anterior",
+      "pagerNext": "Próxima página"
+    },
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "statusToggle": {
+      "activateTitle": "Ativar produto",
+      "deactivateTitle": "Inativar produto",
+      "activateMessage": "Tem certeza que deseja ativar este produto?",
+      "deactivateMessage": "Tem certeza que deseja inativar este produto?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
+    },
+    "delete": {
+      "title": "Excluir produto",
+      "message": "Tem certeza que deseja excluir este produto?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
+    },
+    "form": {
+      "title": "Cadastro de Produto",
+      "subtitle": "Catálogo de produtos acabados para a produção.",
+      "editTitle": "Editar Produto",
+      "editSubtitle": "Atualize os dados do produto acabado para produção.",
+      "nameLabel": "Nome do produto",
+      "namePlaceholder": "Ex: POTE 1,5L COCO BRANCO",
+      "finalSizeLabel": "Tamanho final",
+      "finalSizePlaceholder": "1,5",
+      "finalSizeUnitLabel": "Unidade do tamanho final",
+      "yieldLabel": "Rendimento",
+      "yieldPlaceholder": "0,75",
+      "expansionFactorLabel": "Fator de expansão",
+      "validationTitle": "Regras de Validação",
+      "validationText": "O rendimento deve ser maior que zero. O fator de expansão é calculado como 1 ÷ rendimento e não pode ser editado.",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "loading": "Carregando produto"
+    },
+    "units": {
+      "l": "Litro (L)",
+      "kg": "Quilograma (KG)",
+      "un": "Unidade (UNID)",
+      "m": "Metro (M)",
+      "m2": "Metro quadrado (M2)"
     }
   }
 }
