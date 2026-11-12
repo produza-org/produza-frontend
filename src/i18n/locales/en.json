@@ -28,6 +28,7 @@
       "dashboard": "Dashboard",
       "rawMaterials": "Raw materials",
       "products": "Products",
+      "productionOrders": "Production orders",
       "groupings": "Groupings",
       "expandSidebar": "Expand sidebar",
       "collapseSidebar": "Collapse sidebar"
@@ -268,6 +269,90 @@
         "duplicateMaterial": "Each raw material can appear only once.",
         "negativeConsumption": "Unit consumption cannot be negative."
       }
+    }
+  },
+  "productionOrders": {
+    "errors": {
+      "unexpected": "Something went wrong. Please try again."
+    },
+    "list": {
+      "title": "Production orders",
+      "subtitle": "Lot projection from product recipes.",
+      "add": "New production order",
+      "addAria": "Create new production order",
+      "loading": "Loading production orders",
+      "statTotal": "Total orders",
+      "statAvgQ": "Average Q",
+      "statTotalMistura": "Total mistura (kg)"
+    },
+    "filters": {
+      "numberLabel": "Order or product",
+      "numberPlaceholder": "e.g. 108 or COCO BRANCO",
+      "submit": "Filter"
+    },
+    "table": {
+      "colNumber": "Number",
+      "colProduct": "Product",
+      "colQ": "Q",
+      "colTotalMistura": "Total mistura (kg)",
+      "colEmitidaEm": "Issued at",
+      "colStartDate": "Start",
+      "colActions": "Actions",
+      "actionsMenuAria": "Production order actions",
+      "viewAction": "Open",
+      "pagerSummary": "Showing {{shown}} of {{total}} orders",
+      "pagerPrev": "Previous page",
+      "pagerNext": "Next page"
+    },
+    "form": {
+      "title": "New production order",
+      "subtitle": "Snapshot the active recipe and project batch needs.",
+      "numberLabel": "Order number",
+      "numberPlaceholder": "108",
+      "productLabel": "Product",
+      "productPlaceholder": "Select a product with a recipe",
+      "qLabel": "Quantity to produce (Q)",
+      "qPlaceholder": "27",
+      "startDateLabel": "Start date",
+      "plannedEndDateLabel": "Planned end date",
+      "datePlaceholder": "YYYY-MM-DD",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Optional notes",
+      "loadingProducts": "Loading products with recipes",
+      "noProductsWithRecipe": "No active products with a recipe were found. Create a recipe first.",
+      "validationTitle": "Validation rules",
+      "validationText": "Q must be greater than zero. The product must already have a recipe. When both dates are set, start must be on or before the planned end.",
+      "cancel": "Cancel",
+      "save": "Create order",
+      "saving": "Creating…"
+    },
+    "detail": {
+      "title": "Production order {{number}}",
+      "subtitle": "Snapshot needs by category with QTD. LOTE.",
+      "loading": "Loading production order",
+      "number": "Number",
+      "product": "Product",
+      "emitidaEm": "Issued at",
+      "yieldSnapshot": "Yield snapshot",
+      "totalMistura": "Total mistura (kg)",
+      "startDate": "Start date",
+      "plannedEndDate": "Planned end date",
+      "notes": "Notes",
+      "qLabel": "Quantity to produce (Q)",
+      "saveQ": "Update Q",
+      "savingQ": "Updating…",
+      "recalculate": "Recalculate from recipe",
+      "emptyCategory": "No lines in this category.",
+      "colCode": "Code",
+      "colName": "Material",
+      "colConsumption": "Unit consumption",
+      "colUnit": "Unit",
+      "colQtdLote": "QTD. LOTE"
+    },
+    "categories": {
+      "COMPONENTE": "Component",
+      "MATERIA_PRIMA": "Raw material",
+      "EMBALAGEM": "Packaging"
     }
   }
 }
