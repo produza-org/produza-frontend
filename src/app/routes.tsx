@@ -7,6 +7,7 @@ import {
   ProductsListPage,
   ProductCreatePage,
   ProductEditPage,
+  ProductRecipePage,
   ProductsProvider,
 } from '@/features/products';
 import {
@@ -46,6 +47,7 @@ export function AppRoutes() {
             <Route index element={<ProductsListPage />} />
             <Route path="new" element={<ProductCreatePage />} />
             <Route path=":id/edit" element={<ProductEditPage />} />
+            <Route path=":id/recipe" element={<ProductRecipePage />} />
           </Route>
           <Route path="/groupings" element={<HomePage />} />
         </Route>

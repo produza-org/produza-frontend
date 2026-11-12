@@ -44,8 +44,8 @@ Each feature under `src/features/<name>/` typically includes:
 
 ```
 features/<name>/
-├── pages/            Route-level screens (list, create, edit, …)
-├── components/       Feature UI (e.g. list/, form/)
+├── pages/            Route-level screens (list, create, edit, recipe, …)
+├── components/       Feature UI (e.g. list/, form/, recipe/)
 ├── hooks/            Feature-local hooks
 ├── context/          Feature provider + context (when needed)
 ├── utils/            Pure helpers scoped to the feature
@@ -53,5 +53,7 @@ features/<name>/
 ├── constants.ts      Feature constants
 └── index.ts          Public API for app routes (pages, provider, shared types)
 ```
+
+Products include a nested recipe editor at `/products/:id/recipe` under `features/products/pages/recipe/` and `components/recipe/`.
 
 Use barrel `index.ts` in a folder when it helps keep imports short; export only what is part of the folder’s public API.

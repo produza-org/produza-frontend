@@ -4,3 +4,8 @@ export { getProduct } from './get';
 export { listAllProducts, listProducts } from './list';
 export type { ListProductsParams } from './list';
 export { updateProductRequest } from './update';
+export {
+  deleteProductRecipe,
+  getProductRecipe,
+  upsertProductRecipe,
+} from './recipe';

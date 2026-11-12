@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import EditOutlined from '@mui/icons-material/EditOutlined';
+import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
 import ToggleOffOutlined from '@mui/icons-material/ToggleOffOutlined';
 import ToggleOnOutlined from '@mui/icons-material/ToggleOnOutlined';
 import TableBody from '@mui/material/TableBody';
@@ -82,6 +83,12 @@ export function ProductsListTable({
                   label: t('products.table.editAction'),
                   icon: <EditOutlined sx={{ fontSize: 18 }} />,
                   onClick: () => navigate(`/products/${row.id}/edit`),
+                },
+                {
+                  id: 'recipe',
+                  label: t('products.recipe.editAction'),
+                  icon: <MenuBookOutlined sx={{ fontSize: 18 }} />,
+                  onClick: () => navigate(`/products/${row.id}/recipe`),
                 },
                 {
                   id: 'toggle-status',
