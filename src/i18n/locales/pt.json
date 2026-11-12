@@ -226,6 +226,48 @@
       "un": "Unidade (UNID)",
       "m": "Metro (M)",
       "m2": "Metro quadrado (M2)"
+    },
+    "recipe": {
+      "title": "Ficha técnica — {{name}}",
+      "subtitle": "Ficha técnica (BOM) com componentes, matérias-primas e embalagens.",
+      "emptyHint": "Ainda não há ficha técnica. Adicione linhas em cada categoria e salve quando o consumo dos componentes somar 1.",
+      "editAction": "Editar ficha técnica",
+      "editLink": "Editar ficha técnica",
+      "addLine": "Adicionar linha",
+      "removeLine": "Remover linha",
+      "materialLabel": "Matéria-prima",
+      "materialPlaceholder": "Selecione uma matéria-prima",
+      "materialUnavailable": "Matéria-prima indisponível",
+      "consumptionLabel": "Consumo unitário",
+      "consumptionPlaceholder": "0,000000",
+      "unitLabel": "Unidade",
+      "componentSum": "Soma dos componentes",
+      "componentSumValid": "Válida",
+      "componentSumInvalid": "Deve ser igual a 1 (±1e-6)",
+      "cancel": "Cancelar",
+      "save": "Salvar ficha técnica",
+      "saving": "Salvando…",
+      "loading": "Carregando ficha técnica",
+      "discardTitle": "Descartar alterações?",
+      "discardMessage": "Há alterações não salvas na ficha técnica. Sair sem salvar?",
+      "discardCancel": "Continuar editando",
+      "discardConfirm": "Descartar",
+      "productMeta": {
+        "yield": "Rendimento",
+        "expansion": "Expansão",
+        "finalSize": "Tamanho final"
+      },
+      "categories": {
+        "COMPONENTE": "COMPONENTE",
+        "MATERIA_PRIMA": "MATÉRIA PRIMA",
+        "EMBALAGEM": "EMBALAGEM"
+      },
+      "errors": {
+        "unexpected": "Algo deu errado. Tente novamente.",
+        "packagingUnit": "Linhas de embalagem devem usar UNID.",
+        "duplicateMaterial": "Cada matéria-prima só pode aparecer uma vez.",
+        "negativeConsumption": "O consumo unitário não pode ser negativo."
+      }
     }
   }
 }

@@ -7,3 +7,13 @@ export const PRODUCT_FINAL_SIZE_UNIT_OPTIONS = [
   { value: 'M', labelKey: 'products.units.m' },
   { value: 'M2', labelKey: 'products.units.m2' },
 ] as const;
+
+export const RECIPE_LINE_CATEGORIES = [
+  'COMPONENTE',
+  'MATERIA_PRIMA',
+  'EMBALAGEM',
+] as const;
+
+export const RECIPE_COMPONENT_SUM_TOLERANCE = 1e-6;
+
+export const RECIPE_PACKAGING_UNIT = 'UNID';

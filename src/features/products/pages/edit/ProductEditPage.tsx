@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { getProduct } from '@/features/products/api';
@@ -142,6 +144,20 @@ export function ProductEditPage() {
       <PageHeader>
         <PageTitle>{t('products.form.editTitle')}</PageTitle>
         <PageSubtitle>{t('products.form.editSubtitle')}</PageSubtitle>
+        <Box sx={{ mt: 2 }}>
+          <Button
+            type="button"
+            startIcon={<MenuBookOutlined />}
+            onClick={() => navigate(`/products/${id}/recipe`)}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 700,
+              color: 'produza.primary',
+            }}
+          >
+            {t('products.recipe.editLink')}
+          </Button>
+        </Box>
       </PageHeader>
 
       <ProductForm

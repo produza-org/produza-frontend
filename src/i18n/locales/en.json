@@ -226,6 +226,48 @@
       "un": "Unit (UNID)",
       "m": "Meter (M)",
       "m2": "Square meter (M2)"
+    },
+    "recipe": {
+      "title": "Recipe — {{name}}",
+      "subtitle": "Technical sheet (BOM) with components, raw materials, and packaging.",
+      "emptyHint": "No recipe yet. Add lines in each category and save when component consumptions sum to 1.",
+      "editAction": "Edit recipe",
+      "editLink": "Edit recipe",
+      "addLine": "Add line",
+      "removeLine": "Remove line",
+      "materialLabel": "Raw material",
+      "materialPlaceholder": "Select a raw material",
+      "materialUnavailable": "Unavailable material",
+      "consumptionLabel": "Unit consumption",
+      "consumptionPlaceholder": "0.000000",
+      "unitLabel": "Unit",
+      "componentSum": "Component sum",
+      "componentSumValid": "Valid",
+      "componentSumInvalid": "Must equal 1 (±1e-6)",
+      "cancel": "Cancel",
+      "save": "Save recipe",
+      "saving": "Saving…",
+      "loading": "Loading recipe",
+      "discardTitle": "Discard changes?",
+      "discardMessage": "You have unsaved recipe changes. Leave without saving?",
+      "discardCancel": "Keep editing",
+      "discardConfirm": "Discard",
+      "productMeta": {
+        "yield": "Yield",
+        "expansion": "Expansion",
+        "finalSize": "Final size"
+      },
+      "categories": {
+        "COMPONENTE": "Component",
+        "MATERIA_PRIMA": "Raw material",
+        "EMBALAGEM": "Packaging"
+      },
+      "errors": {
+        "unexpected": "Something went wrong. Please try again.",
+        "packagingUnit": "Packaging lines must use UNID.",
+        "duplicateMaterial": "Each raw material can appear only once.",
+        "negativeConsumption": "Unit consumption cannot be negative."
+      }
     }
   }
 }
