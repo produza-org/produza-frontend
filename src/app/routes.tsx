@@ -4,6 +4,12 @@ import { HomePage } from '@/app/HomePage';
 import { RequireAuth } from '@/app/RequireAuth';
 import { LoginPage } from '@/features/auth';
 import {
+  ProductsListPage,
+  ProductCreatePage,
+  ProductEditPage,
+  ProductsProvider,
+} from '@/features/products';
+import {
   RawMaterialsListPage,
   RawMaterialCreatePage,
   RawMaterialEditPage,
@@ -28,6 +34,18 @@ export function AppRoutes() {
             <Route index element={<RawMaterialsListPage />} />
             <Route path="new" element={<RawMaterialCreatePage />} />
             <Route path=":id/edit" element={<RawMaterialEditPage />} />
+          </Route>
+          <Route
+            path="/products"
+            element={
+              <ProductsProvider>
+                <Outlet />
+              </ProductsProvider>
+            }
+          >
+            <Route index element={<ProductsListPage />} />
+            <Route path="new" element={<ProductCreatePage />} />
+            <Route path=":id/edit" element={<ProductEditPage />} />
           </Route>
           <Route path="/groupings" element={<HomePage />} />
         </Route>

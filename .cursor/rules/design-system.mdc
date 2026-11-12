@@ -1,0 +1,33 @@
+---
+description: UI/design-system consistency — mirror raw-materials shell, theme, and shared components
+alwaysApply: true
+---
+
+# Design system (UI consistency)
+
+Agents and UI work MUST keep visual and interaction parity with the existing catalog UX. Do not invent a one-off visual language.
+
+## Shell and theme
+
+- Reuse the app shell: `AppSidebar`, header, and page containers under `src/shared/components/layout/` and `src/shared/components/page/` (e.g. `PageTitle`, `PageSubtitle`).
+- Colors via MUI theme `palette.produza` only (`useTheme().palette.produza` / `theme.palette.produza.*`). Tokens live in `src/theme/produzaTokens.ts` and are exposed by `createAppTheme` — never hardcode feature hex or light/dark hex forks in features.
+
+## Mirror raw-materials patterns
+
+Use **`src/features/raw-materials/`** as the reference for catalog CRUD screens:
+
+| Concern | Mirror from |
+|--------|-------------|
+| List page chrome, hero row, primary CTA, stats grid | `pages/list/RawMaterialsListPage.tsx` + `RawMaterialsListPage.styled.tsx` |
+| Filters density and field styling | `components/list/RawMaterialsListFilters*.tsx` |
+| Table density, status chips, actions menu, pager | `components/list/RawMaterialsListTable*.tsx`, `RawMaterialsTableFooter.tsx`, `RawMaterialsStatCard.tsx` |
+| Create/edit form card, accent bar, rows, validation alert, cancel/save | `components/form/RawMaterialForm*.tsx`, `pages/RawMaterialFormPage.styled.tsx` |
+| Status toggles + soft-delete confirms | list page + shared `ConfirmModal` |
+| Feature layout (api, types, context, pages, form/list, hooks, utils) | entire `features/raw-materials/` tree |
+
+Prefer shared building blocks already used there: `FormTextField`, `FormSelectField`, `FormCurrencyField`, `ActionsMenu`, `ConfirmModal`, `PageTitle` / `PageSubtitle`.
+
+## i18n
+
+- All user-facing copy in both `src/i18n/locales/en.json` and `pt.json`.
+- No hardcoded UI sentences in components.

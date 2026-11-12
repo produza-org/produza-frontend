@@ -14,6 +14,7 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import SpaceDashboardOutlined from '@mui/icons-material/SpaceDashboardOutlined';
 import Inventory2Outlined from '@mui/icons-material/Inventory2Outlined';
+import CategoryOutlined from '@mui/icons-material/CategoryOutlined';
 import AccountTreeOutlined from '@mui/icons-material/AccountTreeOutlined';
 import {
   DRAWER_WIDTH_COLLAPSED,
@@ -28,6 +29,11 @@ const navConfig = [
     to: '/raw-materials',
     i18nKey: 'layout.nav.rawMaterials',
     Icon: Inventory2Outlined,
+  },
+  {
+    to: '/products',
+    i18nKey: 'layout.nav.products',
+    Icon: CategoryOutlined,
   },
   {
     to: '/groupings',

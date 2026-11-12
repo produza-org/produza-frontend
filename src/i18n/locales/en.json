@@ -27,6 +27,7 @@
     "nav": {
       "dashboard": "Dashboard",
       "rawMaterials": "Raw materials",
+      "products": "Products",
       "groupings": "Groupings",
       "expandSidebar": "Expand sidebar",
       "collapseSidebar": "Collapse sidebar"
@@ -142,6 +143,89 @@
       "m": "Meter (m)",
       "m2": "Square meter (m²)",
       "lt": "Liter (lt)"
+    }
+  },
+  "products": {
+    "errors": {
+      "unexpected": "Something went wrong. Please try again."
+    },
+    "list": {
+      "title": "Products",
+      "subtitle": "Finished product catalog for production.",
+      "add": "Add product",
+      "addAria": "Create new product",
+      "loading": "Loading products",
+      "statTotal": "Total products",
+      "statActive": "Active status",
+      "statAvgYield": "Average yield",
+      "statAvgExpansion": "Average expansion"
+    },
+    "filters": {
+      "nameLabel": "Product name",
+      "namePlaceholder": "e.g. POTE 1,5L COCO BRANCO",
+      "submit": "Filter"
+    },
+    "table": {
+      "colStatus": "Status",
+      "colName": "Product",
+      "colFinalSize": "Final size",
+      "colUnit": "Unit",
+      "colYield": "Yield",
+      "colExpansionFactor": "Expansion factor",
+      "colActions": "Actions",
+      "actionsMenuAria": "Product actions",
+      "editAction": "Edit",
+      "activateAction": "Activate",
+      "deactivateAction": "Deactivate",
+      "deleteAction": "Delete",
+      "pagerSummary": "Showing {{shown}} of {{total}} products",
+      "pagerPrev": "Previous page",
+      "pagerNext": "Next page"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "statusToggle": {
+      "activateTitle": "Activate product",
+      "deactivateTitle": "Deactivate product",
+      "activateMessage": "Are you sure you want to activate this product?",
+      "deactivateMessage": "Are you sure you want to deactivate this product?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "delete": {
+      "title": "Delete product",
+      "message": "Are you sure you want to delete this product?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "form": {
+      "title": "Product Registration",
+      "subtitle": "Finished product catalog for production.",
+      "editTitle": "Edit Product",
+      "editSubtitle": "Update finished product details for production.",
+      "nameLabel": "Product name",
+      "namePlaceholder": "E.g. POTE 1,5L COCO BRANCO",
+      "finalSizeLabel": "Final size",
+      "finalSizePlaceholder": "1.5",
+      "finalSizeUnitLabel": "Final size unit",
+      "yieldLabel": "Yield",
+      "yieldPlaceholder": "0.75",
+      "expansionFactorLabel": "Expansion factor",
+      "validationTitle": "Validation Rules",
+      "validationText": "Yield must be greater than zero. Expansion factor is calculated as 1 ÷ yield and cannot be edited.",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "loading": "Loading product"
+    },
+    "units": {
+      "l": "Liter (L)",
+      "kg": "Kilogram (KG)",
+      "un": "Unit (UNID)",
+      "m": "Meter (M)",
+      "m2": "Square meter (M2)"
     }
   }
 }
