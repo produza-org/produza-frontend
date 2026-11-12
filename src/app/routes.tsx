@@ -11,6 +11,12 @@ import {
   ProductsProvider,
 } from '@/features/products';
 import {
+  ProductionOrdersListPage,
+  ProductionOrderCreatePage,
+  ProductionOrderDetailPage,
+  ProductionOrdersProvider,
+} from '@/features/production-orders';
+import {
   RawMaterialsListPage,
   RawMaterialCreatePage,
   RawMaterialEditPage,
@@ -48,6 +54,18 @@ export function AppRoutes() {
             <Route path="new" element={<ProductCreatePage />} />
             <Route path=":id/edit" element={<ProductEditPage />} />
             <Route path=":id/recipe" element={<ProductRecipePage />} />
+          </Route>
+          <Route
+            path="/production-orders"
+            element={
+              <ProductionOrdersProvider>
+                <Outlet />
+              </ProductionOrdersProvider>
+            }
+          >
+            <Route index element={<ProductionOrdersListPage />} />
+            <Route path="new" element={<ProductionOrderCreatePage />} />
+            <Route path=":id" element={<ProductionOrderDetailPage />} />
           </Route>
           <Route path="/groupings" element={<HomePage />} />
         </Route>

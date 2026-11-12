@@ -15,6 +15,7 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import SpaceDashboardOutlined from '@mui/icons-material/SpaceDashboardOutlined';
 import Inventory2Outlined from '@mui/icons-material/Inventory2Outlined';
 import CategoryOutlined from '@mui/icons-material/CategoryOutlined';
+import PrecisionManufacturingOutlined from '@mui/icons-material/PrecisionManufacturingOutlined';
 import AccountTreeOutlined from '@mui/icons-material/AccountTreeOutlined';
 import {
   DRAWER_WIDTH_COLLAPSED,
@@ -34,6 +35,11 @@ const navConfig = [
     to: '/products',
     i18nKey: 'layout.nav.products',
     Icon: CategoryOutlined,
+  },
+  {
+    to: '/production-orders',
+    i18nKey: 'layout.nav.productionOrders',
+    Icon: PrecisionManufacturingOutlined,
   },
   {
     to: '/groupings',

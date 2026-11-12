@@ -11,7 +11,7 @@ export type FormTextFieldProps = {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  type?: 'text' | 'number' | 'password' | 'email';
+  type?: 'text' | 'number' | 'password' | 'email' | 'date';
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
   autoComplete?: string;
   error?: boolean;

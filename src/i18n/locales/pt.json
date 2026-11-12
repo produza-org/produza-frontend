@@ -28,6 +28,7 @@
       "dashboard": "Dashboard",
       "rawMaterials": "Matérias-primas",
       "products": "Produtos",
+      "productionOrders": "Ordens de produção",
       "groupings": "Agrupamentos",
       "expandSidebar": "Expandir menu",
       "collapseSidebar": "Recolher menu"
@@ -268,6 +269,90 @@
         "duplicateMaterial": "Cada matéria-prima só pode aparecer uma vez.",
         "negativeConsumption": "O consumo unitário não pode ser negativo."
       }
+    }
+  },
+  "productionOrders": {
+    "errors": {
+      "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "list": {
+      "title": "Ordens de produção",
+      "subtitle": "Projeção de lote a partir das receitas de produto.",
+      "add": "Nova ordem de produção",
+      "addAria": "Criar nova ordem de produção",
+      "loading": "Carregando ordens de produção",
+      "statTotal": "Total de ordens",
+      "statAvgQ": "Q média",
+      "statTotalMistura": "Total mistura (kg)"
+    },
+    "filters": {
+      "numberLabel": "Ordem ou produto",
+      "numberPlaceholder": "ex.: 108 ou COCO BRANCO",
+      "submit": "Filtrar"
+    },
+    "table": {
+      "colNumber": "Número",
+      "colProduct": "Produto",
+      "colQ": "Q",
+      "colTotalMistura": "Total mistura (kg)",
+      "colEmitidaEm": "Emitida em",
+      "colStartDate": "Início",
+      "colActions": "Ações",
+      "actionsMenuAria": "Ações da ordem de produção",
+      "viewAction": "Abrir",
+      "pagerSummary": "Mostrando {{shown}} de {{total}} ordens",
+      "pagerPrev": "Página anterior",
+      "pagerNext": "Próxima página"
+    },
+    "form": {
+      "title": "Nova ordem de produção",
+      "subtitle": "Congela a receita ativa e projeta as necessidades do lote.",
+      "numberLabel": "Número da ordem",
+      "numberPlaceholder": "108",
+      "productLabel": "Produto",
+      "productPlaceholder": "Selecione um produto com receita",
+      "qLabel": "Quantidade a produzir (Q)",
+      "qPlaceholder": "27",
+      "startDateLabel": "Data de início",
+      "plannedEndDateLabel": "Data prevista de fim",
+      "datePlaceholder": "AAAA-MM-DD",
+      "notesLabel": "Observações",
+      "notesPlaceholder": "Observações opcionais",
+      "loadingProducts": "Carregando produtos com receita",
+      "noProductsWithRecipe": "Nenhum produto ativo com receita foi encontrado. Crie uma receita primeiro.",
+      "validationTitle": "Regras de validação",
+      "validationText": "Q deve ser maior que zero. O produto precisa ter receita. Quando as duas datas forem informadas, o início deve ser anterior ou igual ao fim previsto.",
+      "cancel": "Cancelar",
+      "save": "Criar ordem",
+      "saving": "Criando…"
+    },
+    "detail": {
+      "title": "Ordem de produção {{number}}",
+      "subtitle": "Necessidades do snapshot por categoria com QTD. LOTE.",
+      "loading": "Carregando ordem de produção",
+      "number": "Número",
+      "product": "Produto",
+      "emitidaEm": "Emitida em",
+      "yieldSnapshot": "Rendimento (snapshot)",
+      "totalMistura": "Total mistura (kg)",
+      "startDate": "Data de início",
+      "plannedEndDate": "Data prevista de fim",
+      "notes": "Observações",
+      "qLabel": "Quantidade a produzir (Q)",
+      "saveQ": "Atualizar Q",
+      "savingQ": "Atualizando…",
+      "recalculate": "Recalcular da receita",
+      "emptyCategory": "Nenhuma linha nesta categoria.",
+      "colCode": "Código",
+      "colName": "Material",
+      "colConsumption": "Consumo unitário",
+      "colUnit": "Unidade",
+      "colQtdLote": "QTD. LOTE"
+    },
+    "categories": {
+      "COMPONENTE": "COMPONENTE",
+      "MATERIA_PRIMA": "MATÉRIA PRIMA",
+      "EMBALAGEM": "EMBALAGEM"
     }
   }
 }
