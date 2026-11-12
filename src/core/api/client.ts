@@ -1,4 +1,5 @@
 import { config } from '@/core/config/env';
+import { useAuthStore } from '@/core/store/useAuthStore';
 import type { ApiErrorBody } from '@/core/types';
 
 const defaultHeaders: HeadersInit = {
@@ -48,12 +49,22 @@ export async function apiClient<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${config.apiBaseUrl}${path}`;
+  const accessToken = useAuthStore.getState().accessToken;
+  const headers: HeadersInit = {
+    ...defaultHeaders,
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    ...options.headers,
+  };
+
   const response = await fetch(url, {
     ...options,
-    headers: { ...defaultHeaders, ...options.headers },
+    headers,
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      useAuthStore.getState().clearSession();
+    }
     throw new ApiError(await readApiErrorBody(response));
   }
 

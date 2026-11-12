@@ -32,6 +32,21 @@
       "collapseSidebar": "Collapse sidebar"
     }
   },
+  "auth": {
+    "logout": "Log out",
+    "login": {
+      "subtitle": "Sign in to continue",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@company.com",
+      "emailRequired": "Email is required",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "passwordRequired": "Password is required",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "unexpectedError": "Something went wrong. Please try again."
+    }
+  },
   "rawMaterials": {
     "list": {
       "title": "Raw materials",
