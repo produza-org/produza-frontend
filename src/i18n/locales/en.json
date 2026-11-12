@@ -347,7 +347,30 @@
       "colName": "Material",
       "colConsumption": "Unit consumption",
       "colUnit": "Unit",
-      "colQtdLote": "QTD. LOTE"
+      "colQtdLote": "QTD. LOTE",
+      "steps": {
+        "title": "Floor steps",
+        "plannedLoad": "Planned load: {{minutes}} min",
+        "empty": "No floor steps yet. Add at least one step.",
+        "colName": "Step",
+        "namePlaceholder": "e.g. SEPARAÇÃO",
+        "colMinutes": "Planned minutes",
+        "minutesPlaceholder": "40",
+        "colAssignee": "Assignee",
+        "assigneePlaceholder": "Optional",
+        "add": "Add step",
+        "remove": "Remove step",
+        "save": "Save steps",
+        "saving": "Saving steps…"
+      },
+      "real": {
+        "title": "Actual production",
+        "label": "Actual produced (real)",
+        "placeholder": "0",
+        "save": "Update actual",
+        "saving": "Updating…",
+        "variation": "Variation (real − Q): {{value}}"
+      }
     },
     "categories": {
       "COMPONENTE": "Component",

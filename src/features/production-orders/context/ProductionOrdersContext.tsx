@@ -13,6 +13,7 @@ import {
   listAllProductionOrders,
   recalculateProductionOrderFromRecipe,
   updateProductionOrderRequest,
+  updateProductionOrderSteps,
 } from '@/features/production-orders/api';
 import {
   useProductionOrdersFiltersState,
@@ -22,6 +23,8 @@ import type {
   ProductionOrder,
   ProductionOrderCreateInput,
   ProductionOrderUpdateInput,
+  ProductionStep,
+  ProductionStepsUpdateInput,
 } from '@/features/production-orders/types/production-order';
 
 type ProductionOrdersContextValue = ProductionOrdersFiltersState & {
@@ -36,6 +39,10 @@ type ProductionOrdersContextValue = ProductionOrdersFiltersState & {
     id: string,
     input: ProductionOrderUpdateInput
   ) => Promise<ProductionOrder>;
+  updateProductionOrderSteps: (
+    id: string,
+    input: ProductionStepsUpdateInput
+  ) => Promise<ProductionStep[]>;
   recalculateFromRecipe: (id: string) => Promise<ProductionOrder>;
   upsertLocalOrder: (order: ProductionOrder) => void;
   page: number;
@@ -118,6 +125,29 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
     return updated;
   }, []);
 
+  const updateOrderSteps = useCallback(
+    async (id: string, input: ProductionStepsUpdateInput) => {
+      const steps = await updateProductionOrderSteps(id, input);
+      const plannedMinutesTotal = steps.reduce(
+        (sum, step) => sum + step.plannedMinutes,
+        0
+      );
+      setItems((prev) => {
+        const current = prev.find((item) => item.id === id);
+        if (!current) {
+          return prev;
+        }
+        return upsertItem(prev, {
+          ...current,
+          steps,
+          plannedMinutesTotal,
+        });
+      });
+      return steps;
+    },
+    []
+  );
+
   const value = useMemo(
     () => ({
       items,
@@ -126,6 +156,7 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
       refresh,
       createProductionOrder,
       updateProductionOrder,
+      updateProductionOrderSteps: updateOrderSteps,
       recalculateFromRecipe,
       upsertLocalOrder,
       numberFilter,
@@ -140,6 +171,7 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
       refresh,
       createProductionOrder,
       updateProductionOrder,
+      updateOrderSteps,
       recalculateFromRecipe,
       upsertLocalOrder,
       numberFilter,

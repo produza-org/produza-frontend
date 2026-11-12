@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProductionOrderRequest } from './create';
 import { getProductionOrder } from './get';
 import { recalculateProductionOrderFromRecipe } from './recalculate';
+import {
+  getProductionOrderSteps,
+  updateProductionOrderSteps,
+} from './steps';
 import { updateProductionOrderRequest } from './update';
 
 const apiClientMock = vi.fn();
@@ -76,5 +80,54 @@ describe('production orders mutation api', () => {
         method: 'POST',
       }
     );
+  });
+
+  it('fetches production order steps', async () => {
+    apiClientMock.mockResolvedValueOnce([]);
+
+    await getProductionOrderSteps('op-1');
+
+    expect(apiClientMock).toHaveBeenCalledWith(
+      '/production-orders/op-1/steps'
+    );
+  });
+
+  it('updates production order steps with PATCH', async () => {
+    const input = {
+      steps: [
+        {
+          id: 's-1',
+          name: 'SEPARAÇÃO',
+          plannedMinutes: 42,
+          assignee: 'Maria',
+          sortOrder: 0,
+        },
+      ],
+    };
+    apiClientMock.mockResolvedValueOnce(input.steps);
+
+    await updateProductionOrderSteps('op-1', input);
+
+    expect(apiClientMock).toHaveBeenCalledWith(
+      '/production-orders/op-1/steps',
+      {
+        method: 'PATCH',
+        body: JSON.stringify(input),
+      }
+    );
+  });
+
+  it('updates realProduzido with PATCH', async () => {
+    apiClientMock.mockResolvedValueOnce({
+      id: 'op-1',
+      realProduzido: 30,
+    });
+
+    await updateProductionOrderRequest('op-1', { realProduzido: 30 });
+
+    expect(apiClientMock).toHaveBeenCalledWith('/production-orders/op-1', {
+      method: 'PATCH',
+      body: JSON.stringify({ realProduzido: 30 }),
+    });
   });
 });

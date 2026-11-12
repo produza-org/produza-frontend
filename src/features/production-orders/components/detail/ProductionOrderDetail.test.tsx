@@ -16,8 +16,10 @@ const order: ProductionOrder = {
     yield: 0.75,
   },
   qtdAProduzir: 27,
+  realProduzido: 0,
   yieldSnapshot: 0.75,
   totalMisturaKg: 20.25,
+  plannedMinutesTotal: 320,
   emitidaEm: '2026-11-12T03:00:00.000Z',
   startDate: '2026-11-12',
   plannedEndDate: '2026-11-13',
@@ -46,21 +48,72 @@ const order: ProductionOrder = {
       sortOrder: 0,
     },
   ],
+  steps: [
+    {
+      id: 's-1',
+      name: 'SEPARAÇÃO',
+      plannedMinutes: 40,
+      assignee: null,
+      sortOrder: 0,
+    },
+    {
+      id: 's-2',
+      name: 'PREPARAÇÃO',
+      plannedMinutes: 35,
+      assignee: 'Maria',
+      sortOrder: 1,
+    },
+    {
+      id: 's-3',
+      name: 'MATURAÇÃO',
+      plannedMinutes: 120,
+      assignee: null,
+      sortOrder: 2,
+    },
+    {
+      id: 's-4',
+      name: 'SABORIZAÇÃO',
+      plannedMinutes: 50,
+      assignee: null,
+      sortOrder: 3,
+    },
+    {
+      id: 's-5',
+      name: 'ENVASE',
+      plannedMinutes: 60,
+      assignee: null,
+      sortOrder: 4,
+    },
+    {
+      id: 's-6',
+      name: 'ESTEIRA / EMBALAGEM',
+      plannedMinutes: 15,
+      assignee: null,
+      sortOrder: 5,
+    },
+  ],
+};
+
+const detailHandlers = {
+  onUpdateQ: vi.fn(),
+  onUpdateReal: vi.fn(),
+  onUpdateSteps: vi.fn(),
+  onRecalculate: vi.fn(),
 };
 
 describe('ProductionOrderDetail', () => {
   beforeEach(() => {
     i18n.changeLanguage('en');
+    detailHandlers.onUpdateQ = vi.fn();
+    detailHandlers.onUpdateReal = vi.fn();
+    detailHandlers.onUpdateSteps = vi.fn();
+    detailHandlers.onRecalculate = vi.fn();
   });
 
-  it('renders header, categories, and QTD. LOTE values', () => {
+  it('renders header, categories, steps, and QTD. LOTE values', () => {
     renderWithTheme(
       <I18nextProvider i18n={i18n}>
-        <ProductionOrderDetail
-          order={order}
-          onUpdateQ={vi.fn()}
-          onRecalculate={vi.fn()}
-        />
+        <ProductionOrderDetail order={order} {...detailHandlers} />
       </I18nextProvider>
     );
 
@@ -69,6 +122,11 @@ describe('ProductionOrderDetail', () => {
     expect(screen.getByText('MP-006')).toBeInTheDocument();
     expect(screen.getByText('8,505')).toBeInTheDocument();
     expect(screen.getByText('MP-EMB-POTE')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('SEPARAÇÃO')).toBeInTheDocument();
+    expect(screen.getByText('Planned load: 320 min')).toBeInTheDocument();
+    expect(
+      screen.getByText('Variation (real − Q): -27')
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Update Q' })).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Recalculate from recipe' })
@@ -76,14 +134,9 @@ describe('ProductionOrderDetail', () => {
   });
 
   it('patches Q when save is clicked with a new value', () => {
-    const onUpdateQ = vi.fn();
     renderWithTheme(
       <I18nextProvider i18n={i18n}>
-        <ProductionOrderDetail
-          order={order}
-          onUpdateQ={onUpdateQ}
-          onRecalculate={vi.fn()}
-        />
+        <ProductionOrderDetail order={order} {...detailHandlers} />
       </I18nextProvider>
     );
 
@@ -92,18 +145,13 @@ describe('ProductionOrderDetail', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'Update Q' }));
 
-    expect(onUpdateQ).toHaveBeenCalledWith(54);
+    expect(detailHandlers.onUpdateQ).toHaveBeenCalledWith(54);
   });
 
   it('calls recalculate handler', () => {
-    const onRecalculate = vi.fn();
     renderWithTheme(
       <I18nextProvider i18n={i18n}>
-        <ProductionOrderDetail
-          order={order}
-          onUpdateQ={vi.fn()}
-          onRecalculate={onRecalculate}
-        />
+        <ProductionOrderDetail order={order} {...detailHandlers} />
       </I18nextProvider>
     );
 
@@ -111,6 +159,48 @@ describe('ProductionOrderDetail', () => {
       screen.getByRole('button', { name: 'Recalculate from recipe' })
     );
 
-    expect(onRecalculate).toHaveBeenCalled();
+    expect(detailHandlers.onRecalculate).toHaveBeenCalled();
+  });
+
+  it('saves realProduzido and keeps need lines visible', () => {
+    renderWithTheme(
+      <I18nextProvider i18n={i18n}>
+        <ProductionOrderDetail order={order} {...detailHandlers} />
+      </I18nextProvider>
+    );
+
+    fireEvent.change(screen.getByLabelText('Actual produced (real)'), {
+      target: { value: '30' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Update actual' }));
+
+    expect(detailHandlers.onUpdateReal).toHaveBeenCalledWith(30);
+    expect(screen.getByText('MP-006')).toBeInTheDocument();
+    expect(screen.getByText('8,505')).toBeInTheDocument();
+  });
+
+  it('saves edited steps without clearing need lines', () => {
+    renderWithTheme(
+      <I18nextProvider i18n={i18n}>
+        <ProductionOrderDetail order={order} {...detailHandlers} />
+      </I18nextProvider>
+    );
+
+    fireEvent.change(screen.getByDisplayValue('40'), {
+      target: { value: '42' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save steps' }));
+
+    expect(detailHandlers.onUpdateSteps).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 's-1',
+          name: 'SEPARAÇÃO',
+          plannedMinutes: 42,
+          sortOrder: 0,
+        }),
+      ])
+    );
+    expect(screen.getByText('MP-EMB-POTE')).toBeInTheDocument();
   });
 });

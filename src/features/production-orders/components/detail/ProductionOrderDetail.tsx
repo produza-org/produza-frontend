@@ -4,7 +4,10 @@ import RefreshOutlined from '@mui/icons-material/RefreshOutlined';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
 import Alert from '@mui/material/Alert';
 import { FormTextField } from '@/shared/components/form';
-import type { ProductionOrder } from '@/features/production-orders/types/production-order';
+import type {
+  ProductionOrder,
+  ProductionStepInput,
+} from '@/features/production-orders/types/production-order';
 import {
   formatDateDisplay,
   formatDecimal,
@@ -12,7 +15,9 @@ import {
   sanitizeDecimalInput,
 } from '@/features/production-orders/utils/format';
 import { groupNeedLinesByCategory } from '@/features/production-orders/utils/need-lines';
+import { FloorStepsPanel } from '@/features/production-orders/components/detail/FloorStepsPanel';
 import { NeedCategoryBlock } from '@/features/production-orders/components/detail/NeedCategoryBlock';
+import { RealProduzidoPanel } from '@/features/production-orders/components/detail/RealProduzidoPanel';
 import {
   ActionButton,
   DetailBody,
@@ -31,6 +36,8 @@ type ProductionOrderDetailProps = {
   isMutating?: boolean;
   errorMessage?: string | null;
   onUpdateQ: (qtdAProduzir: number) => void | Promise<void>;
+  onUpdateReal: (realProduzido: number) => void | Promise<void>;
+  onUpdateSteps: (steps: ProductionStepInput[]) => void | Promise<void>;
   onRecalculate: () => void | Promise<void>;
 };
 
@@ -39,6 +46,8 @@ export function ProductionOrderDetail({
   isMutating = false,
   errorMessage = null,
   onUpdateQ,
+  onUpdateReal,
+  onUpdateSteps,
   onRecalculate,
 }: ProductionOrderDetailProps) {
   const { t } = useTranslation();
@@ -155,6 +164,20 @@ export function ProductionOrderDetail({
             lines={group.lines}
           />
         ))}
+
+        <FloorStepsPanel
+          steps={order.steps}
+          plannedMinutesTotal={order.plannedMinutesTotal}
+          isMutating={isMutating}
+          onSave={onUpdateSteps}
+        />
+
+        <RealProduzidoPanel
+          realProduzido={order.realProduzido}
+          qtdAProduzir={order.qtdAProduzir}
+          isMutating={isMutating}
+          onSave={onUpdateReal}
+        />
       </DetailBody>
     </DetailCard>
   );
