@@ -7,128 +7,129 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { loadPersistedData, savePersistedData, rawMaterialsSeed } from '@/core/mocks';
+import { ApiError } from '@/core/api';
 import {
-  RAW_MATERIALS_CRITICAL_STOCK_THRESHOLD,
-  RAW_MATERIALS_STORAGE_KEY,
-} from '@/features/raw-materials/constants';
+  createRawMaterialRequest,
+  deleteRawMaterialRequest,
+  listAllRawMaterials,
+  updateRawMaterialRequest,
+} from '@/features/raw-materials/api';
 import {
   useRawMaterialsFiltersState,
   type RawMaterialsFiltersState,
 } from '@/features/raw-materials/hooks/useRawMaterialsFilters';
-import type { RawMaterial, RawMaterialStatus } from '@/features/raw-materials/types/raw-material';
-
-type RawMaterialInput = {
-  name: string;
-  code: string;
-  unit: string;
-  unitCost: number;
-  stockQuantity: number;
-  minStock: number;
-};
+import type {
+  RawMaterial,
+  RawMaterialCreateInput,
+  RawMaterialStatus,
+} from '@/features/raw-materials/types/raw-material';
 
 type RawMaterialsContextValue = RawMaterialsFiltersState & {
   items: RawMaterial[];
-  setItems: React.Dispatch<React.SetStateAction<RawMaterial[]>>;
-  createRawMaterial: (input: RawMaterialInput) => void;
-  updateRawMaterial: (id: string, input: RawMaterialInput) => void;
-  deleteRawMaterial: (id: string) => void;
-  toggleRawMaterialStatus: (id: string) => void;
+  isLoading: boolean;
+  errorMessage: string | null;
+  refresh: () => Promise<void>;
+  createRawMaterial: (input: RawMaterialCreateInput) => Promise<void>;
+  updateRawMaterial: (id: string, input: RawMaterialCreateInput) => Promise<void>;
+  deleteRawMaterial: (id: string) => Promise<void>;
+  toggleRawMaterialStatus: (id: string) => Promise<void>;
   page: number;
   setPage: (page: number) => void;
 };
 
 const RawMaterialsContext = createContext<RawMaterialsContextValue | null>(null);
 
-function isRawMaterialStatus(value: unknown): value is RawMaterialStatus {
-  return value === 'active' || value === 'inactive';
+function toErrorMessage(error: unknown): string {
+  if (error instanceof ApiError) {
+    return error.message;
+  }
+  return 'UNEXPECTED';
 }
 
-function normalizeRawMaterial(item: RawMaterial): RawMaterial {
-  return {
-    ...item,
-    status: isRawMaterialStatus(item.status) ? item.status : 'active',
-    minStock:
-      typeof item.minStock === 'number' && Number.isFinite(item.minStock)
-        ? item.minStock
-        : RAW_MATERIALS_CRITICAL_STOCK_THRESHOLD,
-  };
-}
-
-function getInitialItems(): RawMaterial[] {
-  const loaded = loadPersistedData(RAW_MATERIALS_STORAGE_KEY, rawMaterialsSeed as RawMaterial[]);
-  return loaded.map(normalizeRawMaterial);
+function upsertItem(items: RawMaterial[], next: RawMaterial): RawMaterial[] {
+  const index = items.findIndex((item) => item.id === next.id);
+  if (index === -1) {
+    return [next, ...items];
+  }
+  return items.map((item, itemIndex) => (itemIndex === index ? next : item));
 }
 
 export function RawMaterialsProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<RawMaterial[]>(getInitialItems);
+  const [items, setItems] = useState<RawMaterial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const resetPage = useCallback(() => setPage(1), []);
   const { nameFilter, codeFilter, setNameFilter, setCodeFilter } =
     useRawMaterialsFiltersState(resetPage);
 
-  useEffect(() => {
-    savePersistedData(RAW_MATERIALS_STORAGE_KEY, items);
-  }, [items]);
+  const refresh = useCallback(async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      const data = await listAllRawMaterials();
+      setItems(data);
+    } catch (error) {
+      setErrorMessage(toErrorMessage(error));
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  const createRawMaterial = useCallback((input: RawMaterialInput) => {
-    const totalCost = input.stockQuantity * input.unitCost;
-    const newItem: RawMaterial = {
-      id: `rm-${Date.now()}`,
-      code: input.code,
-      name: input.name.toUpperCase(),
-      status: 'active',
-      stockQuantity: input.stockQuantity,
-      minStock: input.minStock,
-      unit: input.unit,
-      unitCost: input.unitCost,
-      totalCost,
-    };
-    setItems((prev) => [newItem, ...prev]);
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  const createRawMaterial = useCallback(async (input: RawMaterialCreateInput) => {
+    const created = await createRawMaterialRequest(input);
+    setItems((prev) => [created, ...prev]);
     setPage(1);
   }, []);
 
-  const updateRawMaterial = useCallback((id: string, input: RawMaterialInput) => {
-    const totalCost = input.stockQuantity * input.unitCost;
+  const updateRawMaterial = useCallback(
+    async (id: string, input: RawMaterialCreateInput) => {
+      const updated = await updateRawMaterialRequest(id, input);
+      setItems((prev) => upsertItem(prev, updated));
+    },
+    []
+  );
+
+  const deleteRawMaterial = useCallback(async (id: string) => {
+    const deleted = await deleteRawMaterialRequest(id);
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              code: input.code,
-              name: input.name.toUpperCase(),
-              stockQuantity: input.stockQuantity,
-              minStock: input.minStock,
-              unit: input.unit,
-              unitCost: input.unitCost,
-              totalCost,
-            }
-          : item
-      )
+      prev.map((item) => {
+        if (item.id !== id) {
+          return item;
+        }
+        if (deleted) {
+          return deleted;
+        }
+        return { ...item, status: 'inactive' satisfies RawMaterialStatus };
+      })
     );
   }, []);
 
-  const deleteRawMaterial = useCallback((id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  }, []);
-
-  const toggleRawMaterialStatus = useCallback((id: string) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === 'active' ? 'inactive' : 'active',
-            }
-          : item
-      )
-    );
+  const toggleRawMaterialStatus = useCallback(async (id: string) => {
+    let currentStatus: RawMaterialStatus | undefined;
+    setItems((prev) => {
+      currentStatus = prev.find((item) => item.id === id)?.status;
+      return prev;
+    });
+    if (!currentStatus) {
+      return;
+    }
+    const nextStatus: RawMaterialStatus =
+      currentStatus === 'active' ? 'inactive' : 'active';
+    const updated = await updateRawMaterialRequest(id, { status: nextStatus });
+    setItems((prev) => upsertItem(prev, updated));
   }, []);
 
   const value = useMemo(
     () => ({
       items,
-      setItems,
+      isLoading,
+      errorMessage,
+      refresh,
       createRawMaterial,
       updateRawMaterial,
       deleteRawMaterial,
@@ -142,6 +143,9 @@ export function RawMaterialsProvider({ children }: { children: ReactNode }) {
     }),
     [
       items,
+      isLoading,
+      errorMessage,
+      refresh,
       createRawMaterial,
       updateRawMaterial,
       deleteRawMaterial,

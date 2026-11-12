@@ -48,11 +48,15 @@
     }
   },
   "rawMaterials": {
+    "errors": {
+      "unexpected": "Algo deu errado. Tente novamente."
+    },
     "list": {
       "title": "Matérias-primas",
       "subtitle": "Gestão de insumos industriais para a produção.",
       "add": "Cadastrar matéria-prima",
       "addAria": "Cadastrar nova matéria-prima",
+      "loading": "Carregando matérias-primas",
       "statTotal": "Total de insumos",
       "statCost": "Custo total",
       "statActive": "Status ativo",
@@ -128,7 +132,9 @@
       "validationTitle": "Regras de Validação",
       "validationText": "Certifique-se de que o código seja exclusivo e a unidade de medida esteja de acordo com o padrão ISO industrial da unidade fabril.",
       "cancel": "Cancelar",
-      "save": "Salvar"
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "loading": "Carregando matéria-prima"
     },
     "units": {
       "kg": "Quilograma (kg)",

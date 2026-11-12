@@ -27,7 +27,7 @@ src/
 | **core/config/** | Env and app config. Add new `VITE_*` usage and typed config here. |
 | **core/types/** | Types used in more than one feature or by core itself. |
 | **core/store/** | Zustand (or other) global stores used across features. |
-| **core/mocks/** | Seed JSON and persistence helpers used by features before a real API. |
+| **core/mocks/** | Legacy seed JSON / persistence helpers. Raw materials no longer use localStorage; prefer feature API modules. |
 | **shared/components/** | Buttons, inputs, layout primitives, dialogs, and menus used in multiple features. Organized as `layout/`, `form/`, `dialog/`, `actions/`, `page/`. |
 | **shared/hooks/** | Hooks reused across features (e.g. debounce, media query). |
 | **shared/utils/** | Pure helpers (formatting, validation, etc.). |

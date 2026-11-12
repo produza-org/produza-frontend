@@ -48,11 +48,15 @@
     }
   },
   "rawMaterials": {
+    "errors": {
+      "unexpected": "Something went wrong. Please try again."
+    },
     "list": {
       "title": "Raw materials",
       "subtitle": "Industrial input management for production.",
       "add": "Add raw material",
       "addAria": "Create new raw material",
+      "loading": "Loading raw materials",
       "statTotal": "Total inputs",
       "statCost": "Total cost",
       "statActive": "Active status",
@@ -128,7 +132,9 @@
       "validationTitle": "Validation Rules",
       "validationText": "Ensure the code is unique and the unit of measure follows the factory ISO industrial standard.",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "saving": "Saving…",
+      "loading": "Loading raw material"
     },
     "units": {
       "kg": "Kilogram (kg)",
