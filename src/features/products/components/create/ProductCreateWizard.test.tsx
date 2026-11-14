@@ -50,7 +50,13 @@ async function goToRecipeStep() {
   fireEvent.change(screen.getByLabelText('Final size'), { target: { value: '1.5' } });
   fireEvent.change(screen.getByLabelText('Yield'), { target: { value: '0.75' } });
   fireEvent.click(screen.getByRole('button', { name: 'Next' }));
-  await screen.findByText(/Add components until/);
+  await screen.findByText(/Add raw materials until/);
+}
+
+async function selectMaterial(index: number, optionLabel: string) {
+  const materialInputs = screen.getAllByRole('combobox', { name: 'Raw material' });
+  fireEvent.change(materialInputs[index], { target: { value: optionLabel } });
+  fireEvent.click(await screen.findByRole('option', { name: optionLabel }));
 }
 
 describe('ProductCreateWizard', () => {
@@ -81,8 +87,8 @@ describe('ProductCreateWizard', () => {
     const saveButton = screen.getByRole('button', { name: 'Save' });
     expect(saveButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
-    fireEvent.change(screen.getByLabelText('Unit consumption'), {
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
     expect(saveButton).toBeDisabled();
@@ -93,18 +99,15 @@ describe('ProductCreateWizard', () => {
     renderWizard(onSave);
     await goToRecipeStep();
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
 
-    const materialSelects = screen.getAllByRole('combobox', { name: 'Raw material' });
-    fireEvent.mouseDown(materialSelects[0]);
-    fireEvent.click(await screen.findByRole('option', { name: 'MP-006 — AGUA' }));
-    fireEvent.mouseDown(materialSelects[1]);
-    fireEvent.click(await screen.findByRole('option', { name: 'MP-002 — ACUCAR' }));
+    await selectMaterial(0, 'MP-006 — AGUA');
+    await selectMaterial(1, 'MP-002 — ACUCAR');
 
-    const consumptions = screen.getAllByLabelText('Unit consumption');
-    fireEvent.change(consumptions[0], { target: { value: '0.4' } });
-    fireEvent.change(consumptions[1], { target: { value: '0.6' } });
+    const proportions = screen.getAllByLabelText('Proportion');
+    fireEvent.change(proportions[0], { target: { value: '0.4' } });
+    fireEvent.change(proportions[1], { target: { value: '0.6' } });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
     expect(saveButton).toBeEnabled();
@@ -122,14 +125,12 @@ describe('ProductCreateWizard', () => {
           lines: [
             {
               rawMaterialId: 'm-1',
-              category: 'COMPONENTE',
-              unitConsumption: 0.4,
+              proportion: 0.4,
               sortOrder: 0,
             },
             {
               rawMaterialId: 'm-2',
-              category: 'COMPONENTE',
-              unitConsumption: 0.6,
+              proportion: 0.6,
               sortOrder: 1,
             },
           ],

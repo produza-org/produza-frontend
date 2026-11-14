@@ -1,6 +1,6 @@
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { useTranslation } from 'react-i18next';
-import { FormSelectField, FormTextField } from '@/shared/components/form';
+import { FormAutocomplete, FormTextField } from '@/shared/components/form';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import type { RecipeDraftLine } from '@/features/products/utils/recipe/draft-lines';
 import { sanitizeDecimalInput } from '@/features/products/utils/format';
@@ -46,17 +46,11 @@ export function RecipeLineRow({
           },
           ...options,
         ]
-      : [
-          {
-            value: '',
-            label: t('products.recipe.materialPlaceholder'),
-          },
-          ...options,
-        ];
+      : options;
 
   return (
     <LineRowRoot>
-      <FormSelectField
+      <FormAutocomplete
         id={`recipe-material-${line.key}`}
         label={t('products.recipe.materialLabel')}
         value={line.rawMaterialId}
@@ -69,16 +63,18 @@ export function RecipeLineRow({
           });
         }}
         options={materialOptions}
+        placeholder={t('products.recipe.materialPlaceholder')}
+        noOptionsText={t('products.recipe.materialNoOptions')}
       />
       <FormTextField
-        id={`recipe-consumption-${line.key}`}
-        label={t('products.recipe.consumptionLabel')}
-        placeholder={t('products.recipe.consumptionPlaceholder')}
-        value={line.unitConsumptionDisplay}
+        id={`recipe-proportion-${line.key}`}
+        label={t('products.recipe.proportionLabel')}
+        placeholder={t('products.recipe.proportionPlaceholder')}
+        value={line.proportionDisplay}
         onChange={(value) =>
           onChange({
             ...line,
-            unitConsumptionDisplay: sanitizeDecimalInput(value),
+            proportionDisplay: sanitizeDecimalInput(value),
           })
         }
         inputMode="decimal"

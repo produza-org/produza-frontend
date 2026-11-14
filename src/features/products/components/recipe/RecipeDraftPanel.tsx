@@ -1,27 +1,25 @@
 import { useMemo } from 'react';
 import Alert from '@mui/material/Alert';
 import { useTranslation } from 'react-i18next';
-import { RECIPE_LINE_CATEGORIES } from '@/features/products/constants';
 import { RecipeCategoryBlock } from '@/features/products/components/recipe/RecipeCategoryBlock';
 import {
-  ComponentSumBanner,
-  ComponentSumLabel,
-  ComponentSumValue,
   EmptyHint,
   ProductMetaChip,
   ProductMetaRow,
+  ProportionSumBanner,
+  ProportionSumLabel,
+  ProportionSumValue,
 } from '@/features/products/components/recipe/RecipeEditor.styled';
 import type { RecipeProductMeta } from '@/features/products/utils/form/general-info';
 import { formatDecimal } from '@/features/products/utils/format';
 import {
   createEmptyDraftLine,
-  getDraftComponentSum,
+  getDraftProportionSum,
   hasDuplicateMaterials,
-  hasInvalidPackagingUnit,
-  hasNegativeConsumption,
+  hasNegativeProportion,
   type RecipeDraftLine,
 } from '@/features/products/utils/recipe/draft-lines';
-import { isComponentSumValid } from '@/features/products/utils/recipe/component-sum';
+import { isProportionSumValid } from '@/features/products/utils/recipe/proportion-sum';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 
 type RecipeDraftPanelProps = {
@@ -45,8 +43,8 @@ export function RecipeDraftPanel({
 }: RecipeDraftPanelProps) {
   const { t } = useTranslation();
 
-  const componentSum = getDraftComponentSum(lines);
-  const sumValid = isComponentSumValid(componentSum);
+  const proportionSum = getDraftProportionSum(lines);
+  const sumValid = isProportionSumValid(proportionSum);
 
   const usedMaterialIds = useMemo(
     () =>
@@ -61,13 +59,10 @@ export function RecipeDraftPanel({
   const validationHints = useMemo(() => {
     const hints: string[] = [];
     if (!sumValid) {
-      hints.push(t('products.recipe.componentSumInvalid'));
+      hints.push(t('products.recipe.proportionSumInvalid'));
     }
-    if (hasNegativeConsumption(lines)) {
-      hints.push(t('products.recipe.errors.negativeConsumption'));
-    }
-    if (hasInvalidPackagingUnit(lines)) {
-      hints.push(t('products.recipe.errors.packagingUnit'));
+    if (hasNegativeProportion(lines)) {
+      hints.push(t('products.recipe.errors.negativeProportion'));
     }
     if (hasDuplicateMaterials(lines)) {
       hints.push(t('products.recipe.errors.duplicateMaterial'));
@@ -88,8 +83,8 @@ export function RecipeDraftPanel({
     onChange(lines.filter((line) => line.key !== key));
   }
 
-  function addLine(category: (typeof RECIPE_LINE_CATEGORIES)[number]) {
-    onChange([...lines, createEmptyDraftLine(category)]);
+  function addLine() {
+    onChange([...lines, createEmptyDraftLine()]);
   }
 
   return (
@@ -121,28 +116,24 @@ export function RecipeDraftPanel({
         <EmptyHint>{t('products.recipe.emptyHint')}</EmptyHint>
       ) : null}
 
-      {RECIPE_LINE_CATEGORIES.map((category) => (
-        <RecipeCategoryBlock
-          key={category}
-          category={category}
-          lines={lines.filter((line) => line.category === category)}
-          materials={materials}
-          usedMaterialIds={usedMaterialIds}
-          onAddLine={() => addLine(category)}
-          onChangeLine={updateLine}
-          onRemoveLine={removeLine}
-        />
-      ))}
+      <RecipeCategoryBlock
+        lines={lines}
+        materials={materials}
+        usedMaterialIds={usedMaterialIds}
+        onAddLine={addLine}
+        onChangeLine={updateLine}
+        onRemoveLine={removeLine}
+      />
 
-      <ComponentSumBanner $valid={sumValid} role="status">
-        <ComponentSumLabel>{t('products.recipe.componentSum')}</ComponentSumLabel>
-        <ComponentSumValue>
-          Σ = {formatDecimal(componentSum, 6)}
+      <ProportionSumBanner $valid={sumValid} role="status">
+        <ProportionSumLabel>{t('products.recipe.proportionSum')}</ProportionSumLabel>
+        <ProportionSumValue>
+          Σ = {formatDecimal(proportionSum, 6)}
           {sumValid
-            ? ` · ${t('products.recipe.componentSumValid')}`
-            : ` · ${t('products.recipe.componentSumInvalid')}`}
-        </ComponentSumValue>
-      </ComponentSumBanner>
+            ? ` · ${t('products.recipe.proportionSumValid')}`
+            : ` · ${t('products.recipe.proportionSumInvalid')}`}
+        </ProportionSumValue>
+      </ProportionSumBanner>
 
       {validationHints.length > 0 ? (
         <Alert severity="warning" role="status">

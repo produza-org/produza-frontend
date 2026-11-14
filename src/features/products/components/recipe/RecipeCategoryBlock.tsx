@@ -1,7 +1,6 @@
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useTranslation } from 'react-i18next';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
-import type { RecipeLineCategory } from '@/features/products/types/recipe';
 import type { RecipeDraftLine } from '@/features/products/utils/recipe/draft-lines';
 import { RecipeLineRow } from '@/features/products/components/recipe/RecipeLineRow';
 import {
@@ -13,7 +12,6 @@ import {
 } from '@/features/products/components/recipe/RecipeEditor.styled';
 
 type RecipeCategoryBlockProps = {
-  category: RecipeLineCategory;
   lines: RecipeDraftLine[];
   materials: RawMaterial[];
   usedMaterialIds: Set<string>;
@@ -23,7 +21,6 @@ type RecipeCategoryBlockProps = {
 };
 
 export function RecipeCategoryBlock({
-  category,
   lines,
   materials,
   usedMaterialIds,
@@ -36,7 +33,7 @@ export function RecipeCategoryBlock({
   return (
     <CategoryBlockRoot>
       <CategoryHeader>
-        <CategoryTitle>{t(`products.recipe.categories.${category}`)}</CategoryTitle>
+        <CategoryTitle>{t('products.recipe.rawMaterialsTitle')}</CategoryTitle>
         <AddLineButton
           type="button"
           startIcon={<AddOutlined fontSize="small" />}

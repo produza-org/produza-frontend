@@ -53,6 +53,12 @@ const materials: RawMaterial[] = [
   },
 ];
 
+async function selectMaterial(index: number, optionLabel: string) {
+  const materialInputs = screen.getAllByRole('combobox', { name: 'Raw material' });
+  fireEvent.change(materialInputs[index], { target: { value: optionLabel } });
+  fireEvent.click(await screen.findByRole('option', { name: optionLabel }));
+}
+
 function renderEditor(onSubmit = vi.fn()) {
   return renderWithTheme(
     <I18nextProvider i18n={i18n}>
@@ -72,35 +78,40 @@ describe('RecipeEditor', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps save disabled when component sum is not 1', () => {
+  it('keeps save disabled when proportion sum is not 1', () => {
     renderEditor();
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
-    fireEvent.change(screen.getByLabelText('Unit consumption'), {
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
 
     expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
   });
 
+  it('shows a single raw-material block without component or packaging', () => {
+    renderEditor();
+
+    expect(screen.getByText('Raw material')).toBeInTheDocument();
+    expect(screen.queryByText('Component')).not.toBeInTheDocument();
+    expect(screen.queryByText('Packaging')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(1);
+  });
+
   it('strips empty rows before PUT payload', async () => {
     const onSubmit = vi.fn();
     renderEditor(onSubmit);
 
-    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
-    fireEvent.click(addButtons[0]);
-    fireEvent.click(addButtons[0]);
-    fireEvent.click(addButtons[2]);
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
 
-    const materialSelects = screen.getAllByRole('combobox', { name: 'Raw material' });
-    fireEvent.mouseDown(materialSelects[0]);
-    fireEvent.click(await screen.findByRole('option', { name: 'MP-006 — AGUA' }));
-    fireEvent.mouseDown(materialSelects[1]);
-    fireEvent.click(await screen.findByRole('option', { name: 'MP-002 — ACUCAR' }));
+    await selectMaterial(0, 'MP-006 — AGUA');
+    await selectMaterial(1, 'MP-002 — ACUCAR');
 
-    const consumptions = screen.getAllByLabelText('Unit consumption');
-    fireEvent.change(consumptions[0], { target: { value: '0.4' } });
-    fireEvent.change(consumptions[1], { target: { value: '0.6' } });
+    const proportions = screen.getAllByLabelText('Proportion');
+    fireEvent.change(proportions[0], { target: { value: '0.4' } });
+    fireEvent.change(proportions[1], { target: { value: '0.6' } });
 
     const saveButton = screen.getByRole('button', { name: 'Save recipe' });
     expect(saveButton).toBeEnabled();
@@ -111,14 +122,12 @@ describe('RecipeEditor', () => {
         lines: [
           {
             rawMaterialId: 'm-1',
-            category: 'COMPONENTE',
-            unitConsumption: 0.4,
+            proportion: 0.4,
             sortOrder: 0,
           },
           {
             rawMaterialId: 'm-2',
-            category: 'COMPONENTE',
-            unitConsumption: 0.6,
+            proportion: 0.6,
             sortOrder: 1,
           },
         ],
