@@ -7,6 +7,8 @@ alwaysApply: true
 
 Agents and UI work MUST keep visual and interaction parity with the existing catalog UX. Do not invent a one-off visual language.
 
+Remote mutation/fetch feedback (toasts + loadings): see `ux-feedback.mdc`.
+
 ## Shell and theme
 
 - Reuse the app shell: `AppSidebar`, header, and page containers under `src/shared/components/layout/` and `src/shared/components/page/` (e.g. `PageTitle`, `PageSubtitle`).

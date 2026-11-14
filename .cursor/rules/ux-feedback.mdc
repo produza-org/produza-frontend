@@ -1,0 +1,74 @@
+---
+description: Toast + loading feedback for remote mutations and data-fetching UI
+alwaysApply: true
+---
+
+# UX feedback (toasts and loadings)
+
+User experience is a platform pillar: every remote action must feel fluid and make clear what is happening. Do not ship silent success, silent failure, or empty/stale surfaces while the backend is still working.
+
+Related: `design-system.mdc` (visual parity), `produza-react-typescript.mdc` (MUI/i18n).
+
+## Toasts — mutation feedback
+
+Use **toasts** for feedback on database/API mutations of any system entity:
+
+| Action | Toast required |
+|--------|----------------|
+| Create | success + error |
+| Edit / update | success + error |
+| Delete / soft-delete | success + error |
+| Inactivate / deactivate / status toggle | success + error |
+
+### Where to wire
+
+- Call sites: feature pages and list action handlers (e.g. `RawMaterialCreatePage`, `RawMaterialEditPage`, list status/delete confirms in `RawMaterialsListPage` and equivalents in products / production-orders).
+- After a successful mutation: show a **success** toast (even when navigating away).
+- On mutation failure: show an **error** toast with the API/user-facing message; keep inline form `Alert` only when the user must fix fields on the same screen (validation / submit errors that belong next to the form).
+
+### Shared helper (do not invent one-offs)
+
+There is **no** toast helper in the tree yet. When the first mutation flow needs toast feedback:
+
+1. Add a shared snackbar under **`src/shared/`** (e.g. context + hook, or a small provider) built on MUI **`Snackbar`** + **`Alert`** (`@mui/material/Snackbar`, `@mui/material/Alert`).
+2. Mount the provider in **`src/app/providers.tsx`** (`AppProviders`) so any feature can enqueue feedback.
+3. Export a single public API (e.g. `useToast()` / `enqueueToast({ severity, message })`) from the shared barrel; **reuse it everywhere** — never add a second toast stack or feature-local snackbars.
+4. All toast copy via **i18n** (`en.json` + `pt.json`). Prefer feature keys like `rawMaterials.toasts.created` / `*.errors.unexpected`.
+
+Until that helper exists, **do not** leave mutations silent: introduce the shared helper as part of the same change that adds the first toast.
+
+### Do not use toasts for
+
+- Field validation (use form `ValidationAlert` / field errors as in `RawMaterialForm`).
+- Page-level **load** failures for lists/details (use inline MUI `Alert` as on list/edit pages today).
+- Pure navigation or local UI toggles with no remote write.
+
+## Loadings — pending remote work
+
+Show a loading state whenever information is still being processed by the backend/database. Never leave an empty table, blank card, or stale detail UI without indicating pending work.
+
+### Patterns already in the app (mirror these)
+
+| Surface | Pattern | Reference |
+|---------|---------|-----------|
+| List tables / stats | Context `isLoading` → centered `CircularProgress` (`size={32}`) with i18n `aria-label` | `RawMaterialsListPage`, `ProductsListPage`, `ProductionOrdersListPage` |
+| Edit / detail / recipe fetch | Local `isLoading` → same centered spinner before rendering form/detail | `RawMaterialEditPage`, `ProductEditPage`, `ProductRecipePage`, `ProductionOrderDetailPage` |
+| Form dropdowns / dependent fetches | Local loading flag → spinner or disabled submit until ready | `ProductionOrderForm` (`isLoadingProducts`) |
+| Mutations in progress | `isSubmitting` → disable cancel/submit; button label can switch to saving copy | `RawMaterialForm`, `ProductForm`, create/edit pages |
+| Auth gate | Centered `CircularProgress` while session resolves | `RequireAuth`, `LoginPage` |
+
+Import **`CircularProgress`** from `@mui/material/CircularProgress` (path import, not the MUI barrel). Prefer the existing centered `Box` + `py: 8` layout used on catalog pages.
+
+### Rules of thumb
+
+- Feature contexts that fetch lists expose **`isLoading`** (and `errorMessage`) — consumers must branch on `isLoading` before rendering table/stats content.
+- Detail drawers, info cards, and panels that depend on remote data must show a spinner (or skeleton that matches existing density) while the request is in flight — same rule as list/detail pages.
+- Do **not** flash empty lists or zeroed stats as if they were real data while `isLoading` is true.
+- Prefer **`CircularProgress`** for full-surface waits. Add MUI **`Skeleton`** only when a surface needs shape placeholders and no existing spinner pattern fits; keep it consistent with catalog density.
+- Button-level pending work uses **`isSubmitting` / disabled controls**, not a second full-page spinner on top of an already-loaded form — unless the whole page is waiting on the initial fetch.
+
+## Scope
+
+- Applies to frontend interactions with **remote** data (API/database). Local-only UI does not need toast/loading theater.
+- Do not rewrite the whole app in one PR; apply this rule on every new or touched CRUD/list/detail flow.
+- Keep visual parity with `design-system.mdc` (raw-materials reference) when placing spinners and alerts.
