@@ -29,7 +29,7 @@ type ProductsContextValue = ProductsFiltersState & {
   isLoading: boolean;
   errorMessage: string | null;
   refresh: () => Promise<void>;
-  createProduct: (input: ProductCreateInput) => Promise<void>;
+  createProduct: (input: ProductCreateInput) => Promise<Product>;
   updateProduct: (id: string, input: ProductCreateInput) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   toggleProductStatus: (id: string) => Promise<void>;
@@ -83,6 +83,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     const created = await createProductRequest(input);
     setItems((prev) => [created, ...prev]);
     setPage(1);
+    return created;
   }, []);
 
   const updateProduct = useCallback(

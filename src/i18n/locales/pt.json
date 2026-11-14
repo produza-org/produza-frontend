@@ -236,6 +236,22 @@
       "saving": "Salvando…",
       "loading": "Carregando produto"
     },
+    "createWizard": {
+      "steps": {
+        "general": "Informações gerais",
+        "recipe": "Receita"
+      },
+      "next": "Próximo",
+      "back": "Voltar",
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "recipeHint": "Adicione componentes até Σ = 1 e salve para criar o produto e a receita.",
+      "loadingMaterials": "Carregando matérias-primas",
+      "discardTitle": "Descartar alterações?",
+      "discardMessage": "Há alterações não salvas no cadastro do produto. Sair sem salvar?",
+      "discardCancel": "Continuar editando",
+      "discardConfirm": "Descartar"
+    },
     "units": {
       "l": "Litro (L)",
       "kg": "Quilograma (KG)",

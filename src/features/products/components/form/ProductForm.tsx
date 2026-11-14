@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import ArrowForward from '@mui/icons-material/ArrowForward';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
 import Alert from '@mui/material/Alert';
@@ -20,6 +21,11 @@ import {
   ValidationAlertTitle,
 } from '@/features/products/components/form/ProductForm.styled';
 import type { ProductFinalSizeUnit } from '@/features/products/types/product';
+import type {
+  ProductFormSubmitValues,
+  ProductFormValues,
+} from '@/features/products/types/product-form';
+import { isGeneralInfoValid } from '@/features/products/utils/form/general-info';
 import {
   computeExpansionFactor,
   formatDecimal,
@@ -27,19 +33,7 @@ import {
   sanitizeDecimalInput,
 } from '@/features/products/utils/format';
 
-export type ProductFormValues = {
-  name: string;
-  finalSizeDisplay: string;
-  finalSizeUnit: ProductFinalSizeUnit;
-  yieldDisplay: string;
-};
-
-export type ProductFormSubmitValues = {
-  name: string;
-  finalSize: number;
-  finalSizeUnit: ProductFinalSizeUnit;
-  yield: number;
-};
+export type { ProductFormSubmitValues, ProductFormValues };
 
 type ProductFormProps = {
   onSubmit: (values: ProductFormSubmitValues) => void | Promise<void>;
@@ -47,6 +41,8 @@ type ProductFormProps = {
   initialValues?: Partial<ProductFormValues>;
   isSubmitting?: boolean;
   errorMessage?: string | null;
+  mode?: 'default' | 'step';
+  onDirtyChange?: (isDirty: boolean) => void;
 };
 
 const defaultValues: ProductFormValues = {
@@ -62,6 +58,8 @@ export function ProductForm({
   initialValues,
   isSubmitting = false,
   errorMessage = null,
+  mode = 'default',
+  onDirtyChange,
 }: ProductFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -69,7 +67,26 @@ export function ProductForm({
     defaultValues: { ...defaultValues, ...initialValues },
   });
 
+  const name = useWatch({ control, name: 'name' });
+  const finalSizeDisplay = useWatch({ control, name: 'finalSizeDisplay' });
   const yieldDisplay = useWatch({ control, name: 'yieldDisplay' });
+
+  const isStepValid = isGeneralInfoValid({
+    name: name ?? '',
+    finalSizeDisplay: finalSizeDisplay ?? '',
+    yieldDisplay: yieldDisplay ?? '',
+  });
+
+  useEffect(() => {
+    if (!onDirtyChange) {
+      return;
+    }
+    onDirtyChange(
+      Boolean(name?.trim()) ||
+        Boolean(finalSizeDisplay?.trim()) ||
+        Boolean(yieldDisplay?.trim())
+    );
+  }, [finalSizeDisplay, name, onDirtyChange, yieldDisplay]);
 
   const expansionFactorDisplay = useMemo(() => {
     const yieldValue = parseDecimalInput(yieldDisplay ?? '');
@@ -115,6 +132,9 @@ export function ProductForm({
       yield: yieldValue,
     });
   });
+
+  const isStepMode = mode === 'step';
+  const primaryDisabled = isSubmitting || (isStepMode && !isStepValid);
 
   return (
     <FormCard>
@@ -210,10 +230,15 @@ export function ProductForm({
             type="submit"
             variant="contained"
             disableElevation
-            startIcon={<SaveOutlined />}
-            disabled={isSubmitting}
+            startIcon={isStepMode ? undefined : <SaveOutlined />}
+            endIcon={isStepMode ? <ArrowForward /> : undefined}
+            disabled={primaryDisabled}
           >
-            {isSubmitting ? t('products.form.saving') : t('products.form.save')}
+            {isStepMode
+              ? t('products.createWizard.next')
+              : isSubmitting
+                ? t('products.form.saving')
+                : t('products.form.save')}
           </SaveButton>
         </FormActions>
       </FormBody>
