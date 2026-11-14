@@ -109,7 +109,7 @@ export const RemoveLineButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const ComponentSumBanner = styled(Box, {
+export const ProportionSumBanner = styled(Box, {
   shouldForwardProp: (prop) => prop !== '$valid',
 })<{ $valid: boolean }>(({ theme, $valid }) => ({
   display: 'flex',
@@ -127,7 +127,7 @@ export const ComponentSumBanner = styled(Box, {
   color: $valid ? theme.palette.produza.success : theme.palette.produza.error,
 }));
 
-export const ComponentSumLabel = styled('span')(({ theme }) => ({
+export const ProportionSumLabel = styled('span')(({ theme }) => ({
   fontSize: 12,
   fontWeight: 800,
   letterSpacing: '0.06em',
@@ -135,7 +135,7 @@ export const ComponentSumLabel = styled('span')(({ theme }) => ({
   color: theme.palette.produza.onSurfaceVariant,
 }));
 
-export const ComponentSumValue = styled('span')({
+export const ProportionSumValue = styled('span')({
   fontSize: 18,
   fontWeight: 800,
   fontVariantNumeric: 'tabular-nums',

@@ -1,20 +1,14 @@
-import { RECIPE_PACKAGING_UNIT } from '@/features/products/constants';
-import type {
-  RecipeLine,
-  RecipeLineCategory,
-  RecipeLineInput,
-} from '@/features/products/types/recipe';
+import type { RecipeLine, RecipeLineInput } from '@/features/products/types/recipe';
 import { parseDecimalInput } from '@/features/products/utils/format';
 import {
-  computeComponentSum,
-  isComponentSumValid,
-} from '@/features/products/utils/recipe/component-sum';
+  computeProportionSum,
+  isProportionSumValid,
+} from '@/features/products/utils/recipe/proportion-sum';
 
 export type RecipeDraftLine = {
   key: string;
   rawMaterialId: string;
-  category: RecipeLineCategory;
-  unitConsumptionDisplay: string;
+  proportionDisplay: string;
   unit: string;
 };
 
@@ -25,12 +19,11 @@ export function createDraftLineKey(): string {
   return `draft-${draftKeyCounter}`;
 }
 
-export function createEmptyDraftLine(category: RecipeLineCategory): RecipeDraftLine {
+export function createEmptyDraftLine(): RecipeDraftLine {
   return {
     key: createDraftLineKey(),
     rawMaterialId: '',
-    category,
-    unitConsumptionDisplay: '',
+    proportionDisplay: '',
     unit: '',
   };
 }
@@ -41,8 +34,7 @@ export function recipeLinesToDrafts(lines: RecipeLine[]): RecipeDraftLine[] {
     .map((line) => ({
       key: line.id,
       rawMaterialId: line.rawMaterialId,
-      category: line.category,
-      unitConsumptionDisplay: String(line.unitConsumption),
+      proportionDisplay: String(line.proportion),
       unit: line.unit || line.rawMaterial?.unit || '',
     }));
 }
@@ -51,8 +43,8 @@ export function isDraftLineComplete(line: RecipeDraftLine): boolean {
   if (!line.rawMaterialId) {
     return false;
   }
-  const consumption = parseDecimalInput(line.unitConsumptionDisplay);
-  return Number.isFinite(consumption);
+  const proportion = parseDecimalInput(line.proportionDisplay);
+  return Number.isFinite(proportion);
 }
 
 export function stripIncompleteDraftLines(lines: RecipeDraftLine[]): RecipeDraftLine[] {
@@ -62,34 +54,22 @@ export function stripIncompleteDraftLines(lines: RecipeDraftLine[]): RecipeDraft
 export function toRecipeLineInputs(lines: RecipeDraftLine[]): RecipeLineInput[] {
   return stripIncompleteDraftLines(lines).map((line, index) => ({
     rawMaterialId: line.rawMaterialId,
-    category: line.category,
-    unitConsumption: parseDecimalInput(line.unitConsumptionDisplay),
+    proportion: parseDecimalInput(line.proportionDisplay),
     sortOrder: index,
   }));
 }
 
-export function getCompleteComponentLines(lines: RecipeDraftLine[]): RecipeDraftLine[] {
-  return stripIncompleteDraftLines(lines).filter((line) => line.category === 'COMPONENTE');
-}
-
-export function getDraftComponentSum(lines: RecipeDraftLine[]): number {
-  return computeComponentSum(
-    getCompleteComponentLines(lines).map((line) => ({
-      category: line.category,
-      unitConsumption: parseDecimalInput(line.unitConsumptionDisplay),
+export function getDraftProportionSum(lines: RecipeDraftLine[]): number {
+  return computeProportionSum(
+    stripIncompleteDraftLines(lines).map((line) => ({
+      proportion: parseDecimalInput(line.proportionDisplay),
     }))
   );
 }
 
-export function hasNegativeConsumption(lines: RecipeDraftLine[]): boolean {
+export function hasNegativeProportion(lines: RecipeDraftLine[]): boolean {
   return stripIncompleteDraftLines(lines).some(
-    (line) => parseDecimalInput(line.unitConsumptionDisplay) < 0
-  );
-}
-
-export function hasInvalidPackagingUnit(lines: RecipeDraftLine[]): boolean {
-  return stripIncompleteDraftLines(lines).some(
-    (line) => line.category === 'EMBALAGEM' && line.unit !== RECIPE_PACKAGING_UNIT
+    (line) => parseDecimalInput(line.proportionDisplay) < 0
   );
 }
 
@@ -100,9 +80,8 @@ export function hasDuplicateMaterials(lines: RecipeDraftLine[]): boolean {
 
 export function canSaveRecipeDraft(lines: RecipeDraftLine[]): boolean {
   return (
-    isComponentSumValid(getDraftComponentSum(lines)) &&
-    !hasNegativeConsumption(lines) &&
-    !hasInvalidPackagingUnit(lines) &&
+    isProportionSumValid(getDraftProportionSum(lines)) &&
+    !hasNegativeProportion(lines) &&
     !hasDuplicateMaterials(lines)
   );
 }

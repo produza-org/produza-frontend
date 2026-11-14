@@ -27,8 +27,7 @@ describe('product recipe api', () => {
       lines: [
         {
           rawMaterialId: 'm-1',
-          category: 'COMPONENTE' as const,
-          unitConsumption: 1,
+          proportion: 1,
           sortOrder: 0,
         },
       ],
@@ -36,7 +35,7 @@ describe('product recipe api', () => {
     apiClientMock.mockResolvedValueOnce({
       id: 'r-1',
       productId: 'p-1',
-      componentSum: 1,
+      proportionSum: 1,
       lines: [],
     });
 

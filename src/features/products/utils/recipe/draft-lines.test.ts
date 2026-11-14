@@ -7,14 +7,11 @@ import {
   type RecipeDraftLine,
 } from '@/features/products/utils/recipe/draft-lines';
 
-function line(
-  partial: Partial<RecipeDraftLine> & Pick<RecipeDraftLine, 'category'>
-): RecipeDraftLine {
+function line(partial: Partial<RecipeDraftLine> & Pick<RecipeDraftLine, 'key'>): RecipeDraftLine {
   return {
-    key: partial.key ?? `k-${partial.category}`,
+    key: partial.key,
     rawMaterialId: partial.rawMaterialId ?? '',
-    category: partial.category,
-    unitConsumptionDisplay: partial.unitConsumptionDisplay ?? '',
+    proportionDisplay: partial.proportionDisplay ?? '',
     unit: partial.unit ?? '',
   };
 }
@@ -24,24 +21,21 @@ describe('draft-lines', () => {
     const lines: RecipeDraftLine[] = [
       line({
         key: '1',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-1',
-        unitConsumptionDisplay: '0.4',
+        proportionDisplay: '0.4',
         unit: 'KG',
       }),
       line({
         key: '2',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-2',
-        unitConsumptionDisplay: '0.6',
+        proportionDisplay: '0.6',
         unit: 'KG',
       }),
-      createEmptyDraftLine('MATERIA_PRIMA'),
+      createEmptyDraftLine(),
       line({
         key: '3',
-        category: 'EMBALAGEM',
         rawMaterialId: 'm-3',
-        unitConsumptionDisplay: '',
+        proportionDisplay: '',
         unit: 'UNID',
       }),
     ];
@@ -50,26 +44,23 @@ describe('draft-lines', () => {
     expect(toRecipeLineInputs(lines)).toEqual([
       {
         rawMaterialId: 'm-1',
-        category: 'COMPONENTE',
-        unitConsumption: 0.4,
+        proportion: 0.4,
         sortOrder: 0,
       },
       {
         rawMaterialId: 'm-2',
-        category: 'COMPONENTE',
-        unitConsumption: 0.6,
+        proportion: 0.6,
         sortOrder: 1,
       },
     ]);
   });
 
-  it('disables save when component sum is not 1', () => {
+  it('disables save when proportion sum is not 1', () => {
     const lines: RecipeDraftLine[] = [
       line({
         key: '1',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-1',
-        unitConsumptionDisplay: '0.4',
+        proportionDisplay: '0.4',
         unit: 'KG',
       }),
     ];
@@ -77,49 +68,38 @@ describe('draft-lines', () => {
     expect(canSaveRecipeDraft(lines)).toBe(false);
   });
 
-  it('allows save when component sum is 1 and packaging uses UNID', () => {
+  it('allows save when proportion sum is 1', () => {
     const lines: RecipeDraftLine[] = [
       line({
         key: '1',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-1',
-        unitConsumptionDisplay: '0.4',
+        proportionDisplay: '0.4',
         unit: 'KG',
       }),
       line({
         key: '2',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-2',
-        unitConsumptionDisplay: '0.6',
+        proportionDisplay: '0.6',
         unit: 'KG',
       }),
-      line({
-        key: '3',
-        category: 'EMBALAGEM',
-        rawMaterialId: 'm-3',
-        unitConsumptionDisplay: '1',
-        unit: 'UNID',
-      }),
-      createEmptyDraftLine('MATERIA_PRIMA'),
+      createEmptyDraftLine(),
     ];
 
     expect(canSaveRecipeDraft(lines)).toBe(true);
   });
 
-  it('rejects packaging lines without UNID', () => {
+  it('rejects duplicate materials', () => {
     const lines: RecipeDraftLine[] = [
       line({
         key: '1',
-        category: 'COMPONENTE',
         rawMaterialId: 'm-1',
-        unitConsumptionDisplay: '1',
+        proportionDisplay: '0.5',
         unit: 'KG',
       }),
       line({
         key: '2',
-        category: 'EMBALAGEM',
-        rawMaterialId: 'm-2',
-        unitConsumptionDisplay: '1',
+        rawMaterialId: 'm-1',
+        proportionDisplay: '0.5',
         unit: 'KG',
       }),
     ];
