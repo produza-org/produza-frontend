@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { getProduct, getProductRecipe, upsertProductRecipe } from '@/features/products/api';
 import { RecipeEditor } from '@/features/products/components/recipe/RecipeEditor';
 import type { Product } from '@/features/products/types/product';
@@ -20,6 +21,7 @@ import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 export function ProductRecipePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -97,19 +99,29 @@ export function ProductRecipePage() {
         const saved = await upsertProductRecipe(id, input);
         setRecipe(saved);
         setEditorKey((value) => value + 1);
+        enqueueToast({
+          severity: 'success',
+          message: t('products.toasts.recipeSaved'),
+        });
         navigate('/products');
       } catch (error) {
         if (error instanceof ApiError) {
           const detail = error.body.details?.[0]?.message;
-          setErrorMessage(detail ? `${error.message}: ${detail}` : error.message);
+          const message = detail ? `${error.message}: ${detail}` : error.message;
+          setErrorMessage(message);
+          enqueueToast({ severity: 'error', message });
         } else {
           setErrorMessage('UNEXPECTED');
+          enqueueToast({
+            severity: 'error',
+            message: t('products.recipe.errors.unexpected'),
+          });
         }
       } finally {
         setIsSubmitting(false);
       }
     },
-    [id, navigate]
+    [enqueueToast, id, navigate, t]
   );
 
   const displayLoadError =

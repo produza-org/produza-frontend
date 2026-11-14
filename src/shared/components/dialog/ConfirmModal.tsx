@@ -1,3 +1,4 @@
+import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { Modal } from './Modal';
 import { ModalCancelButton, ModalConfirmButton } from './Modal.styled';
@@ -11,6 +12,7 @@ export type ConfirmModalProps = {
   cancelLabel: string;
   confirmLabel: string;
   confirmDisabled?: boolean;
+  confirmLoading?: boolean;
 };
 
 export function ConfirmModal({
@@ -22,24 +24,41 @@ export function ConfirmModal({
   cancelLabel,
   confirmLabel,
   confirmDisabled = false,
+  confirmLoading = false,
 }: ConfirmModalProps) {
+  const busy = confirmDisabled || confirmLoading;
+
+  const handleClose = () => {
+    if (confirmLoading) {
+      return;
+    }
+    onClose();
+  };
+
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title={title}
       actions={
         <>
-          <ModalCancelButton variant="outlined" onClick={onClose} disabled={confirmDisabled}>
+          <ModalCancelButton variant="outlined" onClick={handleClose} disabled={busy}>
             {cancelLabel}
           </ModalCancelButton>
           <ModalConfirmButton
             variant="contained"
             disableElevation
             onClick={onConfirm}
-            disabled={confirmDisabled}
+            disabled={busy}
+            aria-busy={confirmLoading || undefined}
+            aria-label={confirmLoading ? confirmLabel : undefined}
+            sx={{ minWidth: 112 }}
           >
-            {confirmLabel}
+            {confirmLoading ? (
+              <CircularProgress size={18} color="inherit" aria-hidden />
+            ) : (
+              confirmLabel
+            )}
           </ModalConfirmButton>
         </>
       }

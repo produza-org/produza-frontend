@@ -53,6 +53,13 @@
     "errors": {
       "unexpected": "Something went wrong. Please try again."
     },
+    "toasts": {
+      "created": "Raw material created successfully.",
+      "updated": "Raw material updated successfully.",
+      "deleted": "Raw material deleted successfully.",
+      "activated": "Raw material activated successfully.",
+      "deactivated": "Raw material deactivated successfully."
+    },
     "list": {
       "title": "Raw materials",
       "subtitle": "Industrial input management for production.",
@@ -149,6 +156,14 @@
   "products": {
     "errors": {
       "unexpected": "Something went wrong. Please try again."
+    },
+    "toasts": {
+      "created": "Product created successfully.",
+      "updated": "Product updated successfully.",
+      "deleted": "Product deleted successfully.",
+      "activated": "Product activated successfully.",
+      "deactivated": "Product deactivated successfully.",
+      "recipeSaved": "Recipe saved successfully."
     },
     "list": {
       "title": "Products",
@@ -274,6 +289,13 @@
   "productionOrders": {
     "errors": {
       "unexpected": "Something went wrong. Please try again."
+    },
+    "toasts": {
+      "created": "Production order created successfully.",
+      "qUpdated": "Quantity to produce updated successfully.",
+      "realUpdated": "Actual production updated successfully.",
+      "stepsUpdated": "Floor steps updated successfully.",
+      "recalculated": "Needs recalculated from recipe successfully."
     },
     "list": {
       "title": "Production orders",

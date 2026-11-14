@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { getProduct } from '@/features/products/api';
 import {
   ProductForm,
@@ -23,6 +24,7 @@ import {
 export function ProductEditPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { id } = useParams<{ id: string }>();
   const { items, updateProduct } = useProductsContext();
   const [item, setItem] = useState<Product | null>(null);
@@ -102,14 +104,23 @@ export function ProductEditPage() {
       setErrorMessage(null);
       try {
         await updateProduct(id, values);
+        enqueueToast({
+          severity: 'success',
+          message: t('products.toasts.updated'),
+        });
         navigate('/products');
       } catch (error) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : t('products.errors.unexpected');
         setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [id, updateProduct, navigate]
+    [enqueueToast, id, navigate, t, updateProduct]
   );
 
   const displayLoadError =

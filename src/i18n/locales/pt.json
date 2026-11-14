@@ -53,6 +53,13 @@
     "errors": {
       "unexpected": "Algo deu errado. Tente novamente."
     },
+    "toasts": {
+      "created": "Matéria-prima criada com sucesso.",
+      "updated": "Matéria-prima atualizada com sucesso.",
+      "deleted": "Matéria-prima excluída com sucesso.",
+      "activated": "Matéria-prima ativada com sucesso.",
+      "deactivated": "Matéria-prima inativada com sucesso."
+    },
     "list": {
       "title": "Matérias-primas",
       "subtitle": "Gestão de insumos industriais para a produção.",
@@ -149,6 +156,14 @@
   "products": {
     "errors": {
       "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "toasts": {
+      "created": "Produto criado com sucesso.",
+      "updated": "Produto atualizado com sucesso.",
+      "deleted": "Produto excluído com sucesso.",
+      "activated": "Produto ativado com sucesso.",
+      "deactivated": "Produto inativado com sucesso.",
+      "recipeSaved": "Receita salva com sucesso."
     },
     "list": {
       "title": "Produtos",
@@ -274,6 +289,13 @@
   "productionOrders": {
     "errors": {
       "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "toasts": {
+      "created": "Ordem de produção criada com sucesso.",
+      "qUpdated": "Quantidade a produzir atualizada com sucesso.",
+      "realUpdated": "Produção real atualizada com sucesso.",
+      "stepsUpdated": "Etapas de chão atualizadas com sucesso.",
+      "recalculated": "Necessidades recalculadas a partir da receita com sucesso."
     },
     "list": {
       "title": "Ordens de produção",

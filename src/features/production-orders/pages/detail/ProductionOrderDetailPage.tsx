@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { getProductionOrder } from '@/features/production-orders/api';
 import { ProductionOrderDetail } from '@/features/production-orders/components/detail/ProductionOrderDetail';
 import { useProductionOrdersContext } from '@/features/production-orders/context/ProductionOrdersContext';
@@ -18,9 +19,17 @@ import {
   PageRoot,
 } from '@/features/production-orders/pages/ProductionOrderFormPage.styled';
 
+function toToastError(error: unknown, fallback: string): string {
+  if (error instanceof ApiError) {
+    return error.message;
+  }
+  return fallback;
+}
+
 export function ProductionOrderDetailPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { id } = useParams<{ id: string }>();
   const {
     updateProductionOrder,
@@ -85,15 +94,24 @@ export function ProductionOrderDetailPage() {
       try {
         const updated = await updateProductionOrder(id, { qtdAProduzir });
         setOrder(updated);
+        enqueueToast({
+          severity: 'success',
+          message: t('productionOrders.toasts.qUpdated'),
+        });
       } catch (error) {
+        const message = toToastError(
+          error,
+          t('productionOrders.errors.unexpected')
+        );
         setErrorMessage(
           error instanceof ApiError ? error.message : 'UNEXPECTED'
         );
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsMutating(false);
       }
     },
-    [id, updateProductionOrder]
+    [enqueueToast, id, t, updateProductionOrder]
   );
 
   const handleUpdateReal = useCallback(
@@ -106,15 +124,24 @@ export function ProductionOrderDetailPage() {
       try {
         const updated = await updateProductionOrder(id, { realProduzido });
         setOrder(updated);
+        enqueueToast({
+          severity: 'success',
+          message: t('productionOrders.toasts.realUpdated'),
+        });
       } catch (error) {
+        const message = toToastError(
+          error,
+          t('productionOrders.errors.unexpected')
+        );
         setErrorMessage(
           error instanceof ApiError ? error.message : 'UNEXPECTED'
         );
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsMutating(false);
       }
     },
-    [id, updateProductionOrder]
+    [enqueueToast, id, t, updateProductionOrder]
   );
 
   const handleUpdateSteps = useCallback(
@@ -137,15 +164,24 @@ export function ProductionOrderDetailPage() {
         };
         setOrder(updated);
         upsertLocalOrder(updated);
+        enqueueToast({
+          severity: 'success',
+          message: t('productionOrders.toasts.stepsUpdated'),
+        });
       } catch (error) {
+        const message = toToastError(
+          error,
+          t('productionOrders.errors.unexpected')
+        );
         setErrorMessage(
           error instanceof ApiError ? error.message : 'UNEXPECTED'
         );
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsMutating(false);
       }
     },
-    [id, order, updateProductionOrderSteps, upsertLocalOrder]
+    [enqueueToast, id, order, t, updateProductionOrderSteps, upsertLocalOrder]
   );
 
   const handleRecalculate = useCallback(async () => {
@@ -157,12 +193,21 @@ export function ProductionOrderDetailPage() {
     try {
       const updated = await recalculateFromRecipe(id);
       setOrder(updated);
+      enqueueToast({
+        severity: 'success',
+        message: t('productionOrders.toasts.recalculated'),
+      });
     } catch (error) {
+      const message = toToastError(
+        error,
+        t('productionOrders.errors.unexpected')
+      );
       setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
+      enqueueToast({ severity: 'error', message });
     } finally {
       setIsMutating(false);
     }
-  }, [id, recalculateFromRecipe]);
+  }, [enqueueToast, id, recalculateFromRecipe, t]);
 
   const displayLoadError =
     loadError === 'UNEXPECTED'

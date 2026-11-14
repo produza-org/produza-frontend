@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
 import { ConfirmModal } from '@/shared/components/dialog';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { ProductsStatCard } from '@/features/products/components/list/ProductsStatCard';
 import { ProductsListFilters } from '@/features/products/components/list/ProductsListFilters';
 import { ProductsListTable } from '@/features/products/components/list/ProductsListTable';
@@ -24,16 +25,17 @@ import {
   StatsGrid,
 } from '@/features/products/pages/list/ProductsListPage.styled';
 
-function toActionError(error: unknown): string {
+function toToastError(error: unknown, fallback: string): string {
   if (error instanceof ApiError) {
     return error.message;
   }
-  return 'UNEXPECTED';
+  return fallback;
 }
 
 export function ProductsListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const theme = useTheme();
   const p = theme.palette.produza;
   const {
@@ -50,7 +52,6 @@ export function ProductsListPage() {
     useProductsStats();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [pendingStatusToggleId, setPendingStatusToggleId] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
   const [isMutating, setIsMutating] = useState(false);
 
   const pendingToggleItem = useMemo(
@@ -62,11 +63,6 @@ export function ProductsListPage() {
     errorMessage === 'UNEXPECTED'
       ? t('products.errors.unexpected')
       : errorMessage;
-
-  const displayActionError =
-    actionError === 'UNEXPECTED'
-      ? t('products.errors.unexpected')
-      : actionError;
 
   const handleCloseDeleteModal = () => {
     if (isMutating) {
@@ -80,12 +76,18 @@ export function ProductsListPage() {
       return;
     }
     setIsMutating(true);
-    setActionError(null);
     try {
       await deleteProduct(pendingDeleteId);
       setPendingDeleteId(null);
+      enqueueToast({
+        severity: 'success',
+        message: t('products.toasts.deleted'),
+      });
     } catch (error) {
-      setActionError(toActionError(error));
+      enqueueToast({
+        severity: 'error',
+        message: toToastError(error, t('products.errors.unexpected')),
+      });
     } finally {
       setIsMutating(false);
     }
@@ -99,16 +101,25 @@ export function ProductsListPage() {
   };
 
   const handleConfirmStatusToggle = async () => {
-    if (!pendingStatusToggleId || isMutating) {
+    if (!pendingStatusToggleId || !pendingToggleItem || isMutating) {
       return;
     }
+    const wasActive = pendingToggleItem.status === 'active';
     setIsMutating(true);
-    setActionError(null);
     try {
       await toggleProductStatus(pendingStatusToggleId);
       setPendingStatusToggleId(null);
+      enqueueToast({
+        severity: 'success',
+        message: wasActive
+          ? t('products.toasts.deactivated')
+          : t('products.toasts.activated'),
+      });
     } catch (error) {
-      setActionError(toActionError(error));
+      enqueueToast({
+        severity: 'error',
+        message: toToastError(error, t('products.errors.unexpected')),
+      });
     } finally {
       setIsMutating(false);
     }
@@ -135,12 +146,6 @@ export function ProductsListPage() {
       {loadError ? (
         <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           {loadError}
-        </Alert>
-      ) : null}
-
-      {displayActionError ? (
-        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
-          {displayActionError}
         </Alert>
       ) : null}
 
@@ -209,7 +214,7 @@ export function ProductsListPage() {
         message={t('products.delete.message')}
         cancelLabel={t('products.delete.cancel')}
         confirmLabel={t('products.delete.confirm')}
-        confirmDisabled={isMutating}
+        confirmLoading={isMutating}
       />
 
       <ConfirmModal
@@ -230,7 +235,7 @@ export function ProductsListPage() {
         }
         cancelLabel={t('products.statusToggle.cancel')}
         confirmLabel={t('products.statusToggle.confirm')}
-        confirmDisabled={isMutating}
+        confirmLoading={isMutating}
       />
     </PageRoot>
   );

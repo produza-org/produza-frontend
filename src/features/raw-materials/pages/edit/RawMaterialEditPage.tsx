@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { formatCurrencyBrlInput } from '@/shared/utils';
 import { getRawMaterial } from '@/features/raw-materials/api';
 import {
@@ -22,6 +23,7 @@ import {
 export function RawMaterialEditPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { id } = useParams<{ id: string }>();
   const { items, updateRawMaterial } = useRawMaterialsContext();
   const [item, setItem] = useState<RawMaterial | null>(null);
@@ -103,14 +105,23 @@ export function RawMaterialEditPage() {
       setErrorMessage(null);
       try {
         await updateRawMaterial(id, values);
+        enqueueToast({
+          severity: 'success',
+          message: t('rawMaterials.toasts.updated'),
+        });
         navigate('/raw-materials');
       } catch (error) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : t('rawMaterials.errors.unexpected');
         setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [id, updateRawMaterial, navigate]
+    [enqueueToast, id, navigate, t, updateRawMaterial]
   );
 
   const displayLoadError =

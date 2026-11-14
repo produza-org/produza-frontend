@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
 import { ConfirmModal } from '@/shared/components/dialog';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { RawMaterialsStatCard } from '@/features/raw-materials/components/list/RawMaterialsStatCard';
 import { RawMaterialsListFilters } from '@/features/raw-materials/components/list/RawMaterialsListFilters';
 import { RawMaterialsListTable } from '@/features/raw-materials/components/list/RawMaterialsListTable';
@@ -24,16 +25,17 @@ import {
   StatsGrid,
 } from '@/features/raw-materials/pages/list/RawMaterialsListPage.styled';
 
-function toActionError(error: unknown): string {
+function toToastError(error: unknown, fallback: string): string {
   if (error instanceof ApiError) {
     return error.message;
   }
-  return 'UNEXPECTED';
+  return fallback;
 }
 
 export function RawMaterialsListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const theme = useTheme();
   const p = theme.palette.produza;
   const {
@@ -49,7 +51,6 @@ export function RawMaterialsListPage() {
   const { totalCount, totalCost, activePercent, criticalCount } = useRawMaterialsStats();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [pendingStatusToggleId, setPendingStatusToggleId] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
   const [isMutating, setIsMutating] = useState(false);
 
   const pendingToggleItem = useMemo(
@@ -61,11 +62,6 @@ export function RawMaterialsListPage() {
     errorMessage === 'UNEXPECTED'
       ? t('rawMaterials.errors.unexpected')
       : errorMessage;
-
-  const displayActionError =
-    actionError === 'UNEXPECTED'
-      ? t('rawMaterials.errors.unexpected')
-      : actionError;
 
   const handleCloseDeleteModal = () => {
     if (isMutating) {
@@ -79,12 +75,18 @@ export function RawMaterialsListPage() {
       return;
     }
     setIsMutating(true);
-    setActionError(null);
     try {
       await deleteRawMaterial(pendingDeleteId);
       setPendingDeleteId(null);
+      enqueueToast({
+        severity: 'success',
+        message: t('rawMaterials.toasts.deleted'),
+      });
     } catch (error) {
-      setActionError(toActionError(error));
+      enqueueToast({
+        severity: 'error',
+        message: toToastError(error, t('rawMaterials.errors.unexpected')),
+      });
     } finally {
       setIsMutating(false);
     }
@@ -98,16 +100,25 @@ export function RawMaterialsListPage() {
   };
 
   const handleConfirmStatusToggle = async () => {
-    if (!pendingStatusToggleId || isMutating) {
+    if (!pendingStatusToggleId || !pendingToggleItem || isMutating) {
       return;
     }
+    const wasActive = pendingToggleItem.status === 'active';
     setIsMutating(true);
-    setActionError(null);
     try {
       await toggleRawMaterialStatus(pendingStatusToggleId);
       setPendingStatusToggleId(null);
+      enqueueToast({
+        severity: 'success',
+        message: wasActive
+          ? t('rawMaterials.toasts.deactivated')
+          : t('rawMaterials.toasts.activated'),
+      });
     } catch (error) {
-      setActionError(toActionError(error));
+      enqueueToast({
+        severity: 'error',
+        message: toToastError(error, t('rawMaterials.errors.unexpected')),
+      });
     } finally {
       setIsMutating(false);
     }
@@ -134,12 +145,6 @@ export function RawMaterialsListPage() {
       {loadError ? (
         <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           {loadError}
-        </Alert>
-      ) : null}
-
-      {displayActionError ? (
-        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
-          {displayActionError}
         </Alert>
       ) : null}
 
@@ -211,7 +216,7 @@ export function RawMaterialsListPage() {
         message={t('rawMaterials.delete.message')}
         cancelLabel={t('rawMaterials.delete.cancel')}
         confirmLabel={t('rawMaterials.delete.confirm')}
-        confirmDisabled={isMutating}
+        confirmLoading={isMutating}
       />
 
       <ConfirmModal
@@ -232,7 +237,7 @@ export function RawMaterialsListPage() {
         }
         cancelLabel={t('rawMaterials.statusToggle.cancel')}
         confirmLabel={t('rawMaterials.statusToggle.confirm')}
-        confirmDisabled={isMutating}
+        confirmLoading={isMutating}
       />
     </PageRoot>
   );
