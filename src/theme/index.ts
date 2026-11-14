@@ -140,14 +140,23 @@ export function createAppTheme(mode: PaletteMode) {
       },
       MuiButton: {
         styleOverrides: {
-          containedPrimary: isLight
-            ? {
-                background: `linear-gradient(145deg, ${stitchLight.primary} 0%, ${stitchLight.primaryContainer} 100%)`,
-                '&:hover': {
-                  background: `linear-gradient(145deg, ${stitchLight.primaryContainer} 0%, ${produza.primaryMid} 100%)`,
-                },
-              }
-            : {},
+          containedPrimary: {
+            ...(isLight
+              ? {
+                  background: `linear-gradient(145deg, ${stitchLight.primary} 0%, ${stitchLight.primaryContainer} 100%)`,
+                  '&:hover': {
+                    background: `linear-gradient(145deg, ${stitchLight.primaryContainer} 0%, ${produza.primaryMid} 100%)`,
+                  },
+                }
+              : {}),
+            '&.Mui-disabled': {
+              color: produza.onPrimary,
+              background: produza.disabledPrimary,
+              backgroundColor: produza.disabledPrimary,
+              boxShadow: 'none',
+              opacity: 1,
+            },
+          },
         },
       },
     },

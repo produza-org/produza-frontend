@@ -82,6 +82,9 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
   '&:active': { transform: 'scale(0.95)' },
   '&.Mui-disabled': {
     color: theme.palette.produza.onPrimary,
-    backgroundColor: `${theme.palette.produza.primary}66`,
+    background: theme.palette.produza.disabledPrimary,
+    backgroundColor: theme.palette.produza.disabledPrimary,
+    boxShadow: 'none',
+    opacity: 1,
   },
 }));

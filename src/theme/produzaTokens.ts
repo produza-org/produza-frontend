@@ -9,6 +9,7 @@ export interface ProduzaPalette {
   primary: string;
   primaryContainer: string;
   primaryMid: string;
+  disabledPrimary: string;
   tertiaryFixedDim: string;
   secondary: string;
   error: string;
@@ -36,6 +37,7 @@ export const lightProduzaPalette: ProduzaPalette = {
   primary: '#001736',
   primaryContainer: '#002b5b',
   primaryMid: '#264778',
+  disabledPrimary: '#264778',
   tertiaryFixedDim: '#8bd79b',
   secondary: '#515f74',
   error: '#ba1a1a',
@@ -63,6 +65,7 @@ export const darkProduzaPalette: ProduzaPalette = {
   primary: '#a9c7ff',
   primaryContainer: '#7594ca',
   primaryMid: '#264778',
+  disabledPrimary: '#7594ca',
   tertiaryFixedDim: '#8bd79b',
   secondary: '#b9c7df',
   error: '#ffb4ab',

@@ -98,4 +98,11 @@ export const SaveButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.produza.primary,
   },
   '&:active': { transform: 'scale(0.95)' },
+  '&.Mui-disabled': {
+    color: theme.palette.produza.onPrimary,
+    background: theme.palette.produza.disabledPrimary,
+    backgroundColor: theme.palette.produza.disabledPrimary,
+    boxShadow: 'none',
+    opacity: 1,
+  },
 }));

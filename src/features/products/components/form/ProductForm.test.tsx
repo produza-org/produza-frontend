@@ -93,6 +93,8 @@ describe('ProductForm', () => {
 
     const nextButton = screen.getByRole('button', { name: 'Next' });
     expect(nextButton).toBeDisabled();
+    expect(nextButton).toHaveTextContent('Next');
+    expect(nextButton.className).toMatch(/Mui-disabled/);
 
     fireEvent.change(screen.getByLabelText('Product name'), {
       target: { value: 'POTE 1,5L COCO BRANCO' },
@@ -116,3 +118,4 @@ describe('ProductForm', () => {
     });
   });
 });
+
