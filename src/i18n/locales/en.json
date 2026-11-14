@@ -276,8 +276,6 @@
       "proportionPlaceholder": "0.000000",
       "unitLabel": "Unit",
       "proportionSum": "Proportion sum",
-      "proportionSumValid": "Valid",
-      "proportionSumInvalid": "Must equal 1 (±1e-6)",
       "cancel": "Cancel",
       "save": "Save recipe",
       "saving": "Saving…",

@@ -19,7 +19,6 @@ import {
   hasNegativeProportion,
   type RecipeDraftLine,
 } from '@/features/products/utils/recipe/draft-lines';
-import { isProportionSumValid } from '@/features/products/utils/recipe/proportion-sum';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 
 type RecipeDraftPanelProps = {
@@ -44,7 +43,6 @@ export function RecipeDraftPanel({
   const { t } = useTranslation();
 
   const proportionSum = getDraftProportionSum(lines);
-  const sumValid = isProportionSumValid(proportionSum);
 
   const usedMaterialIds = useMemo(
     () =>
@@ -58,9 +56,6 @@ export function RecipeDraftPanel({
 
   const validationHints = useMemo(() => {
     const hints: string[] = [];
-    if (!sumValid) {
-      hints.push(t('products.recipe.proportionSumInvalid'));
-    }
     if (hasNegativeProportion(lines)) {
       hints.push(t('products.recipe.errors.negativeProportion'));
     }
@@ -68,7 +63,7 @@ export function RecipeDraftPanel({
       hints.push(t('products.recipe.errors.duplicateMaterial'));
     }
     return hints;
-  }, [lines, sumValid, t]);
+  }, [lines, t]);
 
   const displayError =
     errorMessage === 'UNEXPECTED'
@@ -125,14 +120,9 @@ export function RecipeDraftPanel({
         onRemoveLine={removeLine}
       />
 
-      <ProportionSumBanner $valid={sumValid} role="status">
+      <ProportionSumBanner role="status">
         <ProportionSumLabel>{t('products.recipe.proportionSum')}</ProportionSumLabel>
-        <ProportionSumValue>
-          Σ = {formatDecimal(proportionSum, 6)}
-          {sumValid
-            ? ` · ${t('products.recipe.proportionSumValid')}`
-            : ` · ${t('products.recipe.proportionSumInvalid')}`}
-        </ProportionSumValue>
+        <ProportionSumValue>Σ = {formatDecimal(proportionSum, 6)}</ProportionSumValue>
       </ProportionSumBanner>
 
       {validationHints.length > 0 ? (

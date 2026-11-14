@@ -229,6 +229,7 @@ export function ProductForm({
           <SaveButton
             type="submit"
             variant="contained"
+            color="primary"
             disableElevation
             startIcon={isStepMode ? undefined : <SaveOutlined />}
             endIcon={isStepMode ? <ArrowForward /> : undefined}

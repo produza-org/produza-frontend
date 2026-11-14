@@ -94,6 +94,29 @@ describe('ProductCreateWizard', () => {
     expect(saveButton).toBeDisabled();
   });
 
+  it('shows only raw-material fields without sum warning banners on step 2', async () => {
+    renderWizard();
+    await goToRecipeStep();
+
+    expect(screen.getByText('Raw material')).toBeInTheDocument();
+    expect(screen.queryByText('Component')).not.toBeInTheDocument();
+    expect(screen.queryByText('Packaging')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.change(screen.getByLabelText('Proportion'), {
+      target: { value: '0.4' },
+    });
+
+    expect(screen.getByText('Proportion sum')).toBeInTheDocument();
+    expect(screen.getByText(/^Σ =/)).toBeInTheDocument();
+    expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText((_, node) => node?.textContent === ' · Valid')
+    ).not.toBeInTheDocument();
+  });
+
   it('calls onSave with general values and recipe lines when valid', async () => {
     const onSave = vi.fn();
     renderWizard(onSave);

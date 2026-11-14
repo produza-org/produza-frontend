@@ -276,8 +276,6 @@
       "proportionPlaceholder": "0,000000",
       "unitLabel": "Unidade",
       "proportionSum": "Soma das proporções",
-      "proportionSumValid": "Válida",
-      "proportionSumInvalid": "Deve ser igual a 1 (±1e-6)",
       "cancel": "Cancelar",
       "save": "Salvar ficha técnica",
       "saving": "Salvando…",
