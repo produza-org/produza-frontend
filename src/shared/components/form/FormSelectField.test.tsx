@@ -41,4 +41,25 @@ describe('FormSelectField', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Liter (lt)' }));
     expect(onChange).toHaveBeenCalledWith('LITRO');
   });
+
+  it('shows empty placeholder option text in the closed select', () => {
+    renderWithTheme(
+      <FormSelectField
+        id="material-field"
+        label="Raw material"
+        value=""
+        onChange={vi.fn()}
+        options={[
+          { value: '', label: 'Select a raw material' },
+          ...options,
+        ]}
+      />
+    );
+
+    expect(screen.getByText('Select a raw material')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Raw material' })).toHaveTextContent(
+      'Select a raw material'
+    );
+  });
 });
+

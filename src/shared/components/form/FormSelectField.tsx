@@ -42,9 +42,24 @@ export function FormSelectField({
           variant="standard"
           disableUnderline
           displayEmpty
+          MenuProps={{
+            PaperProps: {
+              sx: (theme) => ({
+                backgroundColor: theme.palette.produza.surfaceContainerLowest,
+                color: theme.palette.produza.onSurface,
+                '& .MuiMenuItem-root': {
+                  color: theme.palette.produza.onSurface,
+                },
+                '& .MuiMenuItem-root.Mui-selected': {
+                  backgroundColor: `${theme.palette.produza.primary}14`,
+                  color: theme.palette.produza.onSurface,
+                },
+              }),
+            },
+          }}
         >
           {options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+            <MenuItem key={option.value || '__empty'} value={option.value}>
               {option.label}
             </MenuItem>
           ))}

@@ -21,9 +21,19 @@ export const StyledTextFieldWrapper = styled(Box)(({ theme }) => ({
   '& .MuiInputBase-input': {
     padding: 0,
     color: theme.palette.produza.onSurface,
+    WebkitTextFillColor: theme.palette.produza.onSurface,
     '&::placeholder': {
-      color: theme.palette.produza.slate400,
+      color: theme.palette.produza.slate600,
+      opacity: 1,
+      WebkitTextFillColor: theme.palette.produza.slate600,
+    },
+    '&.Mui-disabled': {
+      color: theme.palette.produza.onSurfaceVariant,
+      WebkitTextFillColor: theme.palette.produza.onSurfaceVariant,
       opacity: 1,
     },
+  },
+  '& .MuiInputBase-root.Mui-disabled': {
+    opacity: 1,
   },
 }));
