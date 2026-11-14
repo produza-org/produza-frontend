@@ -192,6 +192,7 @@ export function ProductCreateWizard({
                   <PrimaryButton
                     type="submit"
                     variant="contained"
+                    color="primary"
                     disableElevation
                     startIcon={<SaveOutlined />}
                     disabled={!saveEnabled}

@@ -87,6 +87,8 @@ describe('RecipeEditor', () => {
     });
 
     expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
+    expect(screen.getByText(/Σ =/)).toBeInTheDocument();
+    expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
   });
 
   it('shows a single raw-material block without component or packaging', () => {

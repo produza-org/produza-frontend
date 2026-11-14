@@ -140,6 +140,17 @@ export function createAppTheme(mode: PaletteMode) {
       },
       MuiButton: {
         styleOverrides: {
+          root: {
+            '&.MuiButton-containedPrimary.Mui-disabled': {
+              color: produza.onPrimary,
+              WebkitTextFillColor: produza.onPrimary,
+              background: produza.disabledPrimary,
+              backgroundImage: 'none',
+              backgroundColor: produza.disabledPrimary,
+              boxShadow: 'none',
+              opacity: 1,
+            },
+          },
           containedPrimary: {
             ...(isLight
               ? {
@@ -151,7 +162,9 @@ export function createAppTheme(mode: PaletteMode) {
               : {}),
             '&.Mui-disabled': {
               color: produza.onPrimary,
+              WebkitTextFillColor: produza.onPrimary,
               background: produza.disabledPrimary,
+              backgroundImage: 'none',
               backgroundColor: produza.disabledPrimary,
               boxShadow: 'none',
               opacity: 1,

@@ -109,22 +109,16 @@ export const RemoveLineButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const ProportionSumBanner = styled(Box, {
-  shouldForwardProp: (prop) => prop !== '$valid',
-})<{ $valid: boolean }>(({ theme, $valid }) => ({
+export const ProportionSumBanner = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: theme.spacing(2),
   padding: theme.spacing(2.5),
   borderRadius: 12,
-  border: `1px solid ${
-    $valid ? theme.palette.produza.success : theme.palette.produza.error
-  }4D`,
-  backgroundColor: $valid
-    ? theme.palette.produza.successContainer
-    : theme.palette.produza.errorContainer,
-  color: $valid ? theme.palette.produza.success : theme.palette.produza.error,
+  border: `1px solid ${theme.palette.produza.outlineVariant}4D`,
+  backgroundColor: theme.palette.produza.surfaceContainerLow,
+  color: theme.palette.produza.onSurface,
 }));
 
 export const ProportionSumLabel = styled('span')(({ theme }) => ({
@@ -135,11 +129,12 @@ export const ProportionSumLabel = styled('span')(({ theme }) => ({
   color: theme.palette.produza.onSurfaceVariant,
 }));
 
-export const ProportionSumValue = styled('span')({
+export const ProportionSumValue = styled('span')(({ theme }) => ({
   fontSize: 18,
   fontWeight: 800,
   fontVariantNumeric: 'tabular-nums',
-});
+  color: theme.palette.produza.onSurface,
+}));
 
 export const EmptyHint = styled('p')(({ theme }) => ({
   margin: 0,
@@ -187,11 +182,14 @@ export const SaveButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.produza.primary,
   },
   '&:active': { transform: 'scale(0.95)' },
-  '&.Mui-disabled': {
-    color: theme.palette.produza.onPrimary,
-    background: theme.palette.produza.disabledPrimary,
-    backgroundColor: theme.palette.produza.disabledPrimary,
-    boxShadow: 'none',
-    opacity: 1,
-  },
+  '&.MuiButton-root.Mui-disabled, &.MuiButton-contained.Mui-disabled, &.MuiButton-containedPrimary.Mui-disabled':
+    {
+      color: theme.palette.produza.onPrimary,
+      WebkitTextFillColor: theme.palette.produza.onPrimary,
+      background: theme.palette.produza.disabledPrimary,
+      backgroundImage: 'none',
+      backgroundColor: theme.palette.produza.disabledPrimary,
+      boxShadow: 'none',
+      opacity: 1,
+    },
 }));

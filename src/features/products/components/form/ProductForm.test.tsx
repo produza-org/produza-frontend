@@ -95,6 +95,10 @@ describe('ProductForm', () => {
     expect(nextButton).toBeDisabled();
     expect(nextButton).toHaveTextContent('Next');
     expect(nextButton.className).toMatch(/Mui-disabled/);
+    const disabledStyles = window.getComputedStyle(nextButton);
+    expect(disabledStyles.color).toBe('rgb(255, 255, 255)');
+    expect(disabledStyles.webkitTextFillColor).toBe('rgb(255, 255, 255)');
+    expect(disabledStyles.opacity).toBe('1');
 
     fireEvent.change(screen.getByLabelText('Product name'), {
       target: { value: 'POTE 1,5L COCO BRANCO' },

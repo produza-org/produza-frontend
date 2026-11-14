@@ -98,11 +98,14 @@ export const SaveButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.produza.primary,
   },
   '&:active': { transform: 'scale(0.95)' },
-  '&.Mui-disabled': {
-    color: theme.palette.produza.onPrimary,
-    background: theme.palette.produza.disabledPrimary,
-    backgroundColor: theme.palette.produza.disabledPrimary,
-    boxShadow: 'none',
-    opacity: 1,
-  },
+  '&.MuiButton-root.Mui-disabled, &.MuiButton-contained.Mui-disabled, &.MuiButton-containedPrimary.Mui-disabled':
+    {
+      color: theme.palette.produza.onPrimary,
+      WebkitTextFillColor: theme.palette.produza.onPrimary,
+      background: theme.palette.produza.disabledPrimary,
+      backgroundImage: 'none',
+      backgroundColor: theme.palette.produza.disabledPrimary,
+      boxShadow: 'none',
+      opacity: 1,
+    },
 }));
