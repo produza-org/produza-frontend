@@ -82,4 +82,37 @@ describe('ProductForm', () => {
     expect(screen.getByLabelText('Yield')).toHaveValue('0.75');
     expect(screen.getByLabelText('Expansion factor')).toHaveValue('1,333333');
   });
+
+  it('keeps Next disabled in step mode until general info is valid', async () => {
+    const onSubmit = vi.fn();
+    renderWithTheme(
+      <I18nextProvider i18n={i18n}>
+        <ProductForm mode="step" onSubmit={onSubmit} onCancel={vi.fn()} />
+      </I18nextProvider>
+    );
+
+    const nextButton = screen.getByRole('button', { name: 'Next' });
+    expect(nextButton).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('Product name'), {
+      target: { value: 'POTE 1,5L COCO BRANCO' },
+    });
+    expect(nextButton).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('Final size'), { target: { value: '1.5' } });
+    expect(nextButton).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('Yield'), { target: { value: '0.75' } });
+    expect(nextButton).toBeEnabled();
+
+    fireEvent.click(nextButton);
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        name: 'POTE 1,5L COCO BRANCO',
+        finalSize: 1.5,
+        finalSizeUnit: 'L',
+        yield: 0.75,
+      });
+    });
+  });
 });

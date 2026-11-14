@@ -236,6 +236,22 @@
       "saving": "Saving…",
       "loading": "Loading product"
     },
+    "createWizard": {
+      "steps": {
+        "general": "General information",
+        "recipe": "Recipe"
+      },
+      "next": "Next",
+      "back": "Back",
+      "save": "Save",
+      "saving": "Saving…",
+      "recipeHint": "Add components until Σ = 1, then save to create the product and recipe.",
+      "loadingMaterials": "Loading raw materials",
+      "discardTitle": "Discard changes?",
+      "discardMessage": "You have unsaved product registration changes. Leave without saving?",
+      "discardCancel": "Keep editing",
+      "discardConfirm": "Discard"
+    },
     "units": {
       "l": "Liter (L)",
       "kg": "Kilogram (KG)",
