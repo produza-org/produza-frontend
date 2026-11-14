@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import {
   ProductionOrderForm,
   type ProductionOrderFormSubmitValues,
@@ -16,6 +17,7 @@ import {
 export function ProductionOrderCreatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { createProductionOrder } = useProductionOrdersContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -30,16 +32,25 @@ export function ProductionOrderCreatePage() {
       setErrorMessage(null);
       try {
         const created = await createProductionOrder(values);
+        enqueueToast({
+          severity: 'success',
+          message: t('productionOrders.toasts.created'),
+        });
         navigate(`/production-orders/${created.id}`);
       } catch (error) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : t('productionOrders.errors.unexpected');
         setErrorMessage(
           error instanceof ApiError ? error.message : 'UNEXPECTED'
         );
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [createProductionOrder, navigate]
+    [createProductionOrder, enqueueToast, navigate, t]
   );
 
   return (

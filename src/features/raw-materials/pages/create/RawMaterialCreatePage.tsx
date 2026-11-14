@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ApiError } from '@/core/api';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import {
   RawMaterialForm,
   type RawMaterialFormSubmitValues,
@@ -16,6 +17,7 @@ import {
 export function RawMaterialCreatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const { createRawMaterial } = useRawMaterialsContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -30,14 +32,23 @@ export function RawMaterialCreatePage() {
       setErrorMessage(null);
       try {
         await createRawMaterial(values);
+        enqueueToast({
+          severity: 'success',
+          message: t('rawMaterials.toasts.created'),
+        });
         navigate('/raw-materials');
       } catch (error) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : t('rawMaterials.errors.unexpected');
         setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
+        enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [createRawMaterial, navigate]
+    [createRawMaterial, enqueueToast, navigate, t]
   );
 
   return (
