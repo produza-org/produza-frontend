@@ -1,14 +1,13 @@
 export { EntityDetailDrawer } from './EntityDetailDrawer';
-export type { EntityDetailDrawerProps } from './EntityDetailDrawer';
-export { DetailFactList } from './DetailFact';
-export type { DetailFactItem } from './DetailFact';
+export type {
+  EntityDetailDrawerProps,
+  DrawerStat,
+} from './EntityDetailDrawer';
+export { DetailBreakdownList } from './DetailBreakdownList';
+export type { DetailBreakdownItem } from './DetailBreakdownList';
 export {
-  DetailSection,
-  DetailSectionTitle,
-  DetailFacts,
-  DetailFactRow,
-  DetailFactLabel,
-  DetailFactValue,
+  BreakdownSection,
+  BreakdownSectionTitle,
   DrawerLoadingBox,
   DrawerFooter,
 } from './EntityDetailDrawer.styled';

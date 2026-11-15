@@ -2,11 +2,8 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
-import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
@@ -21,6 +18,7 @@ import { ProductsListTable } from '@/features/products/components/list/ProductsL
 import { useProductsContext } from '@/features/products/context/ProductsContext';
 import type { Product } from '@/features/products/types/product';
 import { formatDecimal } from '@/features/products/utils/format';
+import { buildProductDrawerStats } from '@/features/products/utils/drawer-stats';
 import { useProductsFilters } from '@/features/products/hooks/useProductsFilters';
 import { useProductsList } from '@/features/products/hooks/useProductsList';
 import { useProductsStats } from '@/features/products/hooks/useProductsStats';
@@ -93,6 +91,7 @@ export function ProductsListPage() {
     try {
       await deleteProduct(pendingDeleteId);
       setPendingDeleteId(null);
+      setSelectedItem(null);
       enqueueToast({
         severity: 'success',
         message: t('products.toasts.deleted'),
@@ -222,58 +221,27 @@ export function ProductsListPage() {
       <EntityDetailDrawer
         open={drawerItem !== null}
         onClose={() => setSelectedItem(null)}
+        eyebrow={t('products.drawer.eyebrow')}
         title={drawerItem?.name ?? t('products.drawer.title')}
-        subtitle={t('products.drawer.subtitle')}
         closeAriaLabel={t('products.drawer.closeAria')}
-        footer={
-          drawerItem ? (
-            <>
-              <Button
-                variant="outlined"
-                startIcon={<MenuBookOutlined />}
-                onClick={() => {
-                  const id = drawerItem.id;
-                  setSelectedItem(null);
-                  navigate(`/products/${id}/recipe`);
-                }}
-                sx={{
-                  width: { xs: '100%', sm: 'auto' },
-                  textTransform: 'none',
-                  fontWeight: 700,
-                  borderRadius: 1.5,
-                  color: 'produza.secondary',
-                  borderColor: 'produza.outlineVariant',
-                  '&:hover': {
-                    borderColor: 'produza.outlineVariant',
-                    bgcolor: 'produza.surfaceContainerLow',
-                  },
-                }}
-              >
-                {t('products.drawer.recipe')}
-              </Button>
-              <Button
-                variant="contained"
-                disableElevation
-                startIcon={<EditOutlined />}
-                onClick={() => {
-                  const id = drawerItem.id;
-                  setSelectedItem(null);
-                  navigate(`/products/${id}/edit`);
-                }}
-                sx={{
-                  width: { xs: '100%', sm: 'auto' },
-                  textTransform: 'none',
-                  fontWeight: 700,
-                  borderRadius: 1.5,
-                  bgcolor: 'produza.primary',
-                  color: 'produza.onPrimary',
-                  '&:hover': { bgcolor: 'produza.primaryContainer' },
-                }}
-              >
-                {t('products.drawer.edit')}
-              </Button>
-            </>
-          ) : null
+        stats={drawerItem ? buildProductDrawerStats(drawerItem, t) : []}
+        editLabel={t('products.drawer.edit')}
+        deleteLabel={t('products.drawer.delete')}
+        onEdit={
+          drawerItem
+            ? () => {
+                const id = drawerItem.id;
+                setSelectedItem(null);
+                navigate(`/products/${id}/edit`);
+              }
+            : undefined
+        }
+        onDelete={
+          drawerItem
+            ? () => {
+                setPendingDeleteId(drawerItem.id);
+              }
+            : undefined
         }
       >
         {drawerItem ? <ProductDetailContent item={drawerItem} /> : null}

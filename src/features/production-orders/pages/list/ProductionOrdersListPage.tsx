@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
-import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
@@ -25,6 +23,7 @@ import {
   formatDecimal,
   formatQuantity,
 } from '@/features/production-orders/utils/format';
+import { buildProductionOrderDrawerStats } from '@/features/production-orders/utils/drawer-stats';
 import {
   AddOrderButton,
   HeroRow,
@@ -180,39 +179,26 @@ export function ProductionOrdersListPage() {
       <EntityDetailDrawer
         open={selectedId !== null}
         onClose={handleCloseDrawer}
+        eyebrow={t('productionOrders.drawer.eyebrow')}
         title={
-          drawerOrder
+          drawerOrder?.product.name ??
+          (drawerOrder
             ? t('productionOrders.drawer.title', { number: drawerOrder.number })
-            : t('productionOrders.drawer.titleFallback')
-        }
-        subtitle={
-          drawerOrder?.product.name ?? t('productionOrders.drawer.subtitle')
+            : t('productionOrders.drawer.titleFallback'))
         }
         closeAriaLabel={t('productionOrders.drawer.closeAria')}
-        footer={
-          selectedId ? (
-            <Button
-              variant="contained"
-              disableElevation
-              startIcon={<VisibilityOutlined />}
-              onClick={() => {
+        stats={
+          drawerOrder ? buildProductionOrderDrawerStats(drawerOrder, t) : []
+        }
+        editLabel={t('productionOrders.drawer.edit')}
+        onEdit={
+          selectedId
+            ? () => {
                 const id = selectedId;
                 handleCloseDrawer();
                 navigate(`/production-orders/${id}`);
-              }}
-              sx={{
-                width: { xs: '100%', sm: 'auto' },
-                textTransform: 'none',
-                fontWeight: 700,
-                borderRadius: 1.5,
-                bgcolor: 'produza.primary',
-                color: 'produza.onPrimary',
-                '&:hover': { bgcolor: 'produza.primaryContainer' },
-              }}
-            >
-              {t('productionOrders.drawer.openFull')}
-            </Button>
-          ) : null
+              }
+            : undefined
         }
       >
         {isDrawerLoading && !drawerOrder ? (

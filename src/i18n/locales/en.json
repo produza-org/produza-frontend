@@ -162,19 +162,13 @@
       "lt": "Liter (lt)"
     },
     "drawer": {
+      "eyebrow": "Raw material details",
       "title": "Raw material details",
-      "subtitle": "Code {{code}}",
       "closeAria": "Close raw material details",
-      "sectionOverview": "Overview",
-      "code": "Code",
-      "name": "Name",
-      "status": "Status",
-      "unit": "Unit",
       "stockQuantity": "Qty. in stock",
-      "minStock": "Minimum stock",
-      "unitCost": "Unit cost (BRL)",
-      "totalCost": "Total cost (BRL)",
-      "edit": "Edit"
+      "totalCost": "Total cost",
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "products": {
@@ -322,18 +316,15 @@
       }
     },
     "drawer": {
+      "eyebrow": "Product details",
       "title": "Product details",
-      "subtitle": "Finished product overview",
       "closeAria": "Close product details",
-      "sectionOverview": "Overview",
-      "name": "Name",
-      "status": "Status",
       "finalSize": "Final size",
-      "unit": "Unit",
       "yield": "Yield",
-      "expansionFactor": "Expansion factor",
+      "sectionRecipe": "Recipe breakdown",
+      "loadingRecipe": "Loading recipe",
       "edit": "Edit",
-      "recipe": "Recipe"
+      "delete": "Delete"
     }
   },
   "productionOrders": {
@@ -450,26 +441,15 @@
       "EMBALAGEM": "Packaging"
     },
     "drawer": {
+      "eyebrow": "Production order details",
       "title": "Order {{number}}",
       "titleFallback": "Production order",
-      "subtitle": "Lot projection overview",
       "closeAria": "Close production order details",
       "loading": "Loading production order details",
-      "sectionOverview": "Overview",
-      "sectionNeeds": "Needs summary",
-      "number": "Number",
-      "product": "Product",
+      "sectionNeeds": "Needs breakdown",
       "quantity": "Quantity to produce (Q)",
-      "realProduzido": "Actual produced",
       "totalMistura": "Total mistura (kg)",
-      "yieldSnapshot": "Yield snapshot",
-      "emitidaEm": "Issued at",
-      "startDate": "Start date",
-      "plannedEndDate": "Planned end date",
-      "notes": "Notes",
-      "needsEmpty": "No need lines for this order.",
-      "needsCount": "{{count}} lines",
-      "openFull": "Open full detail"
+      "edit": "Edit"
     }
   }
 }

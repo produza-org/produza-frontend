@@ -28,7 +28,7 @@ src/
 | **core/types/** | Types used in more than one feature or by core itself. |
 | **core/store/** | Zustand (or other) global stores used across features. |
 | **core/mocks/** | Legacy seed JSON / persistence helpers. Raw materials no longer use localStorage; prefer feature API modules. |
-| **shared/components/** | Buttons, inputs, layout primitives, dialogs, drawers, and menus used in multiple features. Organized as `layout/` (responsive shell: temporary nav below `md`), `form/`, `dialog/`, `drawer/` (`EntityDetailDrawer` + `DetailFactList` for list-row detail panels), `actions/`, `page/` (`PageRoot`, `PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). Mobile-first layout rules: `.cursor/rules/mobile-first-responsive.mdc`. |
+| **shared/components/** | Buttons, inputs, layout primitives, dialogs, drawers, and menus used in multiple features. Organized as `layout/` (responsive shell: temporary nav below `md`), `form/`, `dialog/`, `drawer/` (`EntityDetailDrawer` + `DetailBreakdownList` for Stitch-style list-row detail panels: eyebrow, stats card, optional breakdown, Edit/Delete footer), `actions/`, `page/` (`PageRoot`, `PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). Mobile-first layout rules: `.cursor/rules/mobile-first-responsive.mdc`. |
 | **shared/toast/** | Shared mutation feedback: `ToastProvider` + `useToast` (`enqueueToast`), mounted from `AppProviders`. |
 | **shared/hooks/** | Hooks reused across features (e.g. debounce, media query). |
 | **shared/utils/** | Pure helpers (formatting, validation, etc.). |
@@ -59,6 +59,6 @@ Products include a 2-step create wizard at `/products/new` under `features/produ
 
 Production orders live under `features/production-orders/` with list, create, and detail pages at `/production-orders`, `/production-orders/new`, and `/production-orders/:id`. The detail page includes floor steps (`FloorStepsPanel`) and actual production (`realProduzido`) alongside QTD. LOTE need lines.
 
-List tables for raw materials, products, and production orders open a shared right-side `EntityDetailDrawer` (`shared/components/drawer/`) on row click. Feature-specific content panels live under each feature’s `components/detail/` (or drawer content next to the full detail page for production orders). Action-menu cells use `stopPropagation` so menus do not open the drawer.
+List tables for raw materials, products, and production orders open a shared right-side `EntityDetailDrawer` (`shared/components/drawer/`) on row click. The drawer chrome matches the Stitch detail layout (eyebrow, title, summary stats, optional breakdown list, sticky Edit/Delete footer). Missing sections are omitted per entity (e.g. raw materials have no breakdown; production orders have Edit only—no delete API). Feature-specific breakdown panels live under each feature’s `components/detail/` when list data exists. Action-menu cells use `stopPropagation` so menus do not open the drawer.
 
 Use barrel `index.ts` in a folder when it helps keep imports short; export only what is part of the folder’s public API.
