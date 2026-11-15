@@ -1,30 +1,24 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink, useMatches } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { buildPageBreadcrumbs } from '@/shared/components/page/buildPageBreadcrumbs';
-import { getCrumbFromHandle } from '@/shared/components/page/pageBreadcrumbHandle';
+import { matchPageBreadcrumbs } from '@/shared/components/page/matchPageBreadcrumbs';
 
 export function PageBreadcrumbs() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const matches = useMatches();
+  const { pathname } = useLocation();
   const p = theme.palette.produza;
 
-  const items = useMemo(() => {
-    const routeCrumbs = matches.flatMap((match) => {
-      const crumb = getCrumbFromHandle(match.handle);
-      if (!crumb) {
-        return [];
-      }
-      return [{ pathname: match.pathname, crumb }];
-    });
-    return buildPageBreadcrumbs(routeCrumbs);
-  }, [matches]);
+  const items = useMemo(
+    () => buildPageBreadcrumbs(matchPageBreadcrumbs(pathname)),
+    [pathname]
+  );
 
   return (
     <Breadcrumbs

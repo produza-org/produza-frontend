@@ -22,39 +22,6 @@ import {
   RawMaterialEditPage,
   RawMaterialsProvider,
 } from '@/features/raw-materials';
-import type { PageBreadcrumbHandle } from '@/shared/components/page';
-
-const rawMaterialsCrumb = {
-  crumb: 'layout.nav.rawMaterials',
-} satisfies PageBreadcrumbHandle;
-
-const productsCrumb = {
-  crumb: 'layout.nav.products',
-} satisfies PageBreadcrumbHandle;
-
-const productionOrdersCrumb = {
-  crumb: 'layout.nav.productionOrders',
-} satisfies PageBreadcrumbHandle;
-
-const groupingsCrumb = {
-  crumb: 'layout.nav.groupings',
-} satisfies PageBreadcrumbHandle;
-
-const newCrumb = {
-  crumb: 'layout.breadcrumbs.new',
-} satisfies PageBreadcrumbHandle;
-
-const editCrumb = {
-  crumb: 'layout.breadcrumbs.edit',
-} satisfies PageBreadcrumbHandle;
-
-const recipeCrumb = {
-  crumb: 'layout.breadcrumbs.recipe',
-} satisfies PageBreadcrumbHandle;
-
-const detailCrumb = {
-  crumb: 'layout.breadcrumbs.detail',
-} satisfies PageBreadcrumbHandle;
 
 export function AppRoutes() {
   return (
@@ -65,7 +32,6 @@ export function AppRoutes() {
           <Route path="/" element={<HomePage />} />
           <Route
             path="/raw-materials"
-            handle={rawMaterialsCrumb}
             element={
               <RawMaterialsProvider>
                 <Outlet />
@@ -73,16 +39,11 @@ export function AppRoutes() {
             }
           >
             <Route index element={<RawMaterialsListPage />} />
-            <Route path="new" element={<RawMaterialCreatePage />} handle={newCrumb} />
-            <Route
-              path=":id/edit"
-              element={<RawMaterialEditPage />}
-              handle={editCrumb}
-            />
+            <Route path="new" element={<RawMaterialCreatePage />} />
+            <Route path=":id/edit" element={<RawMaterialEditPage />} />
           </Route>
           <Route
             path="/products"
-            handle={productsCrumb}
             element={
               <ProductsProvider>
                 <Outlet />
@@ -90,17 +51,12 @@ export function AppRoutes() {
             }
           >
             <Route index element={<ProductsListPage />} />
-            <Route path="new" element={<ProductCreatePage />} handle={newCrumb} />
-            <Route path=":id/edit" element={<ProductEditPage />} handle={editCrumb} />
-            <Route
-              path=":id/recipe"
-              element={<ProductRecipePage />}
-              handle={recipeCrumb}
-            />
+            <Route path="new" element={<ProductCreatePage />} />
+            <Route path=":id/edit" element={<ProductEditPage />} />
+            <Route path=":id/recipe" element={<ProductRecipePage />} />
           </Route>
           <Route
             path="/production-orders"
-            handle={productionOrdersCrumb}
             element={
               <ProductionOrdersProvider>
                 <Outlet />
@@ -108,18 +64,10 @@ export function AppRoutes() {
             }
           >
             <Route index element={<ProductionOrdersListPage />} />
-            <Route
-              path="new"
-              element={<ProductionOrderCreatePage />}
-              handle={newCrumb}
-            />
-            <Route
-              path=":id"
-              element={<ProductionOrderDetailPage />}
-              handle={detailCrumb}
-            />
+            <Route path="new" element={<ProductionOrderCreatePage />} />
+            <Route path=":id" element={<ProductionOrderDetailPage />} />
           </Route>
-          <Route path="/groupings" element={<HomePage />} handle={groupingsCrumb} />
+          <Route path="/groupings" element={<HomePage />} />
         </Route>
       </Route>
     </Routes>
