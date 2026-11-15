@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
 import { RAW_MATERIAL_UNIT_OPTIONS } from '@/features/raw-materials/constants';
@@ -9,8 +8,10 @@ import {
   formatDateDisplay,
   formatQuantity,
 } from '@/features/raw-materials/utils/format';
-import { getStockStatus } from '@/features/raw-materials/utils/list/stock-status';
-import { DetailFactList } from '@/shared/components/drawer';
+import {
+  DetailBreakdownList,
+  type DetailBreakdownItem,
+} from '@/shared/components/drawer';
 
 type RawMaterialDetailContentProps = {
   item: RawMaterial;
@@ -21,27 +22,20 @@ export function RawMaterialDetailContent({ item }: RawMaterialDetailContentProps
   const theme = useTheme();
   const p = theme.palette.produza;
   const isActive = item.status === 'active';
-  const stockStatus = getStockStatus(item.stockQuantity, item.minStock);
   const unitOption = RAW_MATERIAL_UNIT_OPTIONS.find(
     (option) => option.value === item.unit
   );
   const unitLabel = unitOption ? t(unitOption.labelKey) : item.unit;
 
-  const stockColors = {
-    critical: p.error,
-    warning: p.warning,
-    ok: p.success,
-  } as const;
-
-  const items = [
+  const items: DetailBreakdownItem[] = [
     {
       id: 'code',
-      label: t('rawMaterials.drawer.code'),
+      primary: t('rawMaterials.drawer.code'),
       value: item.code,
     },
     {
       id: 'status',
-      label: t('rawMaterials.drawer.status'),
+      primary: t('rawMaterials.drawer.status'),
       value: (
         <Chip
           size="small"
@@ -63,38 +57,25 @@ export function RawMaterialDetailContent({ item }: RawMaterialDetailContentProps
     },
     {
       id: 'unit',
-      label: t('rawMaterials.drawer.unit'),
+      primary: t('rawMaterials.drawer.unit'),
       value: unitLabel,
     },
     {
-      id: 'stock',
-      label: t('rawMaterials.drawer.stockQuantity'),
-      value: (
-        <Box component="span" sx={{ color: stockColors[stockStatus] }}>
-          {formatQuantity(item.stockQuantity)}
-        </Box>
-      ),
-    },
-    {
       id: 'minStock',
-      label: t('rawMaterials.drawer.minStock'),
+      primary: t('rawMaterials.drawer.minStock'),
       value: formatQuantity(item.minStock),
+      valueSecondary: unitLabel,
     },
     {
       id: 'unitCost',
-      label: t('rawMaterials.drawer.unitCost'),
+      primary: t('rawMaterials.drawer.unitCost'),
       value: formatCurrencyBrl(item.unitCost),
-    },
-    {
-      id: 'totalCost',
-      label: t('rawMaterials.drawer.totalCost'),
-      value: formatCurrencyBrl(item.totalCost),
     },
     ...(item.createdAt
       ? [
           {
             id: 'createdAt',
-            label: t('rawMaterials.drawer.createdAt'),
+            primary: t('rawMaterials.drawer.createdAt'),
             value: formatDateDisplay(item.createdAt),
           },
         ]
@@ -103,7 +84,7 @@ export function RawMaterialDetailContent({ item }: RawMaterialDetailContentProps
       ? [
           {
             id: 'updatedAt',
-            label: t('rawMaterials.drawer.updatedAt'),
+            primary: t('rawMaterials.drawer.updatedAt'),
             value: formatDateDisplay(item.updatedAt),
           },
         ]
@@ -111,7 +92,7 @@ export function RawMaterialDetailContent({ item }: RawMaterialDetailContentProps
   ];
 
   return (
-    <DetailFactList
+    <DetailBreakdownList
       title={t('rawMaterials.drawer.sectionOverview')}
       items={items}
     />
