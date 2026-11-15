@@ -32,6 +32,14 @@
       "groupings": "Groupings",
       "expandSidebar": "Expand sidebar",
       "collapseSidebar": "Collapse sidebar"
+    },
+    "breadcrumbs": {
+      "ariaLabel": "Breadcrumb",
+      "home": "Home",
+      "new": "New",
+      "edit": "Edit",
+      "recipe": "Recipe",
+      "detail": "Detail"
     }
   },
   "auth": {

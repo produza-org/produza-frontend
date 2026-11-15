@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 export const PageRoot = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(1.5, 4, 4),
 }));
 
 export const HeroRow = styled(Box)(({ theme }) => ({

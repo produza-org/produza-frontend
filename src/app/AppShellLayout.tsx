@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { AppFooter } from '@/shared/components/layout/AppFooter';
 import { AppHeader } from '@/shared/components/layout/AppHeader';
 import { AppSidebar } from '@/shared/components/layout/AppSidebar';
+import { PageBreadcrumbs } from '@/shared/components/page';
 
 const STORAGE_KEY = 'produza-sidebar-collapsed';
 
@@ -44,6 +45,15 @@ export function AppShellLayout() {
             bgcolor: 'background.default',
           }}
         >
+          <Box
+            sx={{
+              px: 4,
+              pt: 4,
+              pb: 0,
+            }}
+          >
+            <PageBreadcrumbs />
+          </Box>
           <Outlet />
         </Box>
         <AppFooter />
