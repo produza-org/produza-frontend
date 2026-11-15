@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import type { GroupingsAppliedFilters } from '@/features/groupings/hooks/useGroupingsFilters';
 import type { FormSelectOption } from '@/shared/components/form/FormSelectField';
@@ -13,6 +14,8 @@ import {
   FiltersRoot,
   FiltersRow,
 } from '@/features/groupings/components/list/GroupingsListFilters.styled';
+
+const RAW_MATERIAL_VISIBLE_TAGS = 1;
 
 type GroupingsListFiltersProps = {
   appliedFilters: GroupingsAppliedFilters;
@@ -88,6 +91,7 @@ export function GroupingsListFilters({
             <Autocomplete
               id="grouping-filter-raw-material"
               multiple
+              disableCloseOnSelect
               options={rawMaterialOptions}
               value={selectedRawMaterials}
               onChange={(_event, next) =>
@@ -109,6 +113,32 @@ export function GroupingsListFilters({
               noOptionsText={t('groupings.filters.rawMaterialNoOptions')}
               fullWidth
               size="small"
+              renderTags={(value, getTagProps) => {
+                const visible = value.slice(0, RAW_MATERIAL_VISIBLE_TAGS);
+                const hiddenCount = value.length - visible.length;
+                const tags = visible.map((option, index) => {
+                  const { key, ...tagProps } = getTagProps({ index });
+                  return (
+                    <Chip
+                      {...tagProps}
+                      key={key}
+                      size="small"
+                      label={option.label}
+                    />
+                  );
+                });
+                if (hiddenCount > 0) {
+                  tags.push(
+                    <Chip
+                      key="raw-material-limit-tags"
+                      size="small"
+                      label={`+${hiddenCount}`}
+                      sx={{ pointerEvents: 'none' }}
+                    />
+                  );
+                }
+                return tags;
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}

@@ -6,13 +6,18 @@ import { styled } from '@mui/material/styles';
 
 export const CardsGrid = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gap: theme.spacing(2.5),
+  gap: theme.spacing(2),
   gridTemplateColumns: '1fr',
+  justifyItems: 'stretch',
   [theme.breakpoints.up('sm')]: {
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: theme.spacing(2.5),
+  },
+  [theme.breakpoints.up('md')]: {
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
   },
   [theme.breakpoints.up('lg')]: {
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
   },
 }));
 
@@ -20,6 +25,8 @@ export const GroupCard = styled(Box)(({ theme }) => ({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
+  aspectRatio: '1 / 1',
   backgroundColor: theme.palette.produza.surfaceContainerLowest,
   borderRadius: 12,
   overflow: 'hidden',
@@ -38,18 +45,22 @@ export const GroupCard = styled(Box)(({ theme }) => ({
 }));
 
 export const GroupCardAccent = styled(Box)(({ theme }) => ({
+  flexShrink: 0,
   height: 4,
   width: '100%',
   backgroundColor: theme.palette.produza.primary,
 }));
 
 export const GroupCardBody = styled(Box)(({ theme }) => ({
+  flex: 1,
+  minHeight: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(1.5),
-  padding: theme.spacing(1.75, 2),
+  justifyContent: 'space-between',
+  gap: theme.spacing(1.25),
+  padding: theme.spacing(1.5, 1.75),
   [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1.75, 2),
   },
 }));
 
@@ -58,6 +69,7 @@ export const GroupCardHeader = styled(Box)(() => ({
   alignItems: 'flex-start',
   justifyContent: 'space-between',
   gap: 12,
+  minHeight: 0,
 }));
 
 export const GroupCardCode = styled(Typography)(({ theme }) => ({
@@ -70,17 +82,22 @@ export const GroupCardCode = styled(Typography)(({ theme }) => ({
 }));
 
 export const GroupCardTitle = styled(Typography)(({ theme }) => ({
-  fontSize: 17,
+  fontSize: 16,
   fontWeight: 800,
   lineHeight: 1.25,
   color: theme.palette.produza.onSurface,
   overflowWrap: 'anywhere',
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
 }));
 
 export const GroupCardStats = styled(Box)(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   gap: theme.spacing(1),
+  flexShrink: 0,
 }));
 
 export const GroupCardStat = styled(Box)(({ theme }) => ({
@@ -90,6 +107,7 @@ export const GroupCardStat = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 1.25),
   borderRadius: 8,
   backgroundColor: theme.palette.produza.surfaceContainerLow,
+  minWidth: 0,
 }));
 
 export const GroupCardStatLabel = styled(Typography)(({ theme }) => ({
@@ -101,11 +119,12 @@ export const GroupCardStatLabel = styled(Typography)(({ theme }) => ({
 }));
 
 export const GroupCardStatValue = styled(Typography)(({ theme }) => ({
-  fontSize: 20,
+  fontSize: 18,
   fontWeight: 800,
   lineHeight: 1.2,
   fontVariantNumeric: 'tabular-nums',
   color: theme.palette.produza.onSurface,
+  overflowWrap: 'anywhere',
 }));
 
 export const EmptyState = styled(Box)(({ theme }) => ({

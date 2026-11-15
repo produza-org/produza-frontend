@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import EditOutlined from '@mui/icons-material/EditOutlined';
+import Box from '@mui/material/Box';
 import { ActionsMenu, type ActionsMenuItem } from '@/shared/components/actions';
 import { GroupingsCardsFooter } from '@/features/groupings/components/list/GroupingsCardsFooter';
 import type { RawMaterialGroup } from '@/features/groupings/types/grouping';
@@ -89,12 +90,12 @@ export function GroupingsListCards({
               <GroupCardAccent />
               <GroupCardBody>
                 <GroupCardHeader>
-                  <div>
+                  <Box sx={{ minWidth: 0, flex: 1 }}>
                     <GroupCardCode>
                       {t('groupings.cards.codeLabel', { code: row.code })}
                     </GroupCardCode>
                     <GroupCardTitle>{row.name}</GroupCardTitle>
-                  </div>
+                  </Box>
                   <ActionsMenu
                     ariaLabel={t('groupings.cards.actionsMenuAria')}
                     items={actionItems}
