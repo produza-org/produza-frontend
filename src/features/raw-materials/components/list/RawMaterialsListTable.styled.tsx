@@ -20,11 +20,17 @@ export const TableScroll = styled(Box)(() => ({
   overflowX: 'auto',
 }));
 
-export const DataTable = styled(Table)(() => ({
+export const DataTable = styled(Table)(({ theme }) => ({
   width: '100%',
   borderCollapse: 'collapse',
   '& .MuiTableCell-root': { borderBottom: 'none' },
   '& .MuiTableBody-root .MuiTableCell-root': { fontSize: 14 },
+  [theme.breakpoints.down('sm')]: {
+    '& .MuiTableCell-root': {
+      paddingLeft: theme.spacing(1.5),
+      paddingRight: theme.spacing(1.5),
+    },
+  },
 }));
 
 export const HeadCell = styled(TableCell)(({ theme }) => ({
@@ -154,14 +160,21 @@ export const StatusChip = styled(Chip, {
 });
 
 export const FooterBar = styled(Box)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
   display: 'flex',
+  flexWrap: 'wrap',
   alignItems: 'center',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
+  gap: theme.spacing(1.5),
   borderTop: `1px solid ${theme.palette.produza.slate100}`,
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    justifyContent: 'space-between',
+  },
 }));
 
 export const FooterSummary = styled(Typography)(({ theme }) => ({

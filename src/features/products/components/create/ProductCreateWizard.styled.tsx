@@ -42,13 +42,20 @@ export const StepPanel = styled(Box)(({ theme }) => ({
 
 export const WizardActions = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  flexWrap: 'wrap',
-  gap: theme.spacing(2),
+  flexDirection: 'column-reverse',
+  alignItems: 'stretch',
+  gap: theme.spacing(1.5),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+  },
 }));
 
 export const SecondaryButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -61,9 +68,13 @@ export const SecondaryButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: `${theme.palette.produza.secondary}1A`,
   },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));
 
 export const PrimaryButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(5),
   paddingTop: theme.spacing(1.5),
@@ -90,4 +101,7 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
       boxShadow: 'none',
       opacity: 1,
     },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));

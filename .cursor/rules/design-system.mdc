@@ -8,10 +8,11 @@ alwaysApply: true
 Agents and UI work MUST keep visual and interaction parity with the existing catalog UX. Do not invent a one-off visual language.
 
 Remote mutation/fetch feedback (toasts + loadings): see `ux-feedback.mdc`.
+Layouts: mobile-first breakpoints and shell behavior — see `mobile-first-responsive.mdc`.
 
 ## Shell and theme
 
-- Reuse the app shell: `AppSidebar`, header, and page containers under `src/shared/components/layout/` and `src/shared/components/page/` (e.g. `PageTitle`, `PageSubtitle`).
+- Reuse the app shell: `AppSidebar`, header, and page containers under `src/shared/components/layout/` and `src/shared/components/page/` (e.g. `PageRoot`, `PageTitle`, `PageSubtitle`).
 - Colors via MUI theme `palette.produza` only (`useTheme().palette.produza` / `theme.palette.produza.*`). Tokens live in `src/theme/produzaTokens.ts` and are exposed by `createAppTheme` — never hardcode feature hex or light/dark hex forks in features.
 
 ## Mirror raw-materials patterns

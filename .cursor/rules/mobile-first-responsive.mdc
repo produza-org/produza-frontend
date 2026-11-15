@@ -1,0 +1,48 @@
+---
+description: Mobile-first responsive layouts for the authenticated panel — shared shell, pages, tables, forms
+alwaysApply: true
+---
+
+# Mobile-first responsive layouts
+
+The authenticated Produza panel must work from narrow phones (~375px) through tablets to desktop. Layout work is **mobile-first**: base styles target the smallest viewport; enhance with MUI breakpoints (`sm` / `md` / `lg`). Do not invent a separate mobile visual language — keep design-system parity (`design-system.mdc`).
+
+Related: `design-system.mdc` (shell/theme), `ux-feedback.mdc` (toasts/loadings), `produza-react-typescript.mdc` (MUI `sx` / styled).
+
+## Breakpoints (MUI)
+
+- Prefer `theme.breakpoints.up('sm'|'md'|'lg')` in `styled(...)` and `sx={{ … }}`.
+- Default styles = **xs**. Add rules only as the viewport grows.
+- Prefer `sx={{ px: { xs: 2, sm: 3, md: 4 } }}` over desktop-only fixed padding/width.
+- Use `useMediaQuery(theme.breakpoints.up('md'))` for structural behavior switches (e.g. permanent vs temporary nav), not for painting brand colors.
+
+## Shell and navigation
+
+- Below `md`, the sidebar is a **temporary** drawer opened from the header; do not keep a permanent rail that shrinks content on phones.
+- At `md+`, keep the permanent drawer (expand/collapse) as today.
+- Page gutters live on shared page chrome (`PageRoot` / shell breadcrumbs) with responsive `px` — avoid stacking large fixed horizontal paddings that collapse usable width.
+- Breadcrumbs, headers, and hero/action rows must wrap; titles may use responsive type size and `overflowWrap`.
+
+## Tables, filters, forms, wizards
+
+| Surface | Mobile-first rule |
+|--------|-------------------|
+| List filters | No desktop-only `minWidth` that exceeds the content column; fields stretch full width on `xs`, tighten from `sm` |
+| Data tables | Always allow horizontal scroll (`overflowX: 'auto'`) or stack into cards; never force multi-column tables to overflow the viewport without a scroll container |
+| Table footers / pagers | `flexWrap`; stack summary + pager on `xs` |
+| Form / editor / detail bodies | Responsive padding (`xs` tighter → `md` roomier) |
+| Form / modal / wizard actions | Stack full-width on `xs` (`column-reverse` so primary is first); row + wrap from `sm` |
+| Create wizards / steppers | Compact or vertical on small screens; horizontal + `alternativeLabel` from `sm`+ |
+| Recipe / floor step rows | Single column on `xs`; multi-column grids only from `md` |
+| Drawers / dialogs | Paper `width: 100%` with viewport margins; actions wrap on narrow screens |
+
+## Prefer shared fixes
+
+When breakage is structural (shell, page padding, table scroll, form actions), fix **`AppShell` / `AppSidebar` / `AppHeader` / shared `page` / shared dialog** — or the shared pattern mirrored across raw-materials / products / production-orders — instead of one-off page hacks.
+
+## Do not
+
+- Hardcode desktop-only widths (`minWidth: 240`, fixed `720`, etc.) that break ~375px content columns.
+- Leave permanent sidebar consuming space on phones.
+- Ship wide tables or need-lines without an overflow/scroll wrapper.
+- Redesign visuals for “mobile look” beyond responsive spacing, wrapping, and navigation behavior.

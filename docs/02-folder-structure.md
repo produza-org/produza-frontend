@@ -28,7 +28,7 @@ src/
 | **core/types/** | Types used in more than one feature or by core itself. |
 | **core/store/** | Zustand (or other) global stores used across features. |
 | **core/mocks/** | Legacy seed JSON / persistence helpers. Raw materials no longer use localStorage; prefer feature API modules. |
-| **shared/components/** | Buttons, inputs, layout primitives, dialogs, and menus used in multiple features. Organized as `layout/`, `form/`, `dialog/`, `actions/`, `page/` (`PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). |
+| **shared/components/** | Buttons, inputs, layout primitives, dialogs, and menus used in multiple features. Organized as `layout/` (responsive shell: temporary nav below `md`), `form/`, `dialog/`, `actions/`, `page/` (`PageRoot`, `PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). Mobile-first layout rules: `.cursor/rules/mobile-first-responsive.mdc`. |
 | **shared/toast/** | Shared mutation feedback: `ToastProvider` + `useToast` (`enqueueToast`), mounted from `AppProviders`. |
 | **shared/hooks/** | Hooks reused across features (e.g. debounce, media query). |
 | **shared/utils/** | Pure helpers (formatting, validation, etc.). |

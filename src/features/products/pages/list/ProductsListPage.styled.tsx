@@ -2,9 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
-export const PageRoot = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1.5, 4, 4),
-}));
+export { PageRoot } from '@/shared/components/page';
 
 export const HeroRow = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -16,6 +14,7 @@ export const HeroRow = styled(Box)(({ theme }) => ({
 }));
 
 export const AddProductButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -33,6 +32,9 @@ export const AddProductButton = styled(Button)(({ theme }) => ({
     boxShadow: '0 10px 15px -3px rgba(0, 23, 54, 0.2)',
   },
   '&:active': { transform: 'scale(0.98)' },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));
 
 export const StatsGrid = styled(Box)(({ theme }) => ({

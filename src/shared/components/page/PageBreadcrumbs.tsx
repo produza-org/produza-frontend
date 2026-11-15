@@ -23,11 +23,14 @@ export function PageBreadcrumbs() {
   return (
     <Breadcrumbs
       aria-label={t('layout.breadcrumbs.ariaLabel')}
+      maxItems={3}
+      itemsBeforeCollapse={0}
       separator={
         <NavigateNextIcon sx={{ fontSize: 16, color: p.onSurfaceVariant }} />
       }
       sx={{
         mb: 0,
+        '& .MuiBreadcrumbs-ol': { flexWrap: 'wrap', rowGap: 0.5 },
         '& .MuiBreadcrumbs-separator': { mx: 0.5 },
       }}
     >

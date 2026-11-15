@@ -31,7 +31,8 @@
       "productionOrders": "Ordens de produção",
       "groupings": "Agrupamentos",
       "expandSidebar": "Expandir menu",
-      "collapseSidebar": "Recolher menu"
+      "collapseSidebar": "Recolher menu",
+      "openMenu": "Abrir menu de navegação"
     },
     "breadcrumbs": {
       "ariaLabel": "Trilha de navegação",
