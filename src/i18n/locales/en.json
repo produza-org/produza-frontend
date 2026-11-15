@@ -160,6 +160,21 @@
       "m": "Meter (m)",
       "m2": "Square meter (m²)",
       "lt": "Liter (lt)"
+    },
+    "drawer": {
+      "title": "Raw material details",
+      "subtitle": "Code {{code}}",
+      "closeAria": "Close raw material details",
+      "sectionOverview": "Overview",
+      "code": "Code",
+      "name": "Name",
+      "status": "Status",
+      "unit": "Unit",
+      "stockQuantity": "Qty. in stock",
+      "minStock": "Minimum stock",
+      "unitCost": "Unit cost (BRL)",
+      "totalCost": "Total cost (BRL)",
+      "edit": "Edit"
     }
   },
   "products": {
@@ -305,6 +320,20 @@
         "duplicateMaterial": "Each raw material can appear only once.",
         "negativeProportion": "Proportion cannot be negative."
       }
+    },
+    "drawer": {
+      "title": "Product details",
+      "subtitle": "Finished product overview",
+      "closeAria": "Close product details",
+      "sectionOverview": "Overview",
+      "name": "Name",
+      "status": "Status",
+      "finalSize": "Final size",
+      "unit": "Unit",
+      "yield": "Yield",
+      "expansionFactor": "Expansion factor",
+      "edit": "Edit",
+      "recipe": "Recipe"
     }
   },
   "productionOrders": {
@@ -419,6 +448,28 @@
       "COMPONENTE": "Component",
       "MATERIA_PRIMA": "Raw material",
       "EMBALAGEM": "Packaging"
+    },
+    "drawer": {
+      "title": "Order {{number}}",
+      "titleFallback": "Production order",
+      "subtitle": "Lot projection overview",
+      "closeAria": "Close production order details",
+      "loading": "Loading production order details",
+      "sectionOverview": "Overview",
+      "sectionNeeds": "Needs summary",
+      "number": "Number",
+      "product": "Product",
+      "quantity": "Quantity to produce (Q)",
+      "realProduzido": "Actual produced",
+      "totalMistura": "Total mistura (kg)",
+      "yieldSnapshot": "Yield snapshot",
+      "emitidaEm": "Issued at",
+      "startDate": "Start date",
+      "plannedEndDate": "Planned end date",
+      "notes": "Notes",
+      "needsEmpty": "No need lines for this order.",
+      "needsCount": "{{count}} lines",
+      "openFull": "Open full detail"
     }
   }
 }

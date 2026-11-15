@@ -160,6 +160,21 @@
       "m": "Metro (m)",
       "m2": "Metro Quadrado (m²)",
       "lt": "Litro (lt)"
+    },
+    "drawer": {
+      "title": "Detalhes da matéria-prima",
+      "subtitle": "Código {{code}}",
+      "closeAria": "Fechar detalhes da matéria-prima",
+      "sectionOverview": "Visão geral",
+      "code": "Código",
+      "name": "Nome",
+      "status": "Status",
+      "unit": "Unidade",
+      "stockQuantity": "Qtd. em estoque",
+      "minStock": "Estoque mínimo",
+      "unitCost": "Custo unitário (R$)",
+      "totalCost": "Custo total (R$)",
+      "edit": "Editar"
     }
   },
   "products": {
@@ -305,6 +320,20 @@
         "duplicateMaterial": "Cada matéria-prima só pode aparecer uma vez.",
         "negativeProportion": "A proporção não pode ser negativa."
       }
+    },
+    "drawer": {
+      "title": "Detalhes do produto",
+      "subtitle": "Visão geral do produto acabado",
+      "closeAria": "Fechar detalhes do produto",
+      "sectionOverview": "Visão geral",
+      "name": "Nome",
+      "status": "Status",
+      "finalSize": "Tamanho final",
+      "unit": "Unidade",
+      "yield": "Rendimento",
+      "expansionFactor": "Fator de expansão",
+      "edit": "Editar",
+      "recipe": "Ficha técnica"
     }
   },
   "productionOrders": {
@@ -419,6 +448,28 @@
       "COMPONENTE": "COMPONENTE",
       "MATERIA_PRIMA": "MATÉRIA PRIMA",
       "EMBALAGEM": "EMBALAGEM"
+    },
+    "drawer": {
+      "title": "Ordem {{number}}",
+      "titleFallback": "Ordem de produção",
+      "subtitle": "Visão geral da projeção de lote",
+      "closeAria": "Fechar detalhes da ordem de produção",
+      "loading": "Carregando detalhes da ordem de produção",
+      "sectionOverview": "Visão geral",
+      "sectionNeeds": "Resumo das necessidades",
+      "number": "Número",
+      "product": "Produto",
+      "quantity": "Quantidade a produzir (Q)",
+      "realProduzido": "Real produzido",
+      "totalMistura": "Total mistura (kg)",
+      "yieldSnapshot": "Rendimento (snapshot)",
+      "emitidaEm": "Emitida em",
+      "startDate": "Data de início",
+      "plannedEndDate": "Data prevista de fim",
+      "notes": "Observações",
+      "needsEmpty": "Nenhuma necessidade para esta ordem.",
+      "needsCount": "{{count}} linhas",
+      "openFull": "Abrir detalhe completo"
     }
   }
 }

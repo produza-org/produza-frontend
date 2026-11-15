@@ -3,5 +3,6 @@ export { AppHeader } from './layout/AppHeader';
 export { AppSidebar } from './layout/AppSidebar';
 export * from './actions';
 export * from './dialog';
+export * from './drawer';
 export * from './form';
 export * from './page';
