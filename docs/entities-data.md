@@ -2,7 +2,7 @@
 
 ## Matéria Prima: Ok 
 
-## Componentes (Grupos de Matérias Primas):
+## Componentes (Grupos de Matérias Primas): Ok — `/groupings` (card list, 2-step wizard, detail drawer)
 
 ## Produto
 

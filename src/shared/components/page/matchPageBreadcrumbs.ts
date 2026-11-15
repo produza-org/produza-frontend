@@ -36,7 +36,10 @@ const BREADCRUMB_SECTIONS: BreadcrumbSection[] = [
   {
     path: '/groupings',
     crumb: 'layout.nav.groupings',
-    leaves: [],
+    leaves: [
+      { pattern: '/groupings/new', crumb: 'layout.breadcrumbs.new' },
+      { pattern: '/groupings/:id/edit', crumb: 'layout.breadcrumbs.edit' },
+    ],
   },
 ];
 

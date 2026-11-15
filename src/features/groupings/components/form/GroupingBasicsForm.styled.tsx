@@ -1,0 +1,106 @@
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+
+export const FormCard = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.produza.surfaceContainerLowest,
+  borderRadius: 12,
+  overflow: 'hidden',
+  border: `1px solid ${theme.palette.produza.outlineVariant}4D`,
+  boxShadow: '0 12px 32px rgba(0, 27, 61, 0.04)',
+}));
+
+export const FormCardAccent = styled(Box)(({ theme }) => ({
+  height: 6,
+  width: '100%',
+  background: `linear-gradient(to right, ${theme.palette.produza.primary}, ${theme.palette.produza.primaryContainer})`,
+}));
+
+export const FormBody = styled('form')(({ theme }) => ({
+  padding: theme.spacing(2),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(3),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+    gap: theme.spacing(4),
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
+  },
+}));
+
+export const FormRow = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: theme.spacing(4),
+  [theme.breakpoints.up('md')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+}));
+
+export const FormActions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  alignItems: 'stretch',
+  gap: theme.spacing(1.5),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+  },
+}));
+
+export const CancelButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  fontSize: 14,
+  fontWeight: 700,
+  textTransform: 'none',
+  color: theme.palette.produza.secondary,
+  borderRadius: 6,
+  '&:hover': {
+    backgroundColor: `${theme.palette.produza.secondary}1A`,
+  },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
+}));
+
+export const SaveButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  paddingLeft: theme.spacing(5),
+  paddingRight: theme.spacing(5),
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  fontSize: 14,
+  fontWeight: 700,
+  textTransform: 'none',
+  color: theme.palette.produza.onPrimary,
+  backgroundColor: theme.palette.produza.primary,
+  borderRadius: 6,
+  boxShadow: `0 10px 15px -3px ${theme.palette.produza.primary}33`,
+  '&:hover': {
+    opacity: 0.9,
+    backgroundColor: theme.palette.produza.primary,
+  },
+  '&:active': { transform: 'scale(0.95)' },
+  '&.MuiButton-root.Mui-disabled, &.MuiButton-contained.Mui-disabled, &.MuiButton-containedPrimary.Mui-disabled':
+    {
+      color: theme.palette.produza.onPrimary,
+      WebkitTextFillColor: theme.palette.produza.onPrimary,
+      background: theme.palette.produza.disabledPrimary,
+      backgroundImage: 'none',
+      backgroundColor: theme.palette.produza.disabledPrimary,
+      boxShadow: 'none',
+      opacity: 1,
+    },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
+}));

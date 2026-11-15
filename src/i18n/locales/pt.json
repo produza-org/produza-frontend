@@ -478,5 +478,127 @@
       "edit": "Editar",
       "delete": "Excluir"
     }
+  },
+  "groupings": {
+    "errors": {
+      "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "toasts": {
+      "created": "Agrupamento criado com sucesso.",
+      "updated": "Agrupamento atualizado com sucesso.",
+      "deleted": "Agrupamento excluído com sucesso."
+    },
+    "list": {
+      "title": "Agrupamentos",
+      "subtitle": "Modelos reutilizáveis de composição de matérias-primas.",
+      "add": "Novo agrupamento",
+      "addAria": "Criar novo agrupamento",
+      "loading": "Carregando agrupamentos",
+      "statTotal": "Total de agrupamentos",
+      "statActive": "Status ativo",
+      "statMaterials": "Materiais em uso",
+      "statCost": "Custo total ativo"
+    },
+    "filters": {
+      "nameLabel": "Nome do agrupamento",
+      "namePlaceholder": "ex.: BASE LEITE COCO",
+      "rawMaterialLabel": "Matéria-prima",
+      "rawMaterialPlaceholder": "id, código ou nome",
+      "codeLabel": "Código",
+      "codePlaceholder": "ex.: GRP-001",
+      "submit": "Filtrar"
+    },
+    "cards": {
+      "codeLabel": "CÓDIGO: {{code}}",
+      "materialsLabel": "Materiais",
+      "costLabel": "Custo",
+      "actionsMenuAria": "Ações do agrupamento",
+      "editAction": "Editar",
+      "deleteAction": "Excluir",
+      "empty": "Nenhum agrupamento encontrado.",
+      "pagerSummary": "Mostrando {{shown}} de {{total}} agrupamentos",
+      "pagerPrev": "Página anterior",
+      "pagerNext": "Próxima página"
+    },
+    "delete": {
+      "title": "Excluir agrupamento",
+      "message": "Tem certeza de que deseja excluir este agrupamento?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
+    },
+    "form": {
+      "title": "Cadastro de agrupamento",
+      "subtitle": "Crie uma composição reutilizável de matérias-primas.",
+      "editTitle": "Editar agrupamento",
+      "editSubtitle": "Atualize os dados e a composição do agrupamento.",
+      "nameLabel": "Nome do agrupamento",
+      "namePlaceholder": "Ex.: BASE LEITE COCO",
+      "codeLabel": "Código interno",
+      "codePlaceholder": "Ex.: GRP-001",
+      "descriptionLabel": "Descrição",
+      "descriptionPlaceholder": "Observações opcionais sobre este agrupamento",
+      "cancel": "Cancelar",
+      "loading": "Carregando agrupamento"
+    },
+    "createWizard": {
+      "steps": {
+        "general": "Informações básicas",
+        "composition": "Composição"
+      },
+      "next": "Próximo",
+      "back": "Voltar",
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "loadingMaterials": "Carregando matérias-primas",
+      "discardTitle": "Descartar alterações?",
+      "discardMessage": "Há alterações não salvas neste agrupamento. Sair sem salvar?",
+      "discardCancel": "Continuar editando",
+      "discardConfirm": "Descartar"
+    },
+    "composition": {
+      "hint": "Adicione matérias-primas e defina as quantidades deste agrupamento.",
+      "addItem": "Adicionar item",
+      "empty": "Nenhum material ainda. Use Adicionar item para montar a composição.",
+      "colSku": "Material",
+      "colUnit": "Unidade",
+      "colQty": "Quantidade",
+      "colUnitCost": "Custo unitário",
+      "colSubtotal": "Subtotal",
+      "colActions": "Ações",
+      "qtyAria": "Quantidade de {{name}}",
+      "removeLine": "Remover linha",
+      "total": "Total do agrupamento"
+    },
+    "picker": {
+      "title": "Selecionar matérias-primas",
+      "subtitle": "Busque e selecione materiais para adicionar à composição.",
+      "closeAria": "Fechar seleção de matérias-primas",
+      "searchPlaceholder": "Buscar por nome ou código",
+      "colMaterial": "Material",
+      "colQty": "Qtd",
+      "colStock": "Estoque",
+      "colUnit": "Unidade",
+      "selectAria": "Selecionar {{name}}",
+      "qtyAria": "Quantidade de {{name}}",
+      "selectedCount": "{{count}} selecionado(s)",
+      "pagerPrev": "Anterior",
+      "pagerNext": "Próximo",
+      "pagerPage": "Página {{page}} de {{totalPages}}",
+      "cancel": "Cancelar",
+      "confirm": "Adicionar selecionados"
+    },
+    "drawer": {
+      "eyebrow": "Detalhes do agrupamento",
+      "title": "Detalhes do agrupamento",
+      "closeAria": "Fechar detalhes do agrupamento",
+      "materials": "Materiais",
+      "totalCost": "Custo total",
+      "code": "Código",
+      "description": "Descrição",
+      "sectionBasics": "Básico",
+      "sectionComposition": "Composição",
+      "edit": "Editar",
+      "delete": "Excluir"
+    }
   }
 }
