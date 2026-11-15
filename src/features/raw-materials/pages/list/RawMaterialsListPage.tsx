@@ -2,10 +2,8 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
-import EditOutlined from '@mui/icons-material/EditOutlined';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
@@ -13,13 +11,13 @@ import { ConfirmModal } from '@/shared/components/dialog';
 import { EntityDetailDrawer } from '@/shared/components/drawer';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { useToast } from '@/shared/toast';
-import { RawMaterialDetailContent } from '@/features/raw-materials/components/detail/RawMaterialDetailContent';
 import { RawMaterialsStatCard } from '@/features/raw-materials/components/list/RawMaterialsStatCard';
 import { RawMaterialsListFilters } from '@/features/raw-materials/components/list/RawMaterialsListFilters';
 import { RawMaterialsListTable } from '@/features/raw-materials/components/list/RawMaterialsListTable';
 import { useRawMaterialsContext } from '@/features/raw-materials/context/RawMaterialsContext';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { formatCurrencyBrl } from '@/features/raw-materials/utils/format';
+import { buildRawMaterialDrawerStats } from '@/features/raw-materials/utils/drawer-stats';
 import { useRawMaterialsFilters } from '@/features/raw-materials/hooks/useRawMaterialsFilters';
 import { useRawMaterialsList } from '@/features/raw-materials/hooks/useRawMaterialsList';
 import { useRawMaterialsStats } from '@/features/raw-materials/hooks/useRawMaterialsStats';
@@ -91,6 +89,7 @@ export function RawMaterialsListPage() {
     try {
       await deleteRawMaterial(pendingDeleteId);
       setPendingDeleteId(null);
+      setSelectedItem(null);
       enqueueToast({
         severity: 'success',
         message: t('rawMaterials.toasts.deleted'),
@@ -223,41 +222,29 @@ export function RawMaterialsListPage() {
       <EntityDetailDrawer
         open={drawerItem !== null}
         onClose={() => setSelectedItem(null)}
+        eyebrow={t('rawMaterials.drawer.eyebrow')}
         title={drawerItem?.name ?? t('rawMaterials.drawer.title')}
-        subtitle={
-          drawerItem
-            ? t('rawMaterials.drawer.subtitle', { code: drawerItem.code })
-            : undefined
-        }
         closeAriaLabel={t('rawMaterials.drawer.closeAria')}
-        footer={
-          drawerItem ? (
-            <Button
-              variant="contained"
-              disableElevation
-              startIcon={<EditOutlined />}
-              onClick={() => {
+        stats={drawerItem ? buildRawMaterialDrawerStats(drawerItem, t) : []}
+        editLabel={t('rawMaterials.drawer.edit')}
+        deleteLabel={t('rawMaterials.drawer.delete')}
+        onEdit={
+          drawerItem
+            ? () => {
                 const id = drawerItem.id;
                 setSelectedItem(null);
                 navigate(`/raw-materials/${id}/edit`);
-              }}
-              sx={{
-                width: { xs: '100%', sm: 'auto' },
-                textTransform: 'none',
-                fontWeight: 700,
-                borderRadius: 1.5,
-                bgcolor: 'produza.primary',
-                color: 'produza.onPrimary',
-                '&:hover': { bgcolor: 'produza.primaryContainer' },
-              }}
-            >
-              {t('rawMaterials.drawer.edit')}
-            </Button>
-          ) : null
+              }
+            : undefined
         }
-      >
-        {drawerItem ? <RawMaterialDetailContent item={drawerItem} /> : null}
-      </EntityDetailDrawer>
+        onDelete={
+          drawerItem
+            ? () => {
+                setPendingDeleteId(drawerItem.id);
+              }
+            : undefined
+        }
+      />
 
       <ConfirmModal
         open={pendingDeleteId !== null}
