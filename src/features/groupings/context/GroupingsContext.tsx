@@ -15,7 +15,9 @@ import {
   updateRawMaterialGroupRequest,
 } from '@/features/groupings/api';
 import {
+  EMPTY_GROUPINGS_FILTERS,
   useGroupingsFiltersState,
+  type GroupingsAppliedFilters,
   type GroupingsFiltersState,
 } from '@/features/groupings/hooks/useGroupingsFilters';
 import type {
@@ -65,32 +67,45 @@ export function GroupingsProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [fetchFilters, setFetchFilters] = useState<GroupingsAppliedFilters>(
+    EMPTY_GROUPINGS_FILTERS
+  );
   const resetPage = useCallback(() => setPage(1), []);
   const {
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
-    setNameFilter,
-    setCodeFilter,
-    setRawMaterialFilter,
+    rawMaterialIdsFilter,
+    applyFilters: setAppliedFilters,
   } = useGroupingsFiltersState(resetPage);
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const data = await listAllRawMaterialGroups();
+      const data = await listAllRawMaterialGroups(100, {
+        name: fetchFilters.name,
+        code: fetchFilters.code,
+        rawMaterialIds: fetchFilters.rawMaterialIds,
+      });
       setItems(data);
     } catch (error) {
       setErrorMessage(toErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [fetchFilters]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const applyFilters = useCallback(
+    (filters: GroupingsAppliedFilters) => {
+      setAppliedFilters(filters);
+      setFetchFilters(filters);
+    },
+    [setAppliedFilters]
+  );
 
   const createGrouping = useCallback(
     async (input: RawMaterialGroupCreateInput) => {
@@ -137,10 +152,8 @@ export function GroupingsProvider({ children }: { children: ReactNode }) {
       deleteGrouping,
       nameFilter,
       codeFilter,
-      rawMaterialFilter,
-      setNameFilter,
-      setCodeFilter,
-      setRawMaterialFilter,
+      rawMaterialIdsFilter,
+      applyFilters,
       page,
       setPage,
     }),
@@ -154,10 +167,8 @@ export function GroupingsProvider({ children }: { children: ReactNode }) {
       deleteGrouping,
       nameFilter,
       codeFilter,
-      rawMaterialFilter,
-      setNameFilter,
-      setCodeFilter,
-      setRawMaterialFilter,
+      rawMaterialIdsFilter,
+      applyFilters,
       page,
     ]
   );

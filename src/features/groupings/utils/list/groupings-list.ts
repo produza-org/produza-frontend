@@ -4,11 +4,13 @@ export function filterGroupings(
   items: RawMaterialGroup[],
   nameFilter: string,
   codeFilter: string,
-  rawMaterialFilter: string
+  rawMaterialIdsFilter: string[]
 ): RawMaterialGroup[] {
   const name = nameFilter.trim().toLowerCase();
   const code = codeFilter.trim().toLowerCase();
-  const rawMaterial = rawMaterialFilter.trim().toLowerCase();
+  const rawMaterialIds = new Set(
+    rawMaterialIdsFilter.map((id) => id.trim()).filter((id) => id.length > 0)
+  );
 
   return items.filter((item) => {
     if (name.length > 0 && !item.name.toLowerCase().includes(name)) {
@@ -17,21 +19,13 @@ export function filterGroupings(
     if (code.length > 0 && !item.code.toLowerCase().includes(code)) {
       return false;
     }
-    if (rawMaterial.length === 0) {
+    if (rawMaterialIds.size === 0) {
       return true;
     }
 
-    return (item.lines ?? []).some((line) => {
-      const material = line.rawMaterial;
-      if (!material) {
-        return line.rawMaterialId.toLowerCase() === rawMaterial;
-      }
-      return (
-        material.id.toLowerCase() === rawMaterial ||
-        material.code.toLowerCase().includes(rawMaterial) ||
-        material.name.toLowerCase().includes(rawMaterial)
-      );
-    });
+    return (item.lines ?? []).some((line) =>
+      rawMaterialIds.has(line.rawMaterialId)
+    );
   });
 }
 

@@ -1,41 +1,39 @@
 import { useCallback, useState } from 'react';
 import { useGroupingsContext } from '@/features/groupings/context/GroupingsContext';
 
+export type GroupingsAppliedFilters = {
+  name: string;
+  code: string;
+  rawMaterialIds: string[];
+};
+
+export const EMPTY_GROUPINGS_FILTERS: GroupingsAppliedFilters = {
+  name: '',
+  code: '',
+  rawMaterialIds: [],
+};
+
 export type GroupingsFiltersState = {
   nameFilter: string;
   codeFilter: string;
-  rawMaterialFilter: string;
-  setNameFilter: (value: string) => void;
-  setCodeFilter: (value: string) => void;
-  setRawMaterialFilter: (value: string) => void;
+  rawMaterialIdsFilter: string[];
+  applyFilters: (filters: GroupingsAppliedFilters) => void;
 };
 
 export function useGroupingsFiltersState(
   onFilterChange?: () => void
 ): GroupingsFiltersState {
-  const [nameFilter, setNameFilterState] = useState('');
-  const [codeFilter, setCodeFilterState] = useState('');
-  const [rawMaterialFilter, setRawMaterialFilterState] = useState('');
-
-  const setNameFilter = useCallback(
-    (value: string) => {
-      setNameFilterState(value);
-      onFilterChange?.();
-    },
-    [onFilterChange]
+  const [nameFilter, setNameFilter] = useState('');
+  const [codeFilter, setCodeFilter] = useState('');
+  const [rawMaterialIdsFilter, setRawMaterialIdsFilter] = useState<string[]>(
+    []
   );
 
-  const setCodeFilter = useCallback(
-    (value: string) => {
-      setCodeFilterState(value);
-      onFilterChange?.();
-    },
-    [onFilterChange]
-  );
-
-  const setRawMaterialFilter = useCallback(
-    (value: string) => {
-      setRawMaterialFilterState(value);
+  const applyFilters = useCallback(
+    (filters: GroupingsAppliedFilters) => {
+      setNameFilter(filters.name);
+      setCodeFilter(filters.code);
+      setRawMaterialIdsFilter(filters.rawMaterialIds);
       onFilterChange?.();
     },
     [onFilterChange]
@@ -44,10 +42,8 @@ export function useGroupingsFiltersState(
   return {
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
-    setNameFilter,
-    setCodeFilter,
-    setRawMaterialFilter,
+    rawMaterialIdsFilter,
+    applyFilters,
   };
 }
 
@@ -55,18 +51,14 @@ export function useGroupingsFilters(): GroupingsFiltersState {
   const {
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
-    setNameFilter,
-    setCodeFilter,
-    setRawMaterialFilter,
+    rawMaterialIdsFilter,
+    applyFilters,
   } = useGroupingsContext();
 
   return {
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
-    setNameFilter,
-    setCodeFilter,
-    setRawMaterialFilter,
+    rawMaterialIdsFilter,
+    applyFilters,
   };
 }

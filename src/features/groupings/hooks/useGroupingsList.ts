@@ -8,7 +8,7 @@ export function useGroupingsList() {
     items,
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
+    rawMaterialIdsFilter,
     page,
     setPage,
   } = useGroupingsContext();
@@ -19,9 +19,9 @@ export function useGroupingsList() {
         items.filter((item) => item.status === 'active'),
         nameFilter,
         codeFilter,
-        rawMaterialFilter
+        rawMaterialIdsFilter
       ),
-    [codeFilter, items, nameFilter, rawMaterialFilter]
+    [codeFilter, items, nameFilter, rawMaterialIdsFilter]
   );
 
   const totalFiltered = filteredItems.length;

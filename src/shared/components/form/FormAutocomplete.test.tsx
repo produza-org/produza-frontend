@@ -61,4 +61,25 @@ describe('FormAutocomplete', () => {
 
     expect(screen.getByRole('combobox', { name: 'Unit' })).toBeDisabled();
   });
+
+  it('supports multiple selection', async () => {
+    const onChange = vi.fn();
+
+    renderWithTheme(
+      <FormAutocomplete
+        id="materials-field"
+        label="Raw materials"
+        multiple
+        value={['m-1']}
+        onChange={onChange}
+        options={options}
+      />
+    );
+
+    expect(screen.getByText('MP-006 — AGUA')).toBeInTheDocument();
+    const input = screen.getByRole('combobox', { name: 'Raw materials' });
+    fireEvent.change(input, { target: { value: 'ACUCAR' } });
+    fireEvent.click(await screen.findByRole('option', { name: 'MP-002 — ACUCAR' }));
+    expect(onChange).toHaveBeenCalledWith(['m-1', 'm-2']);
+  });
 });

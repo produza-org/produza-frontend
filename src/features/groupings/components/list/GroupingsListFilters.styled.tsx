@@ -59,6 +59,18 @@ export const FilterTextField = styled('div')(({ theme }) => ({
       borderWidth: 1,
     },
   },
+  '& .MuiAutocomplete-root .MuiOutlinedInput-root': {
+    flexWrap: 'wrap',
+    gap: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+  },
+  '& .MuiChip-root': {
+    height: 24,
+    backgroundColor: theme.palette.produza.surfaceContainerLow,
+    color: theme.palette.produza.onSurface,
+    fontWeight: 600,
+  },
 }));
 
 export const FilterSubmitButton = styled(Button)(({ theme }) => ({

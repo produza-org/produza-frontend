@@ -31,18 +31,33 @@ const groups: RawMaterialGroup[] = [
     name: 'BASE CHOCOLATE',
     code: 'GRP-002',
     status: 'active',
-    materialsCount: 0,
-    totalCost: 0,
-    lines: [],
+    materialsCount: 1,
+    totalCost: 2,
+    lines: [
+      {
+        id: 'l2',
+        rawMaterialId: 'mp-2',
+        quantity: 1,
+        rawMaterial: {
+          id: 'mp-2',
+          code: 'MP-002',
+          name: 'ACUCAR',
+          unit: 'KG',
+          unitCost: 2,
+          stockQuantity: 5,
+        },
+      },
+    ],
   },
 ];
 
 describe('filterGroupings', () => {
-  it('filters by name, code and raw material', () => {
-    expect(filterGroupings(groups, 'leite', '', '')).toHaveLength(1);
-    expect(filterGroupings(groups, '', 'grp-002', '')).toHaveLength(1);
-    expect(filterGroupings(groups, '', '', 'mp-006')).toHaveLength(1);
-    expect(filterGroupings(groups, '', '', 'agua')).toHaveLength(1);
-    expect(filterGroupings(groups, 'x', '', '')).toHaveLength(0);
+  it('filters by name, code and raw material ids', () => {
+    expect(filterGroupings(groups, 'leite', '', [])).toHaveLength(1);
+    expect(filterGroupings(groups, '', 'grp-002', [])).toHaveLength(1);
+    expect(filterGroupings(groups, '', '', ['mp-1'])).toHaveLength(1);
+    expect(filterGroupings(groups, '', '', ['mp-1', 'mp-2'])).toHaveLength(2);
+    expect(filterGroupings(groups, 'x', '', [])).toHaveLength(0);
+    expect(filterGroupings(groups, '', '', ['missing'])).toHaveLength(0);
   });
 });

@@ -7,12 +7,10 @@ export type ListRawMaterialGroupsParams = {
   limit?: number;
   name?: string;
   code?: string;
-  rawMaterial?: string;
+  rawMaterialIds?: string[];
 };
 
-export function listRawMaterialGroups(
-  params: ListRawMaterialGroupsParams = {}
-): Promise<PaginatedResponse<RawMaterialGroup>> {
+function buildListQuery(params: ListRawMaterialGroupsParams): string {
   const page = params.page ?? 1;
   const limit = params.limit ?? 100;
   const query = new URLSearchParams({
@@ -22,7 +20,9 @@ export function listRawMaterialGroups(
 
   const name = params.name?.trim();
   const code = params.code?.trim();
-  const rawMaterial = params.rawMaterial?.trim();
+  const rawMaterialIds = (params.rawMaterialIds ?? [])
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0);
 
   if (name) {
     query.set('name', name);
@@ -30,26 +30,41 @@ export function listRawMaterialGroups(
   if (code) {
     query.set('code', code);
   }
-  if (rawMaterial) {
-    query.set('rawMaterial', rawMaterial);
+  for (const id of rawMaterialIds) {
+    query.append('rawMaterialIds', id);
   }
 
+  return query.toString();
+}
+
+export function listRawMaterialGroups(
+  params: ListRawMaterialGroupsParams = {}
+): Promise<PaginatedResponse<RawMaterialGroup>> {
   return apiClient<PaginatedResponse<RawMaterialGroup>>(
-    `/raw-material-groups?${query}`
+    `/raw-material-groups?${buildListQuery(params)}`
   );
 }
 
 export async function listAllRawMaterialGroups(
-  pageSize = 100
+  pageSize = 100,
+  filters: Omit<ListRawMaterialGroupsParams, 'page' | 'limit'> = {}
 ): Promise<RawMaterialGroup[]> {
-  const first = await listRawMaterialGroups({ page: 1, limit: pageSize });
+  const first = await listRawMaterialGroups({
+    page: 1,
+    limit: pageSize,
+    ...filters,
+  });
   if (first.meta.totalPages <= 1) {
     return first.data;
   }
 
   const pages = await Promise.all(
     Array.from({ length: first.meta.totalPages - 1 }, (_, index) =>
-      listRawMaterialGroups({ page: index + 2, limit: pageSize })
+      listRawMaterialGroups({
+        page: index + 2,
+        limit: pageSize,
+        ...filters,
+      })
     )
   );
 

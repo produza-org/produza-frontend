@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
@@ -11,6 +11,7 @@ import { ConfirmModal } from '@/shared/components/dialog';
 import { EntityDetailDrawer } from '@/shared/components/drawer';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { useToast } from '@/shared/toast';
+import { listAllRawMaterials } from '@/features/raw-materials/api';
 import { GroupingDetailContent } from '@/features/groupings/components/detail/GroupingDetailContent';
 import { GroupingsListCards } from '@/features/groupings/components/list/GroupingsListCards';
 import { GroupingsListFilters } from '@/features/groupings/components/list/GroupingsListFilters';
@@ -22,6 +23,7 @@ import { useGroupingsStats } from '@/features/groupings/hooks/useGroupingsStats'
 import type { RawMaterialGroup } from '@/features/groupings/types/grouping';
 import { buildGroupingDrawerStats } from '@/features/groupings/utils/drawer-stats';
 import { formatCurrencyBrl } from '@/features/groupings/utils/format';
+import type { FormSelectOption } from '@/shared/components/form/FormSelectField';
 import {
   AddGroupingButton,
   HeroRow,
@@ -46,10 +48,8 @@ export function GroupingsListPage() {
   const {
     nameFilter,
     codeFilter,
-    rawMaterialFilter,
-    setNameFilter,
-    setCodeFilter,
-    setRawMaterialFilter,
+    rawMaterialIdsFilter,
+    applyFilters,
   } = useGroupingsFilters();
   const { rows, page, totalFiltered, totalPages, setPage, canPrev, canNext } =
     useGroupingsList();
@@ -58,6 +58,45 @@ export function GroupingsListPage() {
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<RawMaterialGroup | null>(null);
   const [isMutating, setIsMutating] = useState(false);
+  const [rawMaterialOptions, setRawMaterialOptions] = useState<FormSelectOption[]>(
+    []
+  );
+
+  const appliedFilters = useMemo(
+    () => ({
+      name: nameFilter,
+      code: codeFilter,
+      rawMaterialIds: rawMaterialIdsFilter,
+    }),
+    [codeFilter, nameFilter, rawMaterialIdsFilter]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const materials = await listAllRawMaterials();
+        if (cancelled) {
+          return;
+        }
+        setRawMaterialOptions(
+          materials
+            .filter((material) => material.status === 'active')
+            .map((material) => ({
+              value: material.id,
+              label: `${material.code} — ${material.name}`,
+            }))
+        );
+      } catch {
+        if (!cancelled) {
+          setRawMaterialOptions([]);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const drawerItem = useMemo(() => {
     if (!selectedItem) {
@@ -125,6 +164,37 @@ export function GroupingsListPage() {
         </Alert>
       ) : null}
 
+      {!isLoading ? (
+        <StatsGrid>
+          <GroupingsStatCard
+            accentColor={p.primary}
+            label={t('groupings.list.statTotal')}
+            value={String(totalCount)}
+          />
+          <GroupingsStatCard
+            accentColor={p.secondary}
+            label={t('groupings.list.statActive')}
+            value={`${activePercent}%`}
+          />
+          <GroupingsStatCard
+            accentColor={p.tertiaryFixedDim}
+            label={t('groupings.list.statMaterials')}
+            value={String(totalMaterials)}
+          />
+          <GroupingsStatCard
+            accentColor={p.primaryContainer}
+            label={t('groupings.list.statCost')}
+            value={formatCurrencyBrl(totalCost)}
+          />
+        </StatsGrid>
+      ) : null}
+
+      <GroupingsListFilters
+        appliedFilters={appliedFilters}
+        rawMaterialOptions={rawMaterialOptions}
+        onApply={applyFilters}
+      />
+
       {isLoading ? (
         <Box
           sx={{
@@ -136,52 +206,18 @@ export function GroupingsListPage() {
           <CircularProgress size={32} aria-label={t('groupings.list.loading')} />
         </Box>
       ) : (
-        <>
-          <StatsGrid>
-            <GroupingsStatCard
-              accentColor={p.primary}
-              label={t('groupings.list.statTotal')}
-              value={String(totalCount)}
-            />
-            <GroupingsStatCard
-              accentColor={p.secondary}
-              label={t('groupings.list.statActive')}
-              value={`${activePercent}%`}
-            />
-            <GroupingsStatCard
-              accentColor={p.tertiaryFixedDim}
-              label={t('groupings.list.statMaterials')}
-              value={String(totalMaterials)}
-            />
-            <GroupingsStatCard
-              accentColor={p.primaryContainer}
-              label={t('groupings.list.statCost')}
-              value={formatCurrencyBrl(totalCost)}
-            />
-          </StatsGrid>
-
-          <GroupingsListFilters
-            nameFilter={nameFilter}
-            codeFilter={codeFilter}
-            rawMaterialFilter={rawMaterialFilter}
-            onNameFilterChange={setNameFilter}
-            onCodeFilterChange={setCodeFilter}
-            onRawMaterialFilterChange={setRawMaterialFilter}
-          />
-
-          <GroupingsListCards
-            rows={rows}
-            shown={rows.length}
-            total={totalFiltered}
-            page={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-            canPrev={canPrev}
-            canNext={canNext}
-            onDeleteRequest={setPendingDeleteId}
-            onCardClick={setSelectedItem}
-          />
-        </>
+        <GroupingsListCards
+          rows={rows}
+          shown={rows.length}
+          total={totalFiltered}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          canPrev={canPrev}
+          canNext={canNext}
+          onDeleteRequest={setPendingDeleteId}
+          onCardClick={setSelectedItem}
+        />
       )}
 
       <EntityDetailDrawer

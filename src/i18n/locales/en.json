@@ -502,8 +502,9 @@
     "filters": {
       "nameLabel": "Grouping name",
       "namePlaceholder": "e.g. BASE LEITE COCO",
-      "rawMaterialLabel": "Raw material",
-      "rawMaterialPlaceholder": "id, code or name",
+      "rawMaterialLabel": "Raw materials",
+      "rawMaterialPlaceholder": "Search by name or code",
+      "rawMaterialNoOptions": "No raw materials found",
       "codeLabel": "Code",
       "codePlaceholder": "e.g. GRP-001",
       "submit": "Filter"
