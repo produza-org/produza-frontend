@@ -32,6 +32,14 @@
       "groupings": "Agrupamentos",
       "expandSidebar": "Expandir menu",
       "collapseSidebar": "Recolher menu"
+    },
+    "breadcrumbs": {
+      "ariaLabel": "Trilha de navegação",
+      "home": "Início",
+      "new": "Novo",
+      "edit": "Editar",
+      "recipe": "Receita",
+      "detail": "Detalhe"
     }
   },
   "auth": {
