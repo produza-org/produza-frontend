@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
@@ -36,6 +37,7 @@ type ProductionOrdersListTableProps = {
   canPrev: boolean;
   canNext: boolean;
   onRowClick: (item: ProductionOrder) => void;
+  onDeleteRequest: (id: string) => void;
 };
 
 export function ProductionOrdersListTable({
@@ -48,6 +50,7 @@ export function ProductionOrdersListTable({
   canPrev,
   canNext,
   onRowClick,
+  onDeleteRequest,
 }: ProductionOrdersListTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -82,6 +85,13 @@ export function ProductionOrdersListTable({
                   label: t('productionOrders.table.viewAction'),
                   icon: <VisibilityOutlined sx={{ fontSize: 18 }} />,
                   onClick: () => navigate(detailPath),
+                },
+                {
+                  id: 'delete',
+                  label: t('productionOrders.table.deleteAction'),
+                  icon: <DeleteOutline sx={{ fontSize: 18 }} />,
+                  onClick: () => onDeleteRequest(row.id),
+                  tone: 'danger',
                 },
               ];
 

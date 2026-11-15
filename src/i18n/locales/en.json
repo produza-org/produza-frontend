@@ -336,7 +336,8 @@
       "qUpdated": "Quantity to produce updated successfully.",
       "realUpdated": "Actual production updated successfully.",
       "stepsUpdated": "Floor steps updated successfully.",
-      "recalculated": "Needs recalculated from recipe successfully."
+      "recalculated": "Needs recalculated from recipe successfully.",
+      "deleted": "Production order deleted successfully."
     },
     "list": {
       "title": "Production orders",
@@ -363,9 +364,16 @@
       "colActions": "Actions",
       "actionsMenuAria": "Production order actions",
       "viewAction": "Open",
+      "deleteAction": "Delete",
       "pagerSummary": "Showing {{shown}} of {{total}} orders",
       "pagerPrev": "Previous page",
       "pagerNext": "Next page"
+    },
+    "delete": {
+      "title": "Delete production order",
+      "message": "Are you sure you want to delete this production order?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     },
     "form": {
       "title": "New production order",
@@ -449,7 +457,8 @@
       "sectionNeeds": "Needs breakdown",
       "quantity": "Quantity to produce (Q)",
       "totalMistura": "Total mistura (kg)",
-      "edit": "Edit"
+      "edit": "Edit",
+      "delete": "Delete"
     }
   }
 }
