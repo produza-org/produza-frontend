@@ -478,5 +478,127 @@
       "edit": "Edit",
       "delete": "Delete"
     }
+  },
+  "groupings": {
+    "errors": {
+      "unexpected": "Something went wrong. Please try again."
+    },
+    "toasts": {
+      "created": "Grouping created successfully.",
+      "updated": "Grouping updated successfully.",
+      "deleted": "Grouping deleted successfully."
+    },
+    "list": {
+      "title": "Groupings",
+      "subtitle": "Reusable raw-material composition templates.",
+      "add": "New grouping",
+      "addAria": "Create new grouping",
+      "loading": "Loading groupings",
+      "statTotal": "Total groupings",
+      "statActive": "Active status",
+      "statMaterials": "Materials in use",
+      "statCost": "Active total cost"
+    },
+    "filters": {
+      "nameLabel": "Grouping name",
+      "namePlaceholder": "e.g. BASE LEITE COCO",
+      "rawMaterialLabel": "Raw material",
+      "rawMaterialPlaceholder": "id, code or name",
+      "codeLabel": "Code",
+      "codePlaceholder": "e.g. GRP-001",
+      "submit": "Filter"
+    },
+    "cards": {
+      "codeLabel": "CODE: {{code}}",
+      "materialsLabel": "Materials",
+      "costLabel": "Cost",
+      "actionsMenuAria": "Grouping actions",
+      "editAction": "Edit",
+      "deleteAction": "Delete",
+      "empty": "No groupings found.",
+      "pagerSummary": "Showing {{shown}} of {{total}} groupings",
+      "pagerPrev": "Previous page",
+      "pagerNext": "Next page"
+    },
+    "delete": {
+      "title": "Delete grouping",
+      "message": "Are you sure you want to delete this grouping?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "form": {
+      "title": "Grouping registration",
+      "subtitle": "Create a reusable raw-material composition.",
+      "editTitle": "Edit grouping",
+      "editSubtitle": "Update grouping basics and composition.",
+      "nameLabel": "Grouping name",
+      "namePlaceholder": "E.g. BASE LEITE COCO",
+      "codeLabel": "Internal code",
+      "codePlaceholder": "E.g. GRP-001",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional notes about this grouping",
+      "cancel": "Cancel",
+      "loading": "Loading grouping"
+    },
+    "createWizard": {
+      "steps": {
+        "general": "Basic information",
+        "composition": "Composition"
+      },
+      "next": "Next",
+      "back": "Back",
+      "save": "Save",
+      "saving": "Saving…",
+      "loadingMaterials": "Loading raw materials",
+      "discardTitle": "Discard changes?",
+      "discardMessage": "You have unsaved grouping changes. Leave without saving?",
+      "discardCancel": "Keep editing",
+      "discardConfirm": "Discard"
+    },
+    "composition": {
+      "hint": "Add raw materials and set quantities for this grouping.",
+      "addItem": "Add item",
+      "empty": "No materials yet. Use Add item to compose the grouping.",
+      "colSku": "Material",
+      "colUnit": "Unit",
+      "colQty": "Quantity",
+      "colUnitCost": "Unit cost",
+      "colSubtotal": "Subtotal",
+      "colActions": "Actions",
+      "qtyAria": "Quantity for {{name}}",
+      "removeLine": "Remove line",
+      "total": "Grouping total"
+    },
+    "picker": {
+      "title": "Select raw materials",
+      "subtitle": "Search and select materials to add to the composition.",
+      "closeAria": "Close raw material picker",
+      "searchPlaceholder": "Search by name or code",
+      "colMaterial": "Material",
+      "colQty": "Qty",
+      "colStock": "Stock",
+      "colUnit": "Unit",
+      "selectAria": "Select {{name}}",
+      "qtyAria": "Quantity for {{name}}",
+      "selectedCount": "{{count}} selected",
+      "pagerPrev": "Previous",
+      "pagerNext": "Next",
+      "pagerPage": "Page {{page}} of {{totalPages}}",
+      "cancel": "Cancel",
+      "confirm": "Add selected"
+    },
+    "drawer": {
+      "eyebrow": "Grouping details",
+      "title": "Grouping details",
+      "closeAria": "Close grouping details",
+      "materials": "Materials",
+      "totalCost": "Total cost",
+      "code": "Code",
+      "description": "Description",
+      "sectionBasics": "Basics",
+      "sectionComposition": "Composition",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
   }
 }

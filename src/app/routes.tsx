@@ -22,6 +22,12 @@ import {
   RawMaterialEditPage,
   RawMaterialsProvider,
 } from '@/features/raw-materials';
+import {
+  GroupingsListPage,
+  GroupingCreatePage,
+  GroupingEditPage,
+  GroupingsProvider,
+} from '@/features/groupings';
 
 export function AppRoutes() {
   return (
@@ -67,7 +73,18 @@ export function AppRoutes() {
             <Route path="new" element={<ProductionOrderCreatePage />} />
             <Route path=":id" element={<ProductionOrderDetailPage />} />
           </Route>
-          <Route path="/groupings" element={<HomePage />} />
+          <Route
+            path="/groupings"
+            element={
+              <GroupingsProvider>
+                <Outlet />
+              </GroupingsProvider>
+            }
+          >
+            <Route index element={<GroupingsListPage />} />
+            <Route path="new" element={<GroupingCreatePage />} />
+            <Route path=":id/edit" element={<GroupingEditPage />} />
+          </Route>
         </Route>
       </Route>
     </Routes>
