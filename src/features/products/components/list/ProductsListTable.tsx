@@ -39,6 +39,7 @@ type ProductsListTableProps = {
   canNext: boolean;
   onDeleteRequest: (id: string) => void;
   onStatusToggleRequest: (id: string) => void;
+  onRowClick: (item: Product) => void;
 };
 
 export function ProductsListTable({
@@ -52,6 +53,7 @@ export function ProductsListTable({
   canNext,
   onDeleteRequest,
   onStatusToggleRequest,
+  onRowClick,
 }: ProductsListTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -112,7 +114,11 @@ export function ProductsListTable({
               ];
 
               return (
-                <BodyRow key={row.id} $striped={index % 2 === 1}>
+                <BodyRow
+                  key={row.id}
+                  $striped={index % 2 === 1}
+                  onClick={() => onRowClick(row)}
+                >
                   <StatusCell>
                     <StatusChip
                       $status={row.status}
@@ -125,7 +131,11 @@ export function ProductsListTable({
                   <UnitCell>{row.finalSizeUnit}</UnitCell>
                   <NumericCell>{formatDecimal(row.yield, 6)}</NumericCell>
                   <TotalCell>{formatDecimal(row.expansionFactor, 6)}</TotalCell>
-                  <ActionsCell>
+                  <ActionsCell
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}
+                  >
                     <ActionsInner>
                       <ActionsMenu
                         ariaLabel={t('products.table.actionsMenuAria')}

@@ -35,6 +35,7 @@ type ProductionOrdersListTableProps = {
   onPageChange: (page: number) => void;
   canPrev: boolean;
   canNext: boolean;
+  onRowClick: (item: ProductionOrder) => void;
 };
 
 export function ProductionOrdersListTable({
@@ -46,6 +47,7 @@ export function ProductionOrdersListTable({
   onPageChange,
   canPrev,
   canNext,
+  onRowClick,
 }: ProductionOrdersListTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -87,7 +89,7 @@ export function ProductionOrdersListTable({
                 <BodyRow
                   key={row.id}
                   $striped={index % 2 === 1}
-                  onClick={() => navigate(detailPath)}
+                  onClick={() => onRowClick(row)}
                 >
                   <NumberCell>{row.number}</NumberCell>
                   <NameCell>{row.product.name}</NameCell>

@@ -28,7 +28,7 @@ src/
 | **core/types/** | Types used in more than one feature or by core itself. |
 | **core/store/** | Zustand (or other) global stores used across features. |
 | **core/mocks/** | Legacy seed JSON / persistence helpers. Raw materials no longer use localStorage; prefer feature API modules. |
-| **shared/components/** | Buttons, inputs, layout primitives, dialogs, and menus used in multiple features. Organized as `layout/` (responsive shell: temporary nav below `md`), `form/`, `dialog/`, `actions/`, `page/` (`PageRoot`, `PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). Mobile-first layout rules: `.cursor/rules/mobile-first-responsive.mdc`. |
+| **shared/components/** | Buttons, inputs, layout primitives, dialogs, drawers, and menus used in multiple features. Organized as `layout/` (responsive shell: temporary nav below `md`), `form/`, `dialog/`, `drawer/` (`EntityDetailDrawer` + `DetailFactList` for list-row detail panels), `actions/`, `page/` (`PageRoot`, `PageTitle`, `PageSubtitle`, `PageBreadcrumbs` from pathname matching). Mobile-first layout rules: `.cursor/rules/mobile-first-responsive.mdc`. |
 | **shared/toast/** | Shared mutation feedback: `ToastProvider` + `useToast` (`enqueueToast`), mounted from `AppProviders`. |
 | **shared/hooks/** | Hooks reused across features (e.g. debounce, media query). |
 | **shared/utils/** | Pure helpers (formatting, validation, etc.). |
@@ -58,5 +58,7 @@ features/<name>/
 Products include a 2-step create wizard at `/products/new` under `features/products/components/create/` (`ProductCreateWizard`: general info → recipe). Existing products still use edit at `/products/:id/edit` and a nested recipe editor at `/products/:id/recipe` under `features/products/pages/recipe/` and `components/recipe/` (`RecipeDraftPanel` shared by create step 2 and `RecipeEditor`). Recipe lines are raw materials only (`rawMaterialId` + `proportion`, Σ = 1); the material picker is a searchable `FormAutocomplete`.
 
 Production orders live under `features/production-orders/` with list, create, and detail pages at `/production-orders`, `/production-orders/new`, and `/production-orders/:id`. The detail page includes floor steps (`FloorStepsPanel`) and actual production (`realProduzido`) alongside QTD. LOTE need lines.
+
+List tables for raw materials, products, and production orders open a shared right-side `EntityDetailDrawer` (`shared/components/drawer/`) on row click. Feature-specific content panels live under each feature’s `components/detail/` (or drawer content next to the full detail page for production orders). Action-menu cells use `stopPropagation` so menus do not open the drawer.
 
 Use barrel `index.ts` in a folder when it helps keep imports short; export only what is part of the folder’s public API.

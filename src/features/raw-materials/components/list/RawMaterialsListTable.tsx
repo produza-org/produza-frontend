@@ -41,6 +41,7 @@ type RawMaterialsListTableProps = {
   canNext: boolean;
   onDeleteRequest: (id: string) => void;
   onStatusToggleRequest: (id: string) => void;
+  onRowClick: (item: RawMaterial) => void;
 };
 
 export function RawMaterialsListTable({
@@ -54,6 +55,7 @@ export function RawMaterialsListTable({
   canNext,
   onDeleteRequest,
   onStatusToggleRequest,
+  onRowClick,
 }: RawMaterialsListTableProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -109,7 +111,11 @@ export function RawMaterialsListTable({
               ];
 
               return (
-                <BodyRow key={row.id} $striped={index % 2 === 1}>
+                <BodyRow
+                  key={row.id}
+                  $striped={index % 2 === 1}
+                  onClick={() => onRowClick(row)}
+                >
                   <CodeCell>{row.code}</CodeCell>
                   <StatusCell>
                     <StatusChip
@@ -130,7 +136,11 @@ export function RawMaterialsListTable({
                   <UnitCell>{row.unit}</UnitCell>
                   <NumericCell>{formatCurrencyBrl(row.unitCost)}</NumericCell>
                   <TotalCell>{formatCurrencyBrl(row.totalCost)}</TotalCell>
-                  <ActionsCell>
+                  <ActionsCell
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}
+                  >
                     <ActionsInner>
                       <ActionsMenu
                         ariaLabel={t('rawMaterials.table.actionsMenuAria')}

@@ -50,6 +50,7 @@ export const HeadCell = styled(TableCell)(({ theme }) => ({
 export const BodyRow = styled(TableRow, {
   shouldForwardProp: (p) => p !== '$striped',
 })<{ $striped?: boolean }>(({ theme, $striped }) => ({
+  cursor: 'pointer',
   transition: 'background-color 150ms ease',
   '&:hover': { backgroundColor: theme.palette.produza.surfaceContainerLow },
   ...($striped

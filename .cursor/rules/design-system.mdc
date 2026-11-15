@@ -26,9 +26,10 @@ Use **`src/features/raw-materials/`** as the reference for catalog CRUD screens:
 | Table density, status chips, actions menu, pager | `components/list/RawMaterialsListTable*.tsx`, `RawMaterialsTableFooter.tsx`, `RawMaterialsStatCard.tsx` |
 | Create/edit form card, accent bar, rows, validation alert, cancel/save | `components/form/RawMaterialForm*.tsx`, `pages/RawMaterialFormPage.styled.tsx` |
 | Status toggles + soft-delete confirms | list page + shared `ConfirmModal` |
+| Row-click entity detail | shared `EntityDetailDrawer` + feature detail content panel |
 | Feature layout (api, types, context, pages, form/list, hooks, utils) | entire `features/raw-materials/` tree |
 
-Prefer shared building blocks already used there: `FormTextField`, `FormSelectField`, `FormCurrencyField`, `ActionsMenu`, `ConfirmModal`, `PageTitle` / `PageSubtitle`.
+Prefer shared building blocks already used there: `FormTextField`, `FormSelectField`, `FormCurrencyField`, `ActionsMenu`, `ConfirmModal`, `EntityDetailDrawer`, `PageTitle` / `PageSubtitle`.
 
 ## i18n
 

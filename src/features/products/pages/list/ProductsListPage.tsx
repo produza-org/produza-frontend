@@ -2,18 +2,24 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddOutlined from '@mui/icons-material/AddOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
 import { ConfirmModal } from '@/shared/components/dialog';
+import { EntityDetailDrawer } from '@/shared/components/drawer';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { useToast } from '@/shared/toast';
+import { ProductDetailContent } from '@/features/products/components/detail/ProductDetailContent';
 import { ProductsStatCard } from '@/features/products/components/list/ProductsStatCard';
 import { ProductsListFilters } from '@/features/products/components/list/ProductsListFilters';
 import { ProductsListTable } from '@/features/products/components/list/ProductsListTable';
 import { useProductsContext } from '@/features/products/context/ProductsContext';
+import type { Product } from '@/features/products/types/product';
 import { formatDecimal } from '@/features/products/utils/format';
 import { useProductsFilters } from '@/features/products/hooks/useProductsFilters';
 import { useProductsList } from '@/features/products/hooks/useProductsList';
@@ -52,12 +58,20 @@ export function ProductsListPage() {
     useProductsStats();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [pendingStatusToggleId, setPendingStatusToggleId] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isMutating, setIsMutating] = useState(false);
 
   const pendingToggleItem = useMemo(
     () => items.find((item) => item.id === pendingStatusToggleId) ?? null,
     [items, pendingStatusToggleId]
   );
+
+  const drawerItem = useMemo(() => {
+    if (!selectedItem) {
+      return null;
+    }
+    return items.find((item) => item.id === selectedItem.id) ?? selectedItem;
+  }, [items, selectedItem]);
 
   const loadError =
     errorMessage === 'UNEXPECTED'
@@ -200,9 +214,70 @@ export function ProductsListPage() {
             canNext={canNext}
             onDeleteRequest={setPendingDeleteId}
             onStatusToggleRequest={setPendingStatusToggleId}
+            onRowClick={setSelectedItem}
           />
         </>
       )}
+
+      <EntityDetailDrawer
+        open={drawerItem !== null}
+        onClose={() => setSelectedItem(null)}
+        title={drawerItem?.name ?? t('products.drawer.title')}
+        subtitle={t('products.drawer.subtitle')}
+        closeAriaLabel={t('products.drawer.closeAria')}
+        footer={
+          drawerItem ? (
+            <>
+              <Button
+                variant="outlined"
+                startIcon={<MenuBookOutlined />}
+                onClick={() => {
+                  const id = drawerItem.id;
+                  setSelectedItem(null);
+                  navigate(`/products/${id}/recipe`);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: 'auto' },
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  borderRadius: 1.5,
+                  color: 'produza.secondary',
+                  borderColor: 'produza.outlineVariant',
+                  '&:hover': {
+                    borderColor: 'produza.outlineVariant',
+                    bgcolor: 'produza.surfaceContainerLow',
+                  },
+                }}
+              >
+                {t('products.drawer.recipe')}
+              </Button>
+              <Button
+                variant="contained"
+                disableElevation
+                startIcon={<EditOutlined />}
+                onClick={() => {
+                  const id = drawerItem.id;
+                  setSelectedItem(null);
+                  navigate(`/products/${id}/edit`);
+                }}
+                sx={{
+                  width: { xs: '100%', sm: 'auto' },
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  borderRadius: 1.5,
+                  bgcolor: 'produza.primary',
+                  color: 'produza.onPrimary',
+                  '&:hover': { bgcolor: 'produza.primaryContainer' },
+                }}
+              >
+                {t('products.drawer.edit')}
+              </Button>
+            </>
+          ) : null
+        }
+      >
+        {drawerItem ? <ProductDetailContent item={drawerItem} /> : null}
+      </EntityDetailDrawer>
 
       <ConfirmModal
         open={pendingDeleteId !== null}
