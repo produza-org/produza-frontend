@@ -136,4 +136,23 @@ describe('RecipeEditor', () => {
       });
     });
   });
+
+  it('lets the user change unit via searchable select after picking a material', async () => {
+    renderEditor();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+
+    const unitInput = screen.getByRole('combobox', { name: 'Unit' });
+    expect(unitInput).toBeDisabled();
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+
+    expect(unitInput).toBeEnabled();
+    expect(unitInput).toHaveDisplayValue('Liter (lt)');
+
+    fireEvent.change(unitInput, { target: { value: 'Kilogram' } });
+    fireEvent.click(await screen.findByRole('option', { name: 'Kilogram (kg)' }));
+
+    expect(unitInput).toHaveDisplayValue('Kilogram (kg)');
+  });
 });

@@ -275,6 +275,8 @@
       "proportionLabel": "Proportion",
       "proportionPlaceholder": "0.000000",
       "unitLabel": "Unit",
+      "unitPlaceholder": "Search unit",
+      "unitNoOptions": "No units found",
       "proportionSum": "Proportion sum",
       "cancel": "Cancel",
       "save": "Save recipe",

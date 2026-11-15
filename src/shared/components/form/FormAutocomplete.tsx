@@ -13,6 +13,7 @@ export type FormAutocompleteProps = {
   options: FormSelectOption[];
   placeholder?: string;
   noOptionsText?: string;
+  disabled?: boolean;
 };
 
 export function FormAutocomplete({
@@ -23,6 +24,7 @@ export function FormAutocomplete({
   options,
   placeholder,
   noOptionsText,
+  disabled = false,
 }: FormAutocompleteProps) {
   const selected =
     options.find((option) => option.value === value) ??
@@ -54,6 +56,7 @@ export function FormAutocomplete({
             );
           }}
           noOptionsText={noOptionsText}
+          disabled={disabled}
           fullWidth
           renderInput={(params) => (
             <TextField
@@ -61,6 +64,7 @@ export function FormAutocomplete({
               name={id}
               placeholder={placeholder}
               variant="standard"
+              disabled={disabled}
               InputProps={{
                 ...params.InputProps,
                 disableUnderline: true,
