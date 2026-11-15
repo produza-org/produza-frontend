@@ -336,7 +336,8 @@
       "qUpdated": "Quantidade a produzir atualizada com sucesso.",
       "realUpdated": "Produção real atualizada com sucesso.",
       "stepsUpdated": "Etapas de chão atualizadas com sucesso.",
-      "recalculated": "Necessidades recalculadas a partir da receita com sucesso."
+      "recalculated": "Necessidades recalculadas a partir da receita com sucesso.",
+      "deleted": "Ordem de produção excluída com sucesso."
     },
     "list": {
       "title": "Ordens de produção",
@@ -363,9 +364,16 @@
       "colActions": "Ações",
       "actionsMenuAria": "Ações da ordem de produção",
       "viewAction": "Abrir",
+      "deleteAction": "Excluir",
       "pagerSummary": "Mostrando {{shown}} de {{total}} ordens",
       "pagerPrev": "Página anterior",
       "pagerNext": "Próxima página"
+    },
+    "delete": {
+      "title": "Excluir ordem de produção",
+      "message": "Tem certeza de que deseja excluir esta ordem de produção?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
     },
     "form": {
       "title": "Nova ordem de produção",
@@ -449,7 +457,8 @@
       "sectionNeeds": "Necessidades",
       "quantity": "Quantidade a produzir (Q)",
       "totalMistura": "Total mistura (kg)",
-      "edit": "Editar"
+      "edit": "Editar",
+      "delete": "Excluir"
     }
   }
 }

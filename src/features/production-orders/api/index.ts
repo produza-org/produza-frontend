@@ -1,4 +1,5 @@
 export { createProductionOrderRequest } from './create';
+export { deleteProductionOrderRequest } from './delete';
 export { getProductionOrder } from './get';
 export { listAllProductionOrders, listProductionOrders } from './list';
 export type { ListProductionOrdersParams } from './list';

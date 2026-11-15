@@ -10,6 +10,7 @@ import {
 import { ApiError } from '@/core/api';
 import {
   createProductionOrderRequest,
+  deleteProductionOrderRequest,
   listAllProductionOrders,
   recalculateProductionOrderFromRecipe,
   updateProductionOrderRequest,
@@ -39,6 +40,7 @@ type ProductionOrdersContextValue = ProductionOrdersFiltersState & {
     id: string,
     input: ProductionOrderUpdateInput
   ) => Promise<ProductionOrder>;
+  deleteProductionOrder: (id: string) => Promise<void>;
   updateProductionOrderSteps: (
     id: string,
     input: ProductionStepsUpdateInput
@@ -119,6 +121,11 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
     []
   );
 
+  const deleteProductionOrder = useCallback(async (id: string) => {
+    await deleteProductionOrderRequest(id);
+    setItems((prev) => prev.filter((item) => item.id !== id));
+  }, []);
+
   const recalculateFromRecipe = useCallback(async (id: string) => {
     const updated = await recalculateProductionOrderFromRecipe(id);
     setItems((prev) => upsertItem(prev, updated));
@@ -156,6 +163,7 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
       refresh,
       createProductionOrder,
       updateProductionOrder,
+      deleteProductionOrder,
       updateProductionOrderSteps: updateOrderSteps,
       recalculateFromRecipe,
       upsertLocalOrder,
@@ -171,6 +179,7 @@ export function ProductionOrdersProvider({ children }: { children: ReactNode }) 
       refresh,
       createProductionOrder,
       updateProductionOrder,
+      deleteProductionOrder,
       updateOrderSteps,
       recalculateFromRecipe,
       upsertLocalOrder,

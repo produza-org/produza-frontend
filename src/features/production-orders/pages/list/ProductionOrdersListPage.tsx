@@ -7,8 +7,10 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTheme } from '@mui/material/styles';
 import { ApiError } from '@/core/api';
+import { ConfirmModal } from '@/shared/components/dialog';
 import { EntityDetailDrawer, DrawerLoadingBox } from '@/shared/components/drawer';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
+import { useToast } from '@/shared/toast';
 import { getProductionOrder } from '@/features/production-orders/api/get';
 import { ProductionOrdersListFilters } from '@/features/production-orders/components/list/ProductionOrdersListFilters';
 import { ProductionOrdersListTable } from '@/features/production-orders/components/list/ProductionOrdersListTable';
@@ -31,12 +33,21 @@ import {
   StatsGrid,
 } from '@/features/production-orders/pages/list/ProductionOrdersListPage.styled';
 
+function toToastError(error: unknown, fallback: string): string {
+  if (error instanceof ApiError) {
+    return error.message;
+  }
+  return fallback;
+}
+
 export function ProductionOrdersListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enqueueToast } = useToast();
   const theme = useTheme();
   const p = theme.palette.produza;
-  const { isLoading, errorMessage } = useProductionOrdersContext();
+  const { isLoading, errorMessage, deleteProductionOrder } =
+    useProductionOrdersContext();
   const { numberFilter, setNumberFilter } = useProductionOrdersFilters();
   const { rows, page, totalFiltered, totalPages, setPage, canPrev, canNext } =
     useProductionOrdersList();
@@ -45,6 +56,8 @@ export function ProductionOrdersListPage() {
   const [drawerOrder, setDrawerOrder] = useState<ProductionOrder | null>(null);
   const [isDrawerLoading, setIsDrawerLoading] = useState(false);
   const [drawerError, setDrawerError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [isMutating, setIsMutating] = useState(false);
 
   const loadError =
     errorMessage === 'UNEXPECTED'
@@ -98,6 +111,38 @@ export function ProductionOrdersListPage() {
 
   const handleCloseDrawer = () => {
     setSelectedId(null);
+  };
+
+  const handleCloseDeleteModal = () => {
+    if (isMutating) {
+      return;
+    }
+    setPendingDeleteId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId || isMutating) {
+      return;
+    }
+    setIsMutating(true);
+    try {
+      await deleteProductionOrder(pendingDeleteId);
+      setPendingDeleteId(null);
+      if (selectedId === pendingDeleteId) {
+        handleCloseDrawer();
+      }
+      enqueueToast({
+        severity: 'success',
+        message: t('productionOrders.toasts.deleted'),
+      });
+    } catch (error) {
+      enqueueToast({
+        severity: 'error',
+        message: toToastError(error, t('productionOrders.errors.unexpected')),
+      });
+    } finally {
+      setIsMutating(false);
+    }
   };
 
   return (
@@ -172,6 +217,7 @@ export function ProductionOrdersListPage() {
             canPrev={canPrev}
             canNext={canNext}
             onRowClick={(item) => setSelectedId(item.id)}
+            onDeleteRequest={setPendingDeleteId}
           />
         </>
       )}
@@ -191,12 +237,20 @@ export function ProductionOrdersListPage() {
           drawerOrder ? buildProductionOrderDrawerStats(drawerOrder, t) : []
         }
         editLabel={t('productionOrders.drawer.edit')}
+        deleteLabel={t('productionOrders.drawer.delete')}
         onEdit={
           selectedId
             ? () => {
                 const id = selectedId;
                 handleCloseDrawer();
                 navigate(`/production-orders/${id}`);
+              }
+            : undefined
+        }
+        onDelete={
+          selectedId
+            ? () => {
+                setPendingDeleteId(selectedId);
               }
             : undefined
         }
@@ -216,6 +270,19 @@ export function ProductionOrdersListPage() {
         ) : null}
         {drawerOrder ? <ProductionOrderDrawerContent item={drawerOrder} /> : null}
       </EntityDetailDrawer>
+
+      <ConfirmModal
+        open={pendingDeleteId !== null}
+        onClose={handleCloseDeleteModal}
+        onConfirm={() => {
+          void handleConfirmDelete();
+        }}
+        title={t('productionOrders.delete.title')}
+        message={t('productionOrders.delete.message')}
+        cancelLabel={t('productionOrders.delete.cancel')}
+        confirmLabel={t('productionOrders.delete.confirm')}
+        confirmLoading={isMutating}
+      />
     </PageRoot>
   );
 }

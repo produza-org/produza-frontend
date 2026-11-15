@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProductionOrderRequest } from './create';
+import { deleteProductionOrderRequest } from './delete';
 import { getProductionOrder } from './get';
 import { recalculateProductionOrderFromRecipe } from './recalculate';
 import {
@@ -128,6 +129,16 @@ describe('production orders mutation api', () => {
     expect(apiClientMock).toHaveBeenCalledWith('/production-orders/op-1', {
       method: 'PATCH',
       body: JSON.stringify({ realProduzido: 30 }),
+    });
+  });
+
+  it('deletes a production order with DELETE', async () => {
+    apiClientMock.mockResolvedValueOnce(undefined);
+
+    await deleteProductionOrderRequest('op-1');
+
+    expect(apiClientMock).toHaveBeenCalledWith('/production-orders/op-1', {
+      method: 'DELETE',
     });
   });
 });
