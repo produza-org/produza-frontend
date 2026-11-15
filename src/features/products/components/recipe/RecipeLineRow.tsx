@@ -1,6 +1,7 @@
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { useTranslation } from 'react-i18next';
 import { FormAutocomplete, FormTextField } from '@/shared/components/form';
+import { RAW_MATERIAL_UNIT_OPTIONS } from '@/features/raw-materials/constants';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import type { RecipeDraftLine } from '@/features/products/utils/recipe/draft-lines';
 import { sanitizeDecimalInput } from '@/features/products/utils/format';
@@ -48,6 +49,16 @@ export function RecipeLineRow({
         ]
       : options;
 
+  const knownUnitOptions = RAW_MATERIAL_UNIT_OPTIONS.map((option) => ({
+    value: option.value,
+    label: t(option.labelKey),
+  }));
+
+  const unitOptions =
+    line.unit && !knownUnitOptions.some((option) => option.value === line.unit)
+      ? [{ value: line.unit, label: line.unit }, ...knownUnitOptions]
+      : knownUnitOptions;
+
   return (
     <LineRowRoot>
       <FormAutocomplete
@@ -79,12 +90,20 @@ export function RecipeLineRow({
         }
         inputMode="decimal"
       />
-      <FormTextField
+      <FormAutocomplete
         id={`recipe-unit-${line.key}`}
         label={t('products.recipe.unitLabel')}
-        value={line.unit || '—'}
-        onChange={() => undefined}
-        disabled
+        value={line.unit}
+        onChange={(value) =>
+          onChange({
+            ...line,
+            unit: value,
+          })
+        }
+        options={unitOptions}
+        placeholder={t('products.recipe.unitPlaceholder')}
+        noOptionsText={t('products.recipe.unitNoOptions')}
+        disabled={!line.rawMaterialId}
       />
       <RemoveLineButton
         type="button"

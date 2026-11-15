@@ -275,6 +275,8 @@
       "proportionLabel": "Proporção",
       "proportionPlaceholder": "0,000000",
       "unitLabel": "Unidade",
+      "unitPlaceholder": "Buscar unidade",
+      "unitNoOptions": "Nenhuma unidade encontrada",
       "proportionSum": "Soma das proporções",
       "cancel": "Cancelar",
       "save": "Salvar ficha técnica",

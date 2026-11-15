@@ -43,4 +43,22 @@ describe('FormAutocomplete', () => {
     fireEvent.click(await screen.findByRole('option', { name: 'MP-002 — ACUCAR' }));
     expect(onChange).toHaveBeenCalledWith('m-2');
   });
+
+  it('can be disabled', () => {
+    renderWithTheme(
+      <FormAutocomplete
+        id="unit-field"
+        label="Unit"
+        value="KG"
+        onChange={vi.fn()}
+        options={[
+          { value: 'KG', label: 'Kilogram (kg)' },
+          { value: 'LITRO', label: 'Liter (lt)' },
+        ]}
+        disabled
+      />
+    );
+
+    expect(screen.getByRole('combobox', { name: 'Unit' })).toBeDisabled();
+  });
 });
