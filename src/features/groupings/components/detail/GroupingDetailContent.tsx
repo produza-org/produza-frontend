@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
 import type { RawMaterialGroup } from '@/features/groupings/types/grouping';
 import {
   formatCurrencyBrl,
@@ -47,7 +48,7 @@ export function GroupingDetailContent({ item }: GroupingDetailContentProps) {
   });
 
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <DetailBreakdownList
         title={t('groupings.drawer.sectionBasics')}
         items={basics}
@@ -58,6 +59,6 @@ export function GroupingDetailContent({ item }: GroupingDetailContentProps) {
           items={composition}
         />
       ) : null}
-    </>
+    </Box>
   );
 }

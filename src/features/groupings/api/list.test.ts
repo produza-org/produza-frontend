@@ -23,15 +23,15 @@ describe('raw material groups list api', () => {
       limit: 20,
       name: 'BASE',
       code: 'GRP',
-      rawMaterial: 'MP-006',
+      rawMaterialIds: ['mp-1', 'mp-2'],
     });
 
     expect(apiClientMock).toHaveBeenCalledWith(
-      '/raw-material-groups?page=1&limit=20&name=BASE&code=GRP&rawMaterial=MP-006'
+      '/raw-material-groups?page=1&limit=20&name=BASE&code=GRP&rawMaterialIds=mp-1&rawMaterialIds=mp-2'
     );
   });
 
-  it('loads every page when listing all groups', async () => {
+  it('loads every page when listing all groups with filters', async () => {
     apiClientMock
       .mockResolvedValueOnce({
         data: [{ id: '1' }],
@@ -42,16 +42,18 @@ describe('raw material groups list api', () => {
         meta: { page: 2, limit: 1, total: 2, totalPages: 2 },
       });
 
-    const items = await listAllRawMaterialGroups(1);
+    const items = await listAllRawMaterialGroups(1, {
+      rawMaterialIds: ['mp-1'],
+    });
 
     expect(items.map((item) => item.id)).toEqual(['1', '2']);
     expect(apiClientMock).toHaveBeenNthCalledWith(
       1,
-      '/raw-material-groups?page=1&limit=1'
+      '/raw-material-groups?page=1&limit=1&rawMaterialIds=mp-1'
     );
     expect(apiClientMock).toHaveBeenNthCalledWith(
       2,
-      '/raw-material-groups?page=2&limit=1'
+      '/raw-material-groups?page=2&limit=1&rawMaterialIds=mp-1'
     );
   });
 });

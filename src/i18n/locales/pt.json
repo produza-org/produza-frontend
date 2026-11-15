@@ -502,8 +502,9 @@
     "filters": {
       "nameLabel": "Nome do agrupamento",
       "namePlaceholder": "ex.: BASE LEITE COCO",
-      "rawMaterialLabel": "Matéria-prima",
-      "rawMaterialPlaceholder": "id, código ou nome",
+      "rawMaterialLabel": "Matérias-primas",
+      "rawMaterialPlaceholder": "Buscar por nome ou código",
+      "rawMaterialNoOptions": "Nenhuma matéria-prima encontrada",
       "codeLabel": "Código",
       "codePlaceholder": "ex.: GRP-001",
       "submit": "Filtrar"
