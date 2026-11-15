@@ -34,6 +34,9 @@ describe('EntityDetailDrawer', () => {
     expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
 
+    const presentation = document.querySelector('.MuiDrawer-root');
+    expect(presentation?.className).toMatch(/MuiDrawer-anchorRight/);
+
     fireEvent.click(screen.getByRole('button', { name: 'Close details' }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });

@@ -17,13 +17,13 @@ export const StyledDetailDrawer = styled(Drawer)(({ theme }) => ({
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
-    position: 'relative',
     backgroundColor: theme.palette.produza.surfaceContainerLowest,
     borderLeft: 'none',
+    borderRight: 'none',
     boxShadow: `-16px 0 40px ${theme.palette.produza.primary}1A`,
     [theme.breakpoints.up('sm')]: {
-      width: 448,
-      maxWidth: 448,
+      width: 500,
+      maxWidth: 500,
     },
   },
 }));
@@ -258,6 +258,72 @@ export const BreakdownValueSecondary = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
   color: theme.palette.produza.secondary,
   fontVariantNumeric: 'tabular-nums',
+})) as typeof Typography;
+
+export const DetailSection = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1.5),
+  marginBottom: theme.spacing(2),
+}));
+
+export const DetailSectionTitle = styled(Typography)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  fontSize: '0.75rem',
+  fontWeight: 700,
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  color: theme.palette.produza.onSurfaceVariant,
+})) as typeof Typography;
+
+export const DetailFacts = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 0,
+  borderRadius: 12,
+  overflow: 'hidden',
+  backgroundColor: theme.palette.produza.surfaceContainerLow,
+}));
+
+export const DetailFactRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(0.5),
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  borderBottom: `1px solid ${theme.palette.produza.outlineVariant}33`,
+  '&:last-child': {
+    borderBottom: 'none',
+  },
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    gap: theme.spacing(2),
+  },
+}));
+
+export const DetailFactLabel = styled(Typography)(({ theme }) => ({
+  fontSize: '0.75rem',
+  fontWeight: 600,
+  color: theme.palette.produza.onSurfaceVariant,
+  flexShrink: 0,
+})) as typeof Typography;
+
+export const DetailFactValue = styled(Typography)(({ theme }) => ({
+  fontSize: '0.875rem',
+  fontWeight: 700,
+  color: theme.palette.produza.onSurface,
+  fontVariantNumeric: 'tabular-nums',
+  overflowWrap: 'anywhere',
+  textAlign: 'left',
+  [theme.breakpoints.up('sm')]: {
+    textAlign: 'right',
+  },
 })) as typeof Typography;
 
 export const DrawerLoadingBox = styled(Box)(({ theme }) => ({
