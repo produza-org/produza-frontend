@@ -3,22 +3,17 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import { GROUPING_CARD_SIZE_PX } from '@/features/groupings/constants';
 
 export const CardsGrid = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gap: theme.spacing(2),
-  gridTemplateColumns: '1fr',
-  justifyItems: 'stretch',
-  [theme.breakpoints.up('sm')]: {
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    gap: theme.spacing(2.5),
-  },
-  [theme.breakpoints.up('md')]: {
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-  },
-  [theme.breakpoints.up('lg')]: {
-    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-  },
+  gap: theme.spacing(1),
+  gridTemplateColumns: `repeat(
+    auto-fill,
+    minmax(min(100%, ${GROUPING_CARD_SIZE_PX}px), ${GROUPING_CARD_SIZE_PX}px)
+  )`,
+  justifyContent: 'start',
+  alignItems: 'start',
 }));
 
 export const GroupCard = styled(Box)(({ theme }) => ({
@@ -26,6 +21,7 @@ export const GroupCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
+  maxWidth: GROUPING_CARD_SIZE_PX,
   aspectRatio: '1 / 1',
   backgroundColor: theme.palette.produza.surfaceContainerLowest,
   borderRadius: 12,
