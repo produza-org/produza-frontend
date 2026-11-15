@@ -17,10 +17,17 @@ export const FormCardAccent = styled(Box)(({ theme }) => ({
 }));
 
 export const FormBody = styled('form')(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+    gap: theme.spacing(4),
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
+  },
 }));
 
 export const FormRow = styled(Box)(({ theme }) => ({
@@ -61,12 +68,20 @@ export const ValidationAlertText = styled('p')(({ theme }) => ({
 
 export const FormActions = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: theme.spacing(2),
+  flexDirection: 'column-reverse',
+  alignItems: 'stretch',
+  gap: theme.spacing(1.5),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+  },
 }));
 
 export const CancelButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -79,9 +94,13 @@ export const CancelButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: `${theme.palette.produza.secondary}1A`,
   },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));
 
 export const SaveButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(5),
   paddingTop: theme.spacing(1.5),
@@ -98,4 +117,7 @@ export const SaveButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.produza.primary,
   },
   '&:active': { transform: 'scale(0.95)' },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));

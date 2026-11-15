@@ -13,6 +13,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: 440,
     width: '100%',
     margin: theme.spacing(2),
+    maxHeight: 'calc(100% - 32px)',
   },
 }));
 
@@ -31,12 +32,21 @@ export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 }));
 
 export const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
-  padding: theme.spacing(1.5, 3, 3),
-  justifyContent: 'space-between',
-  gap: 0,
+  padding: theme.spacing(1.5, 2, 2),
+  flexWrap: 'wrap',
+  justifyContent: 'stretch',
+  flexDirection: 'column-reverse',
+  gap: theme.spacing(1.5),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(1.5, 3, 3),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 0,
+  },
 }));
 
 export const ModalCancelButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   textTransform: 'none',
   fontWeight: 700,
   fontSize: 14,
@@ -49,9 +59,13 @@ export const ModalCancelButton = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.produza.outlineVariant,
     backgroundColor: `${theme.palette.produza.secondary}1A`,
   },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));
 
 export const ModalConfirmButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   textTransform: 'none',
   fontWeight: 700,
   fontSize: 14,
@@ -64,5 +78,8 @@ export const ModalConfirmButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.produza.confirmHover,
     boxShadow: 'none',
+  },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
   },
 }));

@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import LogoutOutlined from '@mui/icons-material/LogoutOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
@@ -44,7 +45,15 @@ const toggleGroupSx = {
   },
 } as const;
 
-export function AppHeader() {
+export type AppHeaderProps = {
+  showNavButton?: boolean;
+  onOpenNav?: () => void;
+};
+
+export function AppHeader({
+  showNavButton = false,
+  onOpenNav,
+}: AppHeaderProps) {
   const { t } = useTranslation();
   const { mode, toggleTheme } = useThemeMode();
   const { language, setLanguage } = useLanguage();
@@ -86,24 +95,37 @@ export function AppHeader() {
     <AppBar position="sticky" color="default">
       <Toolbar
         variant="dense"
-        sx={{ justifyContent: 'space-between', gap: 2, minHeight: 56 }}
+        sx={{ justifyContent: 'space-between', gap: 1.5, minHeight: 56 }}
       >
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          {user ? (
-            <Stack spacing={0} sx={{ minWidth: 0 }}>
-              <Typography variant="body2" fontWeight={600} noWrap>
-                {user.organizationName}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                noWrap
-                title={user.email}
-              >
-                {user.email}
-              </Typography>
-            </Stack>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
+          {showNavButton ? (
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={onOpenNav}
+              aria-label={t('layout.nav.openMenu')}
+              size="small"
+            >
+              <MenuIcon />
+            </IconButton>
           ) : null}
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            {user ? (
+              <Stack spacing={0} sx={{ minWidth: 0 }}>
+                <Typography variant="body2" fontWeight={600} noWrap>
+                  {user.organizationName}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  noWrap
+                  title={user.email}
+                >
+                  {user.email}
+                </Typography>
+              </Stack>
+            ) : null}
+          </Box>
         </Box>
         <IconButton
           onClick={handleOpenMenu}
@@ -125,7 +147,11 @@ export function AppHeader() {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           slotProps={{
             paper: {
-              sx: { minWidth: 280 },
+              sx: {
+                minWidth: { xs: 0, sm: 280 },
+                maxWidth: 'calc(100vw - 32px)',
+                width: { xs: 'min(100vw - 32px, 320px)', sm: 'auto' },
+              },
             },
           }}
         >

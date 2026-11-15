@@ -1,4 +1,4 @@
-export { PageTitle, PageSubtitle } from './PageHeader.styled';
+export { PageRoot, PageTitle, PageSubtitle } from './PageHeader.styled';
 export { PageBreadcrumbs } from './PageBreadcrumbs';
 export type {
   PageBreadcrumbItem,

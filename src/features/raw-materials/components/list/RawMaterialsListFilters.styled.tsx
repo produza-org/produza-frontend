@@ -4,27 +4,41 @@ import { styled } from '@mui/material/styles';
 
 export const FiltersRoot = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(5),
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   backgroundColor: theme.palette.produza.surfaceContainerLow,
   borderRadius: 12,
   border: `1px solid ${theme.palette.produza.outlineVariant}4D`,
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+  },
 }));
 
 export const FiltersRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'flex-end',
-  gap: theme.spacing(3),
+  gap: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    gap: theme.spacing(3),
+  },
 }));
 
-export const FieldBlock = styled(Box)(() => ({
-  flex: 1,
-  minWidth: 240,
+export const FieldBlock = styled(Box)(({ theme }) => ({
+  flex: '1 1 100%',
+  minWidth: 0,
+  [theme.breakpoints.up('sm')]: {
+    flex: '1 1 200px',
+  },
 }));
 
 export const CodeFieldBlock = styled(Box)(({ theme }) => ({
+  flex: '1 1 100%',
+  minWidth: 0,
   width: '100%',
-  [theme.breakpoints.up('sm')]: { width: 192 },
+  [theme.breakpoints.up('sm')]: {
+    flex: '0 0 192px',
+    width: 192,
+  },
 }));
 
 export const FieldLabel = styled('label')(({ theme }) => ({
@@ -58,6 +72,7 @@ export const FilterTextField = styled('div')(({ theme }) => ({
 }));
 
 export const FilterSubmitButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   backgroundColor: theme.palette.produza.primary,
   color: theme.palette.produza.onPrimary,
   paddingLeft: theme.spacing(4),
@@ -73,5 +88,8 @@ export const FilterSubmitButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.produza.primaryContainer,
     boxShadow: 'none',
+  },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
   },
 }));

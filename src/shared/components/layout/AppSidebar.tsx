@@ -51,17 +51,212 @@ const navConfig = [
 export type AppSidebarProps = {
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
+  isDesktop: boolean;
 };
 
-export function AppSidebar({ collapsed, onToggleCollapsed }: AppSidebarProps) {
+export function AppSidebar({
+  collapsed,
+  onToggleCollapsed,
+  mobileOpen,
+  onMobileClose,
+  isDesktop,
+}: AppSidebarProps) {
   const { t } = useTranslation();
-  const width = collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH_EXPANDED;
+  const showCollapsed = isDesktop && collapsed;
+  const width = showCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH_EXPANDED;
   const brand = t('layout.header.productName');
+
+  const drawerContent = (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        pt: 1,
+      }}
+    >
+      <Box
+        component="header"
+        sx={
+          showCollapsed
+            ? {
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 0.75,
+                px: 0.5,
+                pb: 3,
+              }
+            : {
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                px: 0.5,
+                pb: 3,
+                minHeight: 48,
+              }
+        }
+      >
+        {showCollapsed ? (
+          <Tooltip title={brand} placement="right">
+            <Avatar
+              sx={{
+                width: 36,
+                height: 36,
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                typography: 'subtitle2',
+                fontWeight: 700,
+              }}
+              aria-label={brand}
+            >
+              P
+            </Avatar>
+          </Tooltip>
+        ) : (
+          <>
+            <Box
+              sx={{
+                width: RAIL_ICON_SLOT_PX,
+                flexShrink: 0,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              aria-hidden
+            />
+            <Typography
+              component="h2"
+              variant="h6"
+              noWrap
+              aria-label={brand}
+              sx={{
+                flex: 1,
+                minWidth: 0,
+                textAlign: 'center',
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {brand}
+            </Typography>
+            <Box
+              sx={{
+                width: RAIL_ICON_SLOT_PX,
+                flexShrink: 0,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              {isDesktop ? (
+                <Tooltip
+                  title={t('layout.nav.collapseSidebar')}
+                  placement="right"
+                >
+                  <IconButton
+                    onClick={onToggleCollapsed}
+                    aria-label={t('layout.nav.collapseSidebar')}
+                    size="small"
+                  >
+                    <ChevronLeft />
+                  </IconButton>
+                </Tooltip>
+              ) : null}
+            </Box>
+          </>
+        )}
+        {showCollapsed ? (
+          <Tooltip title={t('layout.nav.expandSidebar')} placement="right">
+            <IconButton
+              onClick={onToggleCollapsed}
+              aria-label={t('layout.nav.expandSidebar')}
+              size="small"
+            >
+              <ChevronRight />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+      </Box>
+      <List component="nav" disablePadding sx={{ flex: 1, px: 0.5 }}>
+        {navConfig.map(({ to, i18nKey, Icon }) => {
+          const label = t(i18nKey);
+          const item = (
+            <ListItemButton
+              key={to}
+              component={NavLink}
+              to={to}
+              end={to === '/'}
+              onClick={isDesktop ? undefined : onMobileClose}
+              sx={{
+                borderRadius: 1,
+                justifyContent: showCollapsed ? 'center' : 'flex-start',
+                px: showCollapsed ? 1 : 2,
+                minHeight: 48,
+                '&.active': {
+                  bgcolor: 'action.selected',
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: showCollapsed ? 0 : 40,
+                  justifyContent: 'center',
+                  color: 'inherit',
+                }}
+              >
+                <Icon fontSize="small" />
+              </ListItemIcon>
+              {!showCollapsed ? (
+                <ListItemText
+                  primary={label}
+                  primaryTypographyProps={{
+                    variant: 'body2',
+                    fontWeight: 600,
+                    noWrap: true,
+                  }}
+                />
+              ) : null}
+            </ListItemButton>
+          );
+
+          return showCollapsed ? (
+            <Tooltip key={to} title={label} placement="right">
+              {item}
+            </Tooltip>
+          ) : (
+            item
+          );
+        })}
+      </List>
+    </Box>
+  );
+
+  if (!isDesktop) {
+    return (
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onMobileClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': {
+            width: DRAWER_WIDTH_EXPANDED,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+    );
+  }
 
   return (
     <Drawer
       variant="permanent"
       sx={(theme) => ({
+        display: { xs: 'none', md: 'block' },
         width,
         flexShrink: 0,
         whiteSpace: 'nowrap',
@@ -81,164 +276,7 @@ export function AppSidebar({ collapsed, onToggleCollapsed }: AppSidebarProps) {
         },
       })}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          pt: 1,
-        }}
-      >
-        <Box
-          component="header"
-          sx={
-            collapsed
-              ? {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 0.75,
-                  px: 0.5,
-                  pb: 3,
-                }
-              : {
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  px: 0.5,
-                  pb: 3,
-                  minHeight: 48,
-                }
-          }
-        >
-          {collapsed ? (
-            <Tooltip title={brand} placement="right">
-              <Avatar
-                sx={{
-                  width: 36,
-                  height: 36,
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  typography: 'subtitle2',
-                  fontWeight: 700,
-                }}
-                aria-label={brand}
-              >
-                P
-              </Avatar>
-            </Tooltip>
-          ) : (
-            <>
-              <Box
-                sx={{
-                  width: RAIL_ICON_SLOT_PX,
-                  flexShrink: 0,
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-                aria-hidden
-              />
-              <Typography
-                component="h2"
-                variant="h6"
-                noWrap
-                aria-label={brand}
-                sx={{
-                  flex: 1,
-                  minWidth: 0,
-                  textAlign: 'center',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {brand}
-              </Typography>
-              <Box
-                sx={{
-                  width: RAIL_ICON_SLOT_PX,
-                  flexShrink: 0,
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <Tooltip
-                  title={t('layout.nav.collapseSidebar')}
-                  placement="right"
-                >
-                  <IconButton
-                    onClick={onToggleCollapsed}
-                    aria-label={t('layout.nav.collapseSidebar')}
-                    size="small"
-                  >
-                    <ChevronLeft />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </>
-          )}
-          {collapsed ? (
-            <Tooltip title={t('layout.nav.expandSidebar')} placement="right">
-              <IconButton
-                onClick={onToggleCollapsed}
-                aria-label={t('layout.nav.expandSidebar')}
-                size="small"
-              >
-                <ChevronRight />
-              </IconButton>
-            </Tooltip>
-          ) : null}
-        </Box>
-        <List component="nav" disablePadding sx={{ flex: 1, px: 0.5 }}>
-          {navConfig.map(({ to, i18nKey, Icon }) => {
-            const label = t(i18nKey);
-            const item = (
-              <ListItemButton
-                key={to}
-                component={NavLink}
-                to={to}
-                end={to === '/'}
-                sx={{
-                  borderRadius: 1,
-                  justifyContent: collapsed ? 'center' : 'flex-start',
-                  px: collapsed ? 1 : 2,
-                  minHeight: 48,
-                  '&.active': {
-                    bgcolor: 'action.selected',
-                  },
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: collapsed ? 0 : 40,
-                    justifyContent: 'center',
-                    color: 'inherit',
-                  }}
-                >
-                  <Icon fontSize="small" />
-                </ListItemIcon>
-                {!collapsed ? (
-                  <ListItemText
-                    primary={label}
-                    primaryTypographyProps={{
-                      variant: 'body2',
-                      fontWeight: 600,
-                      noWrap: true,
-                    }}
-                  />
-                ) : null}
-              </ListItemButton>
-            );
-
-            return collapsed ? (
-              <Tooltip key={to} title={label} placement="right">
-                {item}
-              </Tooltip>
-            ) : (
-              item
-            );
-          })}
-        </List>
-      </Box>
+      {drawerContent}
     </Drawer>
   );
 }

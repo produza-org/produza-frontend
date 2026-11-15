@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { AppFooter } from '@/shared/components/layout/AppFooter';
 import { AppHeader } from '@/shared/components/layout/AppHeader';
 import { AppSidebar } from '@/shared/components/layout/AppSidebar';
@@ -14,17 +16,34 @@ function readCollapsed(): boolean {
 }
 
 export function AppShellLayout() {
+  const theme = useTheme();
+  const location = useLocation();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const [collapsed, setCollapsed] = useState(readCollapsed);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
   }, [collapsed]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isDesktop) {
+      setMobileOpen(false);
+    }
+  }, [isDesktop]);
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
       <AppSidebar
         collapsed={collapsed}
         onToggleCollapsed={() => setCollapsed((c) => !c)}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+        isDesktop={isDesktop}
       />
       <Box
         sx={{
@@ -35,7 +54,10 @@ export function AppShellLayout() {
           minHeight: '100vh',
         }}
       >
-        <AppHeader />
+        <AppHeader
+          showNavButton={!isDesktop}
+          onOpenNav={() => setMobileOpen(true)}
+        />
         <Box
           component="main"
           sx={{
@@ -47,8 +69,8 @@ export function AppShellLayout() {
         >
           <Box
             sx={{
-              px: 4,
-              pt: 4,
+              px: { xs: 2, sm: 3, md: 4 },
+              pt: { xs: 2, sm: 3, md: 4 },
               pb: 0,
             }}
           >

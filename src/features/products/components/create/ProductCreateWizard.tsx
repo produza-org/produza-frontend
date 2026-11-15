@@ -10,6 +10,8 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '@/shared/components/dialog';
 import { ProductForm } from '@/features/products/components/form/ProductForm';
@@ -62,6 +64,8 @@ export function ProductCreateWizard({
   errorMessage = null,
 }: ProductCreateWizardProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
   const [activeStep, setActiveStep] = useState(0);
   const [generalValues, setGeneralValues] =
     useState<ProductFormSubmitValues | null>(null);
@@ -129,7 +133,11 @@ export function ProductCreateWizard({
   return (
     <>
       <WizardRoot>
-        <WizardStepper activeStep={activeStep} alternativeLabel>
+        <WizardStepper
+          activeStep={activeStep}
+          alternativeLabel={isSmUp}
+          orientation={isSmUp ? 'horizontal' : 'vertical'}
+        >
           {steps.map((label, index) => (
             <Step key={label} completed={index < activeStep}>
               <StepLabel

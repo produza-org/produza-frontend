@@ -18,10 +18,17 @@ export const EditorCardAccent = styled(Box)(({ theme }) => ({
 }));
 
 export const EditorBody = styled('form')(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+    gap: theme.spacing(4),
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
+  },
 }));
 
 export const ProductMetaRow = styled(Box)(({ theme }) => ({
@@ -52,6 +59,7 @@ export const CategoryBlockRoot = styled(Box)(({ theme }) => ({
 
 export const CategoryHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: theme.spacing(2),
@@ -111,6 +119,7 @@ export const RemoveLineButton = styled(Button)(({ theme }) => ({
 
 export const ProportionSumBanner = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: theme.spacing(2),
@@ -145,12 +154,20 @@ export const EmptyHint = styled('p')(({ theme }) => ({
 
 export const EditorActions = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: theme.spacing(2),
+  flexDirection: 'column-reverse',
+  alignItems: 'stretch',
+  gap: theme.spacing(1.5),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+  },
 }));
 
 export const CancelButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -163,9 +180,13 @@ export const CancelButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: `${theme.palette.produza.secondary}1A`,
   },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));
 
 export const SaveButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(5),
   paddingTop: theme.spacing(1.5),
@@ -192,4 +213,7 @@ export const SaveButton = styled(Button)(({ theme }) => ({
       boxShadow: 'none',
       opacity: 1,
     },
+  [theme.breakpoints.up('sm')]: {
+    width: 'auto',
+  },
 }));

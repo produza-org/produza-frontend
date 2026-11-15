@@ -20,10 +20,17 @@ export const DetailCardAccent = styled(Box)(({ theme }) => ({
 }));
 
 export const DetailBody = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+    gap: theme.spacing(4),
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
+  },
 }));
 
 export const HeaderGrid = styled(Box)(({ theme }) => ({
@@ -71,6 +78,7 @@ export const QControls = styled(Box)(({ theme }) => ({
 }));
 
 export const ActionButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -87,9 +95,13 @@ export const ActionButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.produza.primary,
   },
   '&:active': { transform: 'scale(0.98)' },
+  [theme.breakpoints.up('md')]: {
+    width: 'auto',
+  },
 }));
 
 export const SecondaryActionButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   paddingTop: theme.spacing(1.5),
@@ -104,6 +116,14 @@ export const SecondaryActionButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: `${theme.palette.produza.primary}14`,
   },
+  [theme.breakpoints.up('md')]: {
+    width: 'auto',
+  },
+}));
+
+export const NeedsTableScroll = styled(Box)(() => ({
+  width: '100%',
+  overflowX: 'auto',
 }));
 
 export const CategoryBlockRoot = styled(Box)(({ theme }) => ({
