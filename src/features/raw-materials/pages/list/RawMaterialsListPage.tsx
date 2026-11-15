@@ -11,6 +11,7 @@ import { ConfirmModal } from '@/shared/components/dialog';
 import { EntityDetailDrawer } from '@/shared/components/drawer';
 import { PageSubtitle, PageTitle } from '@/shared/components/page';
 import { useToast } from '@/shared/toast';
+import { RawMaterialDetailContent } from '@/features/raw-materials/components/detail/RawMaterialDetailContent';
 import { RawMaterialsStatCard } from '@/features/raw-materials/components/list/RawMaterialsStatCard';
 import { RawMaterialsListFilters } from '@/features/raw-materials/components/list/RawMaterialsListFilters';
 import { RawMaterialsListTable } from '@/features/raw-materials/components/list/RawMaterialsListTable';
@@ -244,7 +245,9 @@ export function RawMaterialsListPage() {
               }
             : undefined
         }
-      />
+      >
+        {drawerItem ? <RawMaterialDetailContent item={drawerItem} /> : null}
+      </EntityDetailDrawer>
 
       <ConfirmModal
         open={pendingDeleteId !== null}
