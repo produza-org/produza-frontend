@@ -6,6 +6,7 @@ import type { RecipeDraftLine } from '@/features/products/utils/recipe/draft-lin
 import { RecipeLineRow } from '@/features/products/components/recipe/RecipeLineRow';
 import {
   AddLineButton,
+  AddLineRow,
   CategoryBlockRoot,
   CategoryHeader,
   CategoryTitle,
@@ -37,13 +38,6 @@ export function RecipeCategoryBlock({
     <CategoryBlockRoot>
       <CategoryHeader>
         <CategoryTitle>{t(`products.recipe.categories.${category}`)}</CategoryTitle>
-        <AddLineButton
-          type="button"
-          startIcon={<AddOutlined fontSize="small" />}
-          onClick={onAddLine}
-        >
-          {t('products.recipe.addLine')}
-        </AddLineButton>
       </CategoryHeader>
 
       <LineRows>
@@ -58,6 +52,16 @@ export function RecipeCategoryBlock({
           />
         ))}
       </LineRows>
+
+      <AddLineRow>
+        <AddLineButton
+          type="button"
+          startIcon={<AddOutlined fontSize="small" />}
+          onClick={onAddLine}
+        >
+          {t('products.recipe.addLine')}
+        </AddLineButton>
+      </AddLineRow>
     </CategoryBlockRoot>
   );
 }
