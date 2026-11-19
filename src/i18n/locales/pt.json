@@ -330,7 +330,7 @@
       "back": "Voltar",
       "save": "Salvar",
       "saving": "Salvando…",
-      "recipeHint": "Adicione matérias-primas até Σ = 1 e salve para criar o produto e a receita.",
+      "recipeHint": "Adicione matérias-primas até Σ = 1. Componente e embalagem são opcionais; depois salve para criar o produto e a receita.",
       "loadingMaterials": "Carregando matérias-primas",
       "discardTitle": "Descartar alterações?",
       "discardMessage": "Há alterações não salvas no cadastro do produto. Sair sem salvar?",
@@ -346,13 +346,12 @@
     },
     "recipe": {
       "title": "Ficha técnica — {{name}}",
-      "subtitle": "Ficha técnica (BOM) apenas com matérias-primas.",
-      "emptyHint": "Ainda não há ficha técnica. Adicione linhas de matéria-prima e salve quando as proporções somarem 1.",
+      "subtitle": "Ficha técnica (BOM) com matérias-primas e, opcionalmente, componentes e embalagens.",
+      "emptyHint": "Ainda não há ficha técnica. Adicione linhas de matéria-prima até as proporções somarem 1. Componente e embalagem são opcionais.",
       "editAction": "Editar ficha técnica",
       "editLink": "Editar ficha técnica",
       "addLine": "Adicionar linha",
       "removeLine": "Remover linha",
-      "rawMaterialsTitle": "Matéria-prima",
       "materialLabel": "Matéria-prima",
       "materialPlaceholder": "Buscar pelo nome",
       "materialUnavailable": "Matéria-prima indisponível",
@@ -362,7 +361,7 @@
       "unitLabel": "Unidade",
       "unitPlaceholder": "Buscar unidade",
       "unitNoOptions": "Nenhuma unidade encontrada",
-      "proportionSum": "Soma das proporções",
+      "proportionSum": "Soma das proporções de matéria-prima",
       "cancel": "Cancelar",
       "save": "Salvar ficha técnica",
       "saving": "Salvando…",
@@ -375,6 +374,11 @@
         "yield": "Rendimento",
         "expansion": "Expansão",
         "finalSize": "Tamanho final"
+      },
+      "categories": {
+        "MATERIA_PRIMA": "Matéria-prima",
+        "COMPONENTE": "Componente",
+        "EMBALAGEM": "Embalagem"
       },
       "errors": {
         "unexpected": "Algo deu errado. Tente novamente.",

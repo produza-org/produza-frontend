@@ -87,29 +87,30 @@ describe('ProductCreateWizard', () => {
     const saveButton = screen.getByRole('button', { name: 'Save' });
     expect(saveButton).toBeDisabled();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
     expect(saveButton).toBeDisabled();
   });
 
-  it('shows only raw-material fields without sum warning banners on step 2', async () => {
+  it('shows optional component and packaging sections on step 2', async () => {
     renderWizard();
     await goToRecipeStep();
 
     expect(screen.getByText('Raw material')).toBeInTheDocument();
-    expect(screen.queryByText('Component')).not.toBeInTheDocument();
-    expect(screen.queryByText('Packaging')).not.toBeInTheDocument();
+    expect(screen.getByText('Component')).toBeInTheDocument();
+    expect(screen.getByText('Packaging')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(3);
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
 
-    expect(screen.getByText('Proportion sum')).toBeInTheDocument();
+    expect(screen.getByText('Raw material proportion sum')).toBeInTheDocument();
     expect(screen.getByText(/^Σ =/)).toBeInTheDocument();
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
     expect(
@@ -122,8 +123,9 @@ describe('ProductCreateWizard', () => {
     renderWizard(onSave);
     await goToRecipeStep();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[0]);
 
     await selectMaterial(0, 'MP-006 — AGUA');
     await selectMaterial(1, 'MP-002 — ACUCAR');
@@ -148,11 +150,13 @@ describe('ProductCreateWizard', () => {
           lines: [
             {
               rawMaterialId: 'm-1',
+              category: 'MATERIA_PRIMA',
               proportion: 0.4,
               sortOrder: 0,
             },
             {
               rawMaterialId: 'm-2',
+              category: 'MATERIA_PRIMA',
               proportion: 0.6,
               sortOrder: 1,
             },

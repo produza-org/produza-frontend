@@ -78,10 +78,10 @@ describe('RecipeEditor', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps save disabled when proportion sum is not 1', () => {
+  it('keeps save disabled when raw-material proportion sum is not 1', () => {
     renderEditor();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
@@ -91,22 +91,24 @@ describe('RecipeEditor', () => {
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
   });
 
-  it('shows a single raw-material block without component or packaging', () => {
+  it('shows raw material, component, and packaging blocks', () => {
     renderEditor();
 
     expect(screen.getByText('Raw material')).toBeInTheDocument();
-    expect(screen.queryByText('Component')).not.toBeInTheDocument();
-    expect(screen.queryByText('Packaging')).not.toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(1);
+    expect(screen.getByText('Component')).toBeInTheDocument();
+    expect(screen.getByText('Packaging')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(3);
   });
 
-  it('strips empty rows before PUT payload', async () => {
+  it('strips empty rows and keeps optional component/packaging out of the required sum', async () => {
     const onSubmit = vi.fn();
     renderEditor(onSubmit);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[1]);
+    fireEvent.click(addButtons[2]);
 
     await selectMaterial(0, 'MP-006 — AGUA');
     await selectMaterial(1, 'MP-002 — ACUCAR');
@@ -124,13 +126,61 @@ describe('RecipeEditor', () => {
         lines: [
           {
             rawMaterialId: 'm-1',
+            category: 'MATERIA_PRIMA',
             proportion: 0.4,
             sortOrder: 0,
           },
           {
             rawMaterialId: 'm-2',
+            category: 'MATERIA_PRIMA',
             proportion: 0.6,
             sortOrder: 1,
+          },
+        ],
+      });
+    });
+  });
+
+  it('includes optional component and packaging lines in the PUT payload', async () => {
+    const onSubmit = vi.fn();
+    renderEditor(onSubmit);
+
+    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[1]);
+    fireEvent.click(addButtons[2]);
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+    await selectMaterial(1, 'MP-002 — ACUCAR');
+    await selectMaterial(2, 'MP-EMB-POTE — POTE 1,5L');
+
+    const proportions = screen.getAllByLabelText('Proportion');
+    fireEvent.change(proportions[0], { target: { value: '1' } });
+    fireEvent.change(proportions[1], { target: { value: '0.5' } });
+    fireEvent.change(proportions[2], { target: { value: '1' } });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save recipe' }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        lines: [
+          {
+            rawMaterialId: 'm-1',
+            category: 'MATERIA_PRIMA',
+            proportion: 1,
+            sortOrder: 0,
+          },
+          {
+            rawMaterialId: 'm-2',
+            category: 'COMPONENTE',
+            proportion: 0.5,
+            sortOrder: 1,
+          },
+          {
+            rawMaterialId: 'm-3',
+            category: 'EMBALAGEM',
+            proportion: 1,
+            sortOrder: 2,
           },
         ],
       });
@@ -140,7 +190,7 @@ describe('RecipeEditor', () => {
   it('lets the user change unit via searchable select after picking a material', async () => {
     renderEditor();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Add line' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
 
     const unitInput = screen.getByRole('combobox', { name: 'Unit' });
     expect(unitInput).toBeDisabled();

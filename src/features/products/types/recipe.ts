@@ -1,3 +1,5 @@
+export type RecipeLineCategory = 'MATERIA_PRIMA' | 'COMPONENTE' | 'EMBALAGEM';
+
 export type RecipeLineRawMaterial = {
   id: string;
   code: string;
@@ -9,6 +11,7 @@ export type RecipeLineRawMaterial = {
 export type RecipeLine = {
   id: string;
   rawMaterialId: string;
+  category: RecipeLineCategory;
   proportion: number;
   unit: string;
   sortOrder: number;
@@ -26,6 +29,7 @@ export type Recipe = {
 
 export type RecipeLineInput = {
   rawMaterialId: string;
+  category: RecipeLineCategory;
   proportion: number;
   sortOrder?: number;
 };

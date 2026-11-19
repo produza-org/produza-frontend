@@ -71,7 +71,12 @@ export function ProductDetailContent({ item }: ProductDetailContentProps) {
       items={lines.map((line) => ({
         id: line.id,
         primary: line.rawMaterial?.name ?? line.rawMaterialId,
-        secondary: line.rawMaterial?.code,
+        secondary: [
+          line.rawMaterial?.code,
+          t(`products.recipe.categories.${line.category}`),
+        ]
+          .filter(Boolean)
+          .join(' · '),
         value: formatDecimal(line.proportion, 6),
         valueSecondary: line.unit,
       }))}
