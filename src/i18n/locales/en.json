@@ -330,7 +330,7 @@
       "back": "Back",
       "save": "Save",
       "saving": "Saving…",
-      "recipeHint": "Add raw materials until Σ = 1, then save to create the product and recipe.",
+      "recipeHint": "Add raw materials until Σ = 1. Component and packaging are optional, then save to create the product and recipe.",
       "loadingMaterials": "Loading raw materials",
       "discardTitle": "Discard changes?",
       "discardMessage": "You have unsaved product registration changes. Leave without saving?",
@@ -346,13 +346,12 @@
     },
     "recipe": {
       "title": "Recipe — {{name}}",
-      "subtitle": "Technical sheet (BOM) with raw materials only.",
-      "emptyHint": "No recipe yet. Add raw-material lines and save when proportions sum to 1.",
+      "subtitle": "Technical sheet (BOM) with raw materials, optional components, and packaging.",
+      "emptyHint": "No recipe yet. Add raw-material lines until proportions sum to 1. Component and packaging are optional.",
       "editAction": "Edit recipe",
       "editLink": "Edit recipe",
       "addLine": "Add line",
       "removeLine": "Remove line",
-      "rawMaterialsTitle": "Raw material",
       "materialLabel": "Raw material",
       "materialPlaceholder": "Search by name",
       "materialUnavailable": "Unavailable material",
@@ -362,7 +361,7 @@
       "unitLabel": "Unit",
       "unitPlaceholder": "Search unit",
       "unitNoOptions": "No units found",
-      "proportionSum": "Proportion sum",
+      "proportionSum": "Raw material proportion sum",
       "cancel": "Cancel",
       "save": "Save recipe",
       "saving": "Saving…",
@@ -375,6 +374,11 @@
         "yield": "Yield",
         "expansion": "Expansion",
         "finalSize": "Final size"
+      },
+      "categories": {
+        "MATERIA_PRIMA": "Raw material",
+        "COMPONENTE": "Component",
+        "EMBALAGEM": "Packaging"
       },
       "errors": {
         "unexpected": "Something went wrong. Please try again.",

@@ -1,4 +1,8 @@
-import type { RecipeLine, RecipeLineInput } from '@/features/products/types/recipe';
+import type {
+  RecipeLine,
+  RecipeLineCategory,
+  RecipeLineInput,
+} from '@/features/products/types/recipe';
 import { parseDecimalInput } from '@/features/products/utils/format';
 import {
   computeProportionSum,
@@ -8,6 +12,7 @@ import {
 export type RecipeDraftLine = {
   key: string;
   rawMaterialId: string;
+  category: RecipeLineCategory;
   proportionDisplay: string;
   unit: string;
 };
@@ -19,10 +24,11 @@ export function createDraftLineKey(): string {
   return `draft-${draftKeyCounter}`;
 }
 
-export function createEmptyDraftLine(): RecipeDraftLine {
+export function createEmptyDraftLine(category: RecipeLineCategory): RecipeDraftLine {
   return {
     key: createDraftLineKey(),
     rawMaterialId: '',
+    category,
     proportionDisplay: '',
     unit: '',
   };
@@ -34,6 +40,7 @@ export function recipeLinesToDrafts(lines: RecipeLine[]): RecipeDraftLine[] {
     .map((line) => ({
       key: line.id,
       rawMaterialId: line.rawMaterialId,
+      category: line.category,
       proportionDisplay: String(line.proportion),
       unit: line.unit || line.rawMaterial?.unit || '',
     }));
@@ -54,14 +61,21 @@ export function stripIncompleteDraftLines(lines: RecipeDraftLine[]): RecipeDraft
 export function toRecipeLineInputs(lines: RecipeDraftLine[]): RecipeLineInput[] {
   return stripIncompleteDraftLines(lines).map((line, index) => ({
     rawMaterialId: line.rawMaterialId,
+    category: line.category,
     proportion: parseDecimalInput(line.proportionDisplay),
     sortOrder: index,
   }));
 }
 
+export function getCompleteRawMaterialLines(lines: RecipeDraftLine[]): RecipeDraftLine[] {
+  return stripIncompleteDraftLines(lines).filter(
+    (line) => line.category === 'MATERIA_PRIMA'
+  );
+}
+
 export function getDraftProportionSum(lines: RecipeDraftLine[]): number {
   return computeProportionSum(
-    stripIncompleteDraftLines(lines).map((line) => ({
+    getCompleteRawMaterialLines(lines).map((line) => ({
       proportion: parseDecimalInput(line.proportionDisplay),
     }))
   );

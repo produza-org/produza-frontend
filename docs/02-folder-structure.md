@@ -55,7 +55,7 @@ features/<name>/
 └── index.ts          Public API for app routes (pages, provider, shared types)
 ```
 
-Products include a 2-step create wizard at `/products/new` under `features/products/components/create/` (`ProductCreateWizard`: general info → recipe). Existing products still use edit at `/products/:id/edit` and a nested recipe editor at `/products/:id/recipe` under `features/products/pages/recipe/` and `components/recipe/` (`RecipeDraftPanel` shared by create step 2 and `RecipeEditor`). Recipe lines are raw materials only (`rawMaterialId` + `proportion`, Σ = 1); the material picker is a searchable `FormAutocomplete`.
+Products include a 2-step create wizard at `/products/new` under `features/products/components/create/` (`ProductCreateWizard`: general info → recipe). Existing products still use edit at `/products/:id/edit` and a nested recipe editor at `/products/:id/recipe` under `features/products/pages/recipe/` and `components/recipe/` (`RecipeDraftPanel` shared by create step 2 and `RecipeEditor`). Recipe lines use BOM categories `MATERIA_PRIMA`, `COMPONENTE`, and `EMBALAGEM` (items still from the raw-materials catalog); Σ = 1 is enforced only on raw-material proportions, while component and packaging are optional. The material picker is a searchable `FormAutocomplete`.
 
 Production orders live under `features/production-orders/` with list, create, and detail pages at `/production-orders`, `/production-orders/new`, and `/production-orders/:id`. The detail page includes floor steps (`FloorStepsPanel`) and actual production (`realProduzido`) alongside QTD. LOTE need lines.
 

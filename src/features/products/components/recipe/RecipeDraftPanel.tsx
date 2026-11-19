@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import Alert from '@mui/material/Alert';
 import { useTranslation } from 'react-i18next';
+import { RECIPE_LINE_CATEGORIES } from '@/features/products/constants';
 import { RecipeCategoryBlock } from '@/features/products/components/recipe/RecipeCategoryBlock';
 import {
   EmptyHint,
@@ -10,6 +11,7 @@ import {
   ProportionSumLabel,
   ProportionSumValue,
 } from '@/features/products/components/recipe/RecipeEditor.styled';
+import type { RecipeLineCategory } from '@/features/products/types/recipe';
 import type { RecipeProductMeta } from '@/features/products/utils/form/general-info';
 import { formatDecimal } from '@/features/products/utils/format';
 import {
@@ -78,8 +80,8 @@ export function RecipeDraftPanel({
     onChange(lines.filter((line) => line.key !== key));
   }
 
-  function addLine() {
-    onChange([...lines, createEmptyDraftLine()]);
+  function addLine(category: RecipeLineCategory) {
+    onChange([...lines, createEmptyDraftLine(category)]);
   }
 
   return (
@@ -111,14 +113,18 @@ export function RecipeDraftPanel({
         <EmptyHint>{t('products.recipe.emptyHint')}</EmptyHint>
       ) : null}
 
-      <RecipeCategoryBlock
-        lines={lines}
-        materials={materials}
-        usedMaterialIds={usedMaterialIds}
-        onAddLine={addLine}
-        onChangeLine={updateLine}
-        onRemoveLine={removeLine}
-      />
+      {RECIPE_LINE_CATEGORIES.map((category) => (
+        <RecipeCategoryBlock
+          key={category}
+          category={category}
+          lines={lines.filter((line) => line.category === category)}
+          materials={materials}
+          usedMaterialIds={usedMaterialIds}
+          onAddLine={() => addLine(category)}
+          onChangeLine={updateLine}
+          onRemoveLine={removeLine}
+        />
+      ))}
 
       <ProportionSumBanner role="status">
         <ProportionSumLabel>{t('products.recipe.proportionSum')}</ProportionSumLabel>

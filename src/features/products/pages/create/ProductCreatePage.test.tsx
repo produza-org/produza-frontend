@@ -59,6 +59,7 @@ vi.mock('@/features/products/components/create/ProductCreateWizard', () => ({
             lines: [
               {
                 rawMaterialId: 'm-1',
+                category: 'MATERIA_PRIMA',
                 proportion: 1,
                 sortOrder: 0,
               },
@@ -139,6 +140,7 @@ describe('ProductCreatePage', () => {
         lines: [
           {
             rawMaterialId: 'm-1',
+            category: 'MATERIA_PRIMA',
             proportion: 1,
             sortOrder: 0,
           },
@@ -200,6 +202,7 @@ describe('ProductCreatePage', () => {
         lines: [
           {
             rawMaterialId: 'm-1',
+            category: 'MATERIA_PRIMA',
             proportion: 1,
             sortOrder: 0,
           },
