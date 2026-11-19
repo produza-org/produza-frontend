@@ -61,7 +61,6 @@ export const CategoryHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
-  justifyContent: 'space-between',
   gap: theme.spacing(2),
 }));
 
@@ -73,6 +72,12 @@ export const CategoryTitle = styled('h3')(({ theme }) => ({
   textTransform: 'uppercase',
   color: theme.palette.produza.slate500,
 }));
+
+export const AddLineRow = styled(Box)({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  width: '100%',
+});
 
 export const AddLineButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
