@@ -58,6 +58,65 @@
       "unexpectedError": "Something went wrong. Please try again."
     }
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Company production and stock overview.",
+    "loading": "Loading dashboard",
+    "errors": {
+      "unexpected": "Something went wrong. Please try again."
+    },
+    "period": {
+      "ariaLabel": "Dashboard period",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "custom": "Custom",
+      "from": "From",
+      "to": "To"
+    },
+    "kpis": {
+      "ordersIssued": "Orders issued",
+      "actualProduced": "Actual produced",
+      "avgFulfillment": "Avg. fulfillment",
+      "materialsBelowMin": "Materials below min",
+      "productsWithRecipe": "Products with recipe",
+      "productsWithoutRecipe": "Products without recipe"
+    },
+    "charts": {
+      "series": {
+        "planned": "Planned",
+        "actual": "Actual",
+        "withActual": "With actual output",
+        "withoutActual": "Issued only",
+        "demand": "Demand"
+      },
+      "productionVolume": {
+        "title": "Production volume"
+      },
+      "plannedVsActual": {
+        "title": "Planned vs actual",
+        "variation": "Net variation: {{value}}"
+      },
+      "outputByProduct": {
+        "title": "Output by product",
+        "plannedFallback": "Ranked by planned quantity (no actual output in period)."
+      },
+      "ordersIssued": {
+        "title": "Orders issued"
+      },
+      "stockHealth": {
+        "title": "Stock health (current / manual stock)",
+        "subtitle": "Inventory value: {{value}}",
+        "ok": "OK",
+        "belowMin": "Below minimum",
+        "outOfStock": "Out of stock",
+        "empty": "No active materials"
+      },
+      "materialDemand": {
+        "title": "Material demand from issued orders"
+      }
+    }
+  },
   "rawMaterials": {
     "errors": {
       "unexpected": "Something went wrong. Please try again."

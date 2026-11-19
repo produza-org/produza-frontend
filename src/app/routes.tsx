@@ -1,8 +1,8 @@
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { AppShellLayout } from '@/app/AppShellLayout';
-import { HomePage } from '@/app/HomePage';
 import { RequireAuth } from '@/app/RequireAuth';
 import { LoginPage } from '@/features/auth';
+import { DashboardPage } from '@/features/dashboard';
 import {
   ProductsListPage,
   ProductCreatePage,
@@ -35,7 +35,7 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<AppShellLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<DashboardPage />} />
           <Route
             path="/raw-materials"
             element={

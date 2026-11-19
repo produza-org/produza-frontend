@@ -58,6 +58,65 @@
       "unexpectedError": "Algo deu errado. Tente novamente."
     }
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Visão geral de produção e estoque da empresa.",
+    "loading": "Carregando dashboard",
+    "errors": {
+      "unexpected": "Algo deu errado. Tente novamente."
+    },
+    "period": {
+      "ariaLabel": "Período do dashboard",
+      "day": "Dia",
+      "week": "Semana",
+      "month": "Mês",
+      "custom": "Personalizado",
+      "from": "De",
+      "to": "Até"
+    },
+    "kpis": {
+      "ordersIssued": "Ordens emitidas",
+      "actualProduced": "Produzido real",
+      "avgFulfillment": "Cumprimento médio",
+      "materialsBelowMin": "Materiais abaixo do mínimo",
+      "productsWithRecipe": "Produtos com receita",
+      "productsWithoutRecipe": "Produtos sem receita"
+    },
+    "charts": {
+      "series": {
+        "planned": "Planejado",
+        "actual": "Real",
+        "withActual": "Com produção registrada",
+        "withoutActual": "Somente emitidas",
+        "demand": "Demanda"
+      },
+      "productionVolume": {
+        "title": "Volume de produção"
+      },
+      "plannedVsActual": {
+        "title": "Planejado vs real",
+        "variation": "Variação líquida: {{value}}"
+      },
+      "outputByProduct": {
+        "title": "Produção por produto",
+        "plannedFallback": "Ordenado pela quantidade planejada (sem produção real no período)."
+      },
+      "ordersIssued": {
+        "title": "Ordens emitidas"
+      },
+      "stockHealth": {
+        "title": "Saúde do estoque (atual / manual)",
+        "subtitle": "Valor em estoque: {{value}}",
+        "ok": "OK",
+        "belowMin": "Abaixo do mínimo",
+        "outOfStock": "Sem estoque",
+        "empty": "Sem materiais ativos"
+      },
+      "materialDemand": {
+        "title": "Demanda de materiais das ordens emitidas"
+      }
+    }
+  },
   "rawMaterials": {
     "errors": {
       "unexpected": "Algo deu errado. Tente novamente."

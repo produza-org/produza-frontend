@@ -1,5 +1,1 @@
-import Box from '@mui/material/Box';
-
-export function HomePage() {
-  return <Box sx={{ minHeight: '100%' }} />;
-}
+export { DashboardPage as HomePage } from '@/features/dashboard';
