@@ -15,9 +15,38 @@ describe('product recipe api', () => {
   });
 
   it('fetches a product recipe by product id', async () => {
-    apiClientMock.mockResolvedValueOnce({ id: 'r-1', productId: 'p-1', lines: [] });
+    apiClientMock.mockResolvedValueOnce({
+      id: 'r-1',
+      productId: 'p-1',
+      componentSum: 1,
+      lines: [
+        {
+          id: 'line-1',
+          rawMaterialId: 'm-1',
+          unitConsumption: 0.25,
+          unit: 'KG',
+          sortOrder: 0,
+        },
+      ],
+    });
 
-    await getProductRecipe('p-1');
+    await expect(getProductRecipe('p-1')).resolves.toEqual({
+      id: 'r-1',
+      productId: 'p-1',
+      proportionSum: 1,
+      createdAt: undefined,
+      updatedAt: undefined,
+      lines: [
+        {
+          id: 'line-1',
+          rawMaterialId: 'm-1',
+          proportion: 0.25,
+          unit: 'KG',
+          sortOrder: 0,
+          rawMaterial: undefined,
+        },
+      ],
+    });
 
     expect(apiClientMock).toHaveBeenCalledWith('/products/p-1/recipe');
   });
@@ -35,15 +64,34 @@ describe('product recipe api', () => {
     apiClientMock.mockResolvedValueOnce({
       id: 'r-1',
       productId: 'p-1',
-      proportionSum: 1,
-      lines: [],
+      componentSum: 1,
+      lines: [
+        {
+          id: 'line-1',
+          rawMaterialId: 'm-1',
+          unitConsumption: 1,
+          unit: 'KG',
+          sortOrder: 0,
+        },
+      ],
     });
 
-    await upsertProductRecipe('p-1', input);
+    await expect(upsertProductRecipe('p-1', input)).resolves.toMatchObject({
+      proportionSum: 1,
+      lines: [{ proportion: 1 }],
+    });
 
     expect(apiClientMock).toHaveBeenCalledWith('/products/p-1/recipe', {
       method: 'PUT',
-      body: JSON.stringify(input),
+      body: JSON.stringify({
+        lines: [
+          {
+            rawMaterialId: 'm-1',
+            unitConsumption: 1,
+            sortOrder: 0,
+          },
+        ],
+      }),
     });
   });
 

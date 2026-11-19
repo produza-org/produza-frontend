@@ -121,9 +121,10 @@ export const SecondaryActionButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const NeedsTableScroll = styled(Box)(() => ({
+export const NeedsTableScroll = styled(Box)(({ theme }) => ({
   width: '100%',
   overflowX: 'auto',
+  marginTop: theme.spacing(4),
 }));
 
 export const CategoryBlockRoot = styled(Box)(({ theme }) => ({

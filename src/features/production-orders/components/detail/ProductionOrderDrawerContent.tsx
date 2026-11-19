@@ -29,6 +29,9 @@ export function ProductionOrderDrawerContent({
   return (
     <>
       <DetailFactList
+        style={{
+          marginBottom: theme.spacing(6),
+        }}
         title={t('productionOrders.drawer.sectionOverview')}
         items={[
           {

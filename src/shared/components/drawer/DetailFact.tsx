@@ -17,15 +17,16 @@ export type DetailFactItem = {
 type DetailFactListProps = {
   title?: string;
   items: DetailFactItem[];
+  style?: React.CSSProperties;
 };
 
-export function DetailFactList({ title, items }: DetailFactListProps) {
+export function DetailFactList({ title, items, style }: DetailFactListProps) {
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <DetailSection>
+    <DetailSection style={style}>
       {title ? (
         <DetailSectionTitle component="h3">{title}</DetailSectionTitle>
       ) : null}

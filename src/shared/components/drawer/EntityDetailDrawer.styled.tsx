@@ -264,7 +264,6 @@ export const DetailSection = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1.5),
-  marginBottom: theme.spacing(2),
 }));
 
 export const DetailSectionTitle = styled(Typography)(({ theme }) => ({
