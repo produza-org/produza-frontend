@@ -37,7 +37,6 @@ type RecipeDraftPanelProps = {
   materials: RawMaterial[];
   draft: RecipeDraft;
   onChange: (draft: RecipeDraft) => void;
-  errorMessage?: string | null;
   showEmptyHint?: boolean;
   stepHint?: string | null;
 };
@@ -47,7 +46,6 @@ export function RecipeDraftPanel({
   materials,
   draft,
   onChange,
-  errorMessage = null,
   showEmptyHint = false,
   stepHint = null,
 }: RecipeDraftPanelProps) {
@@ -104,11 +102,6 @@ export function RecipeDraftPanel({
     }
     return hints;
   }, [flatLines, t]);
-
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('products.recipe.errors.unexpected')
-      : errorMessage;
 
   const isEmpty =
     draft.lines.length === 0 && draft.groups.length === 0;
@@ -226,12 +219,6 @@ export function RecipeDraftPanel({
           size="small"
         />
       </ProductMetaRow>
-
-      {displayError ? (
-        <Alert severity="error" role="alert">
-          {displayError}
-        </Alert>
-      ) : null}
 
       {stepHint ? <EmptyHint>{stepHint}</EmptyHint> : null}
 

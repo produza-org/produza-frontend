@@ -30,7 +30,6 @@ export function RawMaterialEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const cachedItem = useMemo(
     () => (id ? items.find((entry) => entry.id === id) ?? null : null),
@@ -102,7 +101,6 @@ export function RawMaterialEditPage() {
     async (values: RawMaterialFormSubmitValues) => {
       if (!id) return;
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         await updateRawMaterial(id, values);
         enqueueToast({
@@ -115,7 +113,6 @@ export function RawMaterialEditPage() {
           error instanceof ApiError
             ? error.message
             : t('rawMaterials.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -163,7 +160,6 @@ export function RawMaterialEditPage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

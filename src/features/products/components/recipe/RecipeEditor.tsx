@@ -1,16 +1,23 @@
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
 import { useTranslation } from 'react-i18next';
 import type { Product } from '@/features/products/types/product';
 import type { Recipe, RecipeUpsertInput } from '@/features/products/types/recipe';
 import {
-  canSaveRecipeDraft,
   recipeToDraft,
   toRecipeUpsertInput,
   type RecipeDraft,
 } from '@/features/products/utils/recipe/draft-lines';
+import {
+  getRecipeDraftFieldOrder,
+  validateRecipeDraft,
+} from '@/features/products/utils/recipe/validate-recipe-draft';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { ConfirmModal } from '@/shared/components/dialog';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import { RecipeDraftPanel } from '@/features/products/components/recipe/RecipeDraftPanel';
 import {
   CancelButton,
@@ -28,25 +35,24 @@ type RecipeEditorProps = {
   onSubmit: (input: RecipeUpsertInput) => void | Promise<void>;
   onCancel: () => void;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
 };
 
-export function RecipeEditor({
+function RecipeEditorFields({
   product,
   recipe,
   materials,
   onSubmit,
   onCancel,
   isSubmitting = false,
-  errorMessage = null,
 }: RecipeEditorProps) {
   const { t } = useTranslation();
+  const { submitWithValidation, clearErrors } = useFormValidation();
   const [draft, setDraft] = useState<RecipeDraft>(() => recipeToDraft(recipe));
   const [discardOpen, setDiscardOpen] = useState(false);
   const [initialSnapshot] = useState(() => JSON.stringify(recipeToDraft(recipe)));
 
   const isDirty = JSON.stringify(draft) !== initialSnapshot;
-  const saveEnabled = canSaveRecipeDraft(draft) && !isSubmitting;
+  const fieldOrder = useMemo(() => getRecipeDraftFieldOrder(draft), [draft]);
 
   function handleCancel() {
     if (isDirty) {
@@ -58,10 +64,22 @@ export function RecipeEditor({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!saveEnabled) {
-      return;
-    }
-    void onSubmit(toRecipeUpsertInput(draft));
+    submitWithValidation(
+      () =>
+        validateRecipeDraft(draft, {
+          rawMaterialRequired: t('products.recipe.errors.rawMaterialRequired'),
+          materialRequired: t('products.recipe.errors.materialRequired'),
+          proportionRequired: t('products.recipe.errors.proportionRequired'),
+          proportionNegative: t('products.recipe.errors.negativeProportion'),
+          duplicateMaterial: t('products.recipe.errors.duplicateMaterial'),
+          componentSumInvalid: t('products.recipe.errors.componentSumInvalid'),
+          groupRequired: t('products.recipe.errors.groupRequired'),
+        }),
+      () => {
+        void onSubmit(toRecipeUpsertInput(draft));
+      },
+      fieldOrder
+    );
   }
 
   return (
@@ -78,8 +96,10 @@ export function RecipeEditor({
             }}
             materials={materials}
             draft={draft}
-            onChange={setDraft}
-            errorMessage={errorMessage}
+            onChange={(next) => {
+              clearErrors();
+              setDraft(next);
+            }}
             showEmptyHint={!recipe}
           />
 
@@ -93,7 +113,7 @@ export function RecipeEditor({
               color="primary"
               disableElevation
               startIcon={<SaveOutlined />}
-              disabled={!saveEnabled}
+              disabled={isSubmitting}
             >
               {isSubmitting ? t('products.recipe.saving') : t('products.recipe.save')}
             </SaveButton>
@@ -114,5 +134,13 @@ export function RecipeEditor({
         confirmLabel={t('products.recipe.discardConfirm')}
       />
     </>
+  );
+}
+
+export function RecipeEditor(props: RecipeEditorProps) {
+  return (
+    <FormValidationProvider>
+      <RecipeEditorFields {...props} />
+    </FormValidationProvider>
   );
 }

@@ -26,7 +26,6 @@ export function GroupingCreatePage() {
   const [materials, setMaterials] = useState<RawMaterial[]>([]);
   const [isLoadingMaterials, setIsLoadingMaterials] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -63,7 +62,6 @@ export function GroupingCreatePage() {
   const handleSave = useCallback(
     async (input: GroupingCreateWizardSaveInput) => {
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         await createGrouping(input);
         enqueueToast({
@@ -76,7 +74,6 @@ export function GroupingCreatePage() {
           error instanceof ApiError
             ? error.message
             : t('groupings.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -105,7 +102,6 @@ export function GroupingCreatePage() {
           onCancel={handleCancel}
           onSave={handleSave}
           isSubmitting={isSubmitting}
-          errorMessage={errorMessage}
         />
       )}
     </PageRoot>

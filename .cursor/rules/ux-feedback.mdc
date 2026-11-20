@@ -7,7 +7,7 @@ alwaysApply: true
 
 User experience is a platform pillar: every remote action must feel fluid and make clear what is happening. Do not ship silent success, silent failure, or empty/stale surfaces while the backend is still working.
 
-Related: `design-system.mdc` (visual parity), `produza-react-typescript.mdc` (MUI/i18n).
+Related: `design-system.mdc` (visual parity), `produza-react-typescript.mdc` (MUI/i18n), `form-validation.mdc` (field errors on cadastros).
 
 ## Toasts — mutation feedback
 
@@ -20,26 +20,31 @@ Use **toasts** for feedback on database/API mutations of any system entity:
 | Delete / soft-delete | success + error |
 | Inactivate / deactivate / status toggle | success + error |
 
-### Where to wire
+### Shared helper
 
-- Call sites: feature pages and list action handlers (e.g. `RawMaterialCreatePage`, `RawMaterialEditPage`, list status/delete confirms in `RawMaterialsListPage` and equivalents in products / production-orders).
+Use **`useToast()`** from `@/shared/toast` (mounted via `ToastProvider` in `AppProviders`):
+
+```ts
+enqueueToast({
+  severity: 'success' | 'error',
+  message: string,
+  autoHideDuration?: number,
+})
+```
+
+Defaults:
+
+- **success** → `4000` ms (`TOAST_SUCCESS_AUTO_HIDE_MS`)
+- **error** → `7000` ms (`TOAST_ERROR_AUTO_HIDE_MS`)
+
+Pass `autoHideDuration` only when a call site needs a different timeout.
+
 - After a successful mutation: show a **success** toast (even when navigating away).
-- On mutation failure: show an **error** toast with the API/user-facing message; keep inline form `Alert` only when the user must fix fields on the same screen (validation / submit errors that belong next to the form).
-
-### Shared helper (do not invent one-offs)
-
-There is **no** toast helper in the tree yet. When the first mutation flow needs toast feedback:
-
-1. Add a shared snackbar under **`src/shared/`** (e.g. context + hook, or a small provider) built on MUI **`Snackbar`** + **`Alert`** (`@mui/material/Snackbar`, `@mui/material/Alert`).
-2. Mount the provider in **`src/app/providers.tsx`** (`AppProviders`) so any feature can enqueue feedback.
-3. Export a single public API (e.g. `useToast()` / `enqueueToast({ severity, message })`) from the shared barrel; **reuse it everywhere** — never add a second toast stack or feature-local snackbars.
-4. All toast copy via **i18n** (`en.json` + `pt.json`). Prefer feature keys like `rawMaterials.toasts.created` / `*.errors.unexpected`.
-
-Until that helper exists, **do not** leave mutations silent: introduce the shared helper as part of the same change that adds the first toast.
+- On mutation failure: show an **error** toast with the API/user-facing message. Prefer toast-only for API errors (do not also mirror the same message in a form-level `Alert`).
 
 ### Do not use toasts for
 
-- Field validation (use form `ValidationAlert` / field errors as in `RawMaterialForm`).
+- Field validation (use `FormValidationProvider` + Form* `error`/`helperText` — see `form-validation.mdc`).
 - Page-level **load** failures for lists/details (use inline MUI `Alert` as on list/edit pages today).
 - Pure navigation or local UI toggles with no remote write.
 

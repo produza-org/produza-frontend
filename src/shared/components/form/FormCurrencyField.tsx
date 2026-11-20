@@ -13,6 +13,9 @@ export type FormCurrencyFieldProps = {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  error?: boolean;
+  helperText?: string;
+  disabled?: boolean;
 };
 
 export function FormCurrencyField({
@@ -21,6 +24,9 @@ export function FormCurrencyField({
   placeholder,
   value,
   onChange,
+  error = false,
+  helperText,
+  disabled = false,
 }: FormCurrencyFieldProps) {
   return (
     <FieldBlock>
@@ -36,6 +42,9 @@ export function FormCurrencyField({
             placeholder={placeholder}
             fullWidth
             variant="standard"
+            error={error}
+            helperText={helperText}
+            disabled={disabled}
             inputProps={{ inputMode: 'decimal' }}
             InputProps={{ disableUnderline: true }}
           />
