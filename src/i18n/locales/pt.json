@@ -362,6 +362,7 @@
       "unitPlaceholder": "Buscar unidade",
       "unitNoOptions": "Nenhuma unidade encontrada",
       "proportionSum": "Soma das proporções de matéria-prima",
+      "componentProportionSum": "Soma das proporções de componente",
       "cancel": "Cancelar",
       "save": "Salvar ficha técnica",
       "saving": "Salvando…",

@@ -16,6 +16,8 @@ import type { RecipeProductMeta } from '@/features/products/utils/form/general-i
 import { formatDecimal } from '@/features/products/utils/format';
 import {
   createEmptyDraftLine,
+  getCompleteComponentLines,
+  getDraftComponentProportionSum,
   getDraftProportionSum,
   hasDuplicateMaterials,
   hasNegativeProportion,
@@ -45,6 +47,8 @@ export function RecipeDraftPanel({
   const { t } = useTranslation();
 
   const proportionSum = getDraftProportionSum(lines);
+  const hasComponentLines = getCompleteComponentLines(lines).length > 0;
+  const componentProportionSum = getDraftComponentProportionSum(lines);
 
   const usedMaterialIds = useMemo(
     () =>
@@ -130,6 +134,17 @@ export function RecipeDraftPanel({
         <ProportionSumLabel>{t('products.recipe.proportionSum')}</ProportionSumLabel>
         <ProportionSumValue>Σ = {formatDecimal(proportionSum, 6)}</ProportionSumValue>
       </ProportionSumBanner>
+
+      {hasComponentLines ? (
+        <ProportionSumBanner role="status">
+          <ProportionSumLabel>
+            {t('products.recipe.componentProportionSum')}
+          </ProportionSumLabel>
+          <ProportionSumValue>
+            Σ = {formatDecimal(componentProportionSum, 6)}
+          </ProportionSumValue>
+        </ProportionSumBanner>
+      ) : null}
 
       {validationHints.length > 0 ? (
         <Alert severity="warning" role="status">

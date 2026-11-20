@@ -73,12 +73,34 @@ export function getCompleteRawMaterialLines(lines: RecipeDraftLine[]): RecipeDra
   );
 }
 
+export function getCompleteComponentLines(lines: RecipeDraftLine[]): RecipeDraftLine[] {
+  return stripIncompleteDraftLines(lines).filter(
+    (line) => line.category === 'COMPONENTE'
+  );
+}
+
 export function getDraftProportionSum(lines: RecipeDraftLine[]): number {
   return computeProportionSum(
     getCompleteRawMaterialLines(lines).map((line) => ({
       proportion: parseDecimalInput(line.proportionDisplay),
     }))
   );
+}
+
+export function getDraftComponentProportionSum(lines: RecipeDraftLine[]): number {
+  return computeProportionSum(
+    getCompleteComponentLines(lines).map((line) => ({
+      proportion: parseDecimalInput(line.proportionDisplay),
+    }))
+  );
+}
+
+export function isComponentProportionSumValid(lines: RecipeDraftLine[]): boolean {
+  const componentLines = getCompleteComponentLines(lines);
+  if (componentLines.length === 0) {
+    return true;
+  }
+  return isProportionSumValid(getDraftComponentProportionSum(lines));
 }
 
 export function hasNegativeProportion(lines: RecipeDraftLine[]): boolean {
@@ -95,6 +117,7 @@ export function hasDuplicateMaterials(lines: RecipeDraftLine[]): boolean {
 export function canSaveRecipeDraft(lines: RecipeDraftLine[]): boolean {
   return (
     isProportionSumValid(getDraftProportionSum(lines)) &&
+    isComponentProportionSumValid(lines) &&
     !hasNegativeProportion(lines) &&
     !hasDuplicateMaterials(lines)
   );

@@ -362,6 +362,7 @@
       "unitPlaceholder": "Search unit",
       "unitNoOptions": "No units found",
       "proportionSum": "Raw material proportion sum",
+      "componentProportionSum": "Component proportion sum",
       "cancel": "Cancel",
       "save": "Save recipe",
       "saving": "Saving…",
