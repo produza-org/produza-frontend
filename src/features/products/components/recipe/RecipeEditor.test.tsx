@@ -156,9 +156,10 @@ describe('RecipeEditor', () => {
 
     const proportions = screen.getAllByLabelText('Proportion');
     fireEvent.change(proportions[0], { target: { value: '1' } });
-    fireEvent.change(proportions[1], { target: { value: '0.5' } });
+    fireEvent.change(proportions[1], { target: { value: '1' } });
     fireEvent.change(proportions[2], { target: { value: '1' } });
 
+    expect(screen.getByText('Component proportion sum')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Save recipe' }));
 
     await waitFor(() => {
@@ -173,7 +174,7 @@ describe('RecipeEditor', () => {
           {
             rawMaterialId: 'm-2',
             category: 'COMPONENTE',
-            proportion: 0.5,
+            proportion: 1,
             sortOrder: 1,
           },
           {
@@ -185,6 +186,39 @@ describe('RecipeEditor', () => {
         ],
       });
     });
+  });
+
+  it('keeps save disabled when component proportion sum is not 1', async () => {
+    renderEditor();
+
+    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[1]);
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+    await selectMaterial(1, 'MP-002 — ACUCAR');
+
+    const proportions = screen.getAllByLabelText('Proportion');
+    fireEvent.change(proportions[0], { target: { value: '1' } });
+    fireEvent.change(proportions[1], { target: { value: '0.5' } });
+
+    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
+    expect(screen.getByText('Component proportion sum')).toBeInTheDocument();
+  });
+
+  it('limits packaging material options to UNID units', async () => {
+    renderEditor();
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[2]);
+
+    const materialInput = screen.getByRole('combobox', { name: 'Raw material' });
+    fireEvent.change(materialInput, { target: { value: 'AGUA' } });
+    expect(screen.queryByRole('option', { name: 'MP-006 — AGUA' })).not.toBeInTheDocument();
+
+    fireEvent.change(materialInput, { target: { value: 'POTE' } });
+    expect(
+      await screen.findByRole('option', { name: 'MP-EMB-POTE — POTE 1,5L' })
+    ).toBeInTheDocument();
   });
 
   it('lets the user change unit via searchable select after picking a material', async () => {

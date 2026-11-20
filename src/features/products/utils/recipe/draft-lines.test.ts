@@ -101,8 +101,8 @@ describe('draft-lines', () => {
     expect(canSaveRecipeDraft(lines)).toBe(true);
   });
 
-  it('does not include component or packaging proportions in the Σ = 1 check', () => {
-    const lines: RecipeDraftLine[] = [
+  it('requires component proportions to sum to 1 when component lines exist', () => {
+    const incompleteComponent: RecipeDraftLine[] = [
       line({
         key: '1',
         category: 'MATERIA_PRIMA',
@@ -126,8 +126,41 @@ describe('draft-lines', () => {
       }),
     ];
 
-    expect(canSaveRecipeDraft(lines)).toBe(true);
-    expect(toRecipeLineInputs(lines)).toEqual([
+    expect(canSaveRecipeDraft(incompleteComponent)).toBe(false);
+
+    const validLines: RecipeDraftLine[] = [
+      line({
+        key: '1',
+        category: 'MATERIA_PRIMA',
+        rawMaterialId: 'm-1',
+        proportionDisplay: '1',
+        unit: 'KG',
+      }),
+      line({
+        key: '2',
+        category: 'COMPONENTE',
+        rawMaterialId: 'm-2',
+        proportionDisplay: '0.4',
+        unit: 'KG',
+      }),
+      line({
+        key: '3',
+        category: 'COMPONENTE',
+        rawMaterialId: 'm-4',
+        proportionDisplay: '0.6',
+        unit: 'LITRO',
+      }),
+      line({
+        key: '4',
+        category: 'EMBALAGEM',
+        rawMaterialId: 'm-3',
+        proportionDisplay: '1',
+        unit: 'UNID',
+      }),
+    ];
+
+    expect(canSaveRecipeDraft(validLines)).toBe(true);
+    expect(toRecipeLineInputs(validLines)).toEqual([
       {
         rawMaterialId: 'm-1',
         category: 'MATERIA_PRIMA',
@@ -137,16 +170,43 @@ describe('draft-lines', () => {
       {
         rawMaterialId: 'm-2',
         category: 'COMPONENTE',
-        proportion: 0.5,
+        proportion: 0.4,
         sortOrder: 1,
+      },
+      {
+        rawMaterialId: 'm-4',
+        category: 'COMPONENTE',
+        proportion: 0.6,
+        sortOrder: 2,
       },
       {
         rawMaterialId: 'm-3',
         category: 'EMBALAGEM',
         proportion: 1,
-        sortOrder: 2,
+        sortOrder: 3,
       },
     ]);
+  });
+
+  it('excludes packaging proportions from both sum checks', () => {
+    const lines: RecipeDraftLine[] = [
+      line({
+        key: '1',
+        category: 'MATERIA_PRIMA',
+        rawMaterialId: 'm-1',
+        proportionDisplay: '1',
+        unit: 'KG',
+      }),
+      line({
+        key: '2',
+        category: 'EMBALAGEM',
+        rawMaterialId: 'm-3',
+        proportionDisplay: '99',
+        unit: 'UNID',
+      }),
+    ];
+
+    expect(canSaveRecipeDraft(lines)).toBe(true);
   });
 
   it('rejects duplicate materials across categories', () => {

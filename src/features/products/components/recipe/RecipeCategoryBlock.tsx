@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useTranslation } from 'react-i18next';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import type { RecipeLineCategory } from '@/features/products/types/recipe';
 import type { RecipeDraftLine } from '@/features/products/utils/recipe/draft-lines';
+import { materialsForRecipeCategory } from '@/features/products/utils/recipe/materials-for-category';
 import { RecipeLineRow } from '@/features/products/components/recipe/RecipeLineRow';
 import {
   AddLineButton,
@@ -33,6 +35,10 @@ export function RecipeCategoryBlock({
   onRemoveLine,
 }: RecipeCategoryBlockProps) {
   const { t } = useTranslation();
+  const categoryMaterials = useMemo(
+    () => materialsForRecipeCategory(category, materials),
+    [category, materials]
+  );
 
   return (
     <CategoryBlockRoot>
@@ -45,7 +51,7 @@ export function RecipeCategoryBlock({
           <RecipeLineRow
             key={line.key}
             line={line}
-            materials={materials}
+            materials={categoryMaterials}
             usedMaterialIds={usedMaterialIds}
             onChange={onChangeLine}
             onRemove={() => onRemoveLine(line.key)}
