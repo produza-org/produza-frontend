@@ -104,6 +104,7 @@ export function RecipeLineRow({
         placeholder={t('products.recipe.unitPlaceholder')}
         noOptionsText={t('products.recipe.unitNoOptions')}
         disabled={!line.rawMaterialId}
+        paperMinWidth="max(100%, 12rem)"
       />
       <RemoveLineButton
         type="button"

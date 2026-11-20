@@ -106,7 +106,7 @@ export const LineRowRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.produza.surfaceContainerLowest,
   border: `1px solid ${theme.palette.produza.outlineVariant}4D`,
   [theme.breakpoints.up('md')]: {
-    gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr) 96px 40px',
+    gridTemplateColumns: 'minmax(0, 2fr) 96px minmax(0, 1fr) 40px',
   },
 }));
 
