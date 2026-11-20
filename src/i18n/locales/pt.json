@@ -211,7 +211,15 @@
       "cancel": "Cancelar",
       "save": "Salvar",
       "saving": "Salvando…",
-      "loading": "Carregando matéria-prima"
+      "loading": "Carregando matéria-prima",
+      "errors": {
+        "nameRequired": "Informe o nome da matéria-prima.",
+        "codeInvalid": "Use um código válido no formato AAAA-000.",
+        "unitRequired": "Selecione a unidade de medida.",
+        "unitCostInvalid": "Informe um preço unitário maior que zero.",
+        "stockInvalid": "Informe uma quantidade em estoque maior que zero.",
+        "minStockInvalid": "Informe um estoque mínimo maior que zero."
+      }
     },
     "units": {
       "kg": "Quilograma (kg)",
@@ -319,7 +327,13 @@
       "cancel": "Cancelar",
       "save": "Salvar",
       "saving": "Salvando…",
-      "loading": "Carregando produto"
+      "loading": "Carregando produto",
+      "errors": {
+        "nameRequired": "Informe o nome do produto.",
+        "finalSizeInvalid": "Informe um tamanho final maior que zero.",
+        "unitRequired": "Selecione a unidade do tamanho final.",
+        "yieldInvalid": "Informe um rendimento maior que zero."
+      }
     },
     "createWizard": {
       "steps": {
@@ -351,7 +365,14 @@
       "editAction": "Editar ficha técnica",
       "editLink": "Editar ficha técnica",
       "addLine": "Adicionar linha",
+      "addGroup": "Adicionar grupo",
       "removeLine": "Remover linha",
+      "removeGroup": "Remover grupo",
+      "groupLabel": "Grupo de materiais",
+      "groupPlaceholder": "Buscar grupos",
+      "groupNoOptions": "Nenhum grupo encontrado",
+      "groupUnavailable": "Grupo indisponível",
+      "loadingGroups": "Carregando grupos",
       "materialLabel": "Matéria-prima",
       "materialPlaceholder": "Buscar pelo nome",
       "materialUnavailable": "Matéria-prima indisponível",
@@ -362,6 +383,7 @@
       "unitPlaceholder": "Buscar unidade",
       "unitNoOptions": "Nenhuma unidade encontrada",
       "proportionSum": "Soma das proporções de matéria-prima",
+      "componentProportionSum": "Soma das proporções de componente",
       "cancel": "Cancelar",
       "save": "Salvar ficha técnica",
       "saving": "Salvando…",
@@ -383,7 +405,12 @@
       "errors": {
         "unexpected": "Algo deu errado. Tente novamente.",
         "duplicateMaterial": "Cada matéria-prima só pode aparecer uma vez.",
-        "negativeProportion": "A proporção não pode ser negativa."
+        "negativeProportion": "A proporção não pode ser negativa.",
+        "rawMaterialRequired": "Adicione pelo menos uma linha ou grupo completo de matéria-prima.",
+        "materialRequired": "Selecione uma matéria-prima.",
+        "proportionRequired": "Informe a proporção.",
+        "componentSumInvalid": "As proporções de componente devem somar 1.",
+        "groupRequired": "Selecione um grupo de materiais."
       }
     },
     "drawer": {
@@ -393,6 +420,8 @@
       "finalSize": "Tamanho final",
       "yield": "Rendimento",
       "sectionRecipe": "Composição da receita",
+      "sectionGroup": "Grupo: {{name}}",
+      "groupFallback": "Grupo",
       "loadingRecipe": "Carregando receita",
       "edit": "Editar",
       "delete": "Excluir"
@@ -466,7 +495,13 @@
       "validationText": "Q deve ser maior que zero. O produto precisa ter receita. Quando as duas datas forem informadas, o início deve ser anterior ou igual ao fim previsto.",
       "cancel": "Cancelar",
       "save": "Criar ordem",
-      "saving": "Criando…"
+      "saving": "Criando…",
+      "errors": {
+        "numberRequired": "Informe o número da ordem.",
+        "productRequired": "Selecione um produto com receita.",
+        "quantityInvalid": "Informe uma quantidade maior que zero.",
+        "dateOrderInvalid": "A data planejada de fim deve ser igual ou posterior à data de início."
+      }
     },
     "detail": {
       "title": "Ordem de produção {{number}}",
@@ -602,7 +637,11 @@
       "descriptionLabel": "Descrição",
       "descriptionPlaceholder": "Observações opcionais sobre este agrupamento",
       "cancel": "Cancelar",
-      "loading": "Carregando agrupamento"
+      "loading": "Carregando agrupamento",
+      "errors": {
+        "nameRequired": "Informe o nome do agrupamento.",
+        "codeRequired": "Informe o código interno."
+      }
     },
     "createWizard": {
       "steps": {
@@ -631,7 +670,11 @@
       "colActions": "Ações",
       "qtyAria": "Quantidade de {{name}}",
       "removeLine": "Remover linha",
-      "total": "Total do agrupamento"
+      "total": "Total do agrupamento",
+      "errors": {
+        "linesRequired": "Adicione pelo menos uma matéria-prima à composição.",
+        "quantityInvalid": "Informe uma quantidade maior que zero."
+      }
     },
     "picker": {
       "title": "Selecionar matérias-primas",

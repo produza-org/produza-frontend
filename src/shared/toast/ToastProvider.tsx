@@ -2,14 +2,18 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { ToastContext } from './ToastContext';
-import type { ToastInput, ToastState } from './toast.types';
-
-const AUTO_HIDE_MS = 4000;
+import {
+  resolveToastAutoHideDuration,
+  TOAST_SUCCESS_AUTO_HIDE_MS,
+  type ToastInput,
+  type ToastState,
+} from './toast.types';
 
 const INITIAL_TOAST: ToastState = {
   open: false,
   severity: 'success',
   message: '',
+  autoHideDuration: TOAST_SUCCESS_AUTO_HIDE_MS,
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -26,6 +30,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       open: true,
       severity: input.severity,
       message: input.message,
+      autoHideDuration: resolveToastAutoHideDuration(
+        input.severity,
+        input.autoHideDuration
+      ),
     });
   }, []);
 
@@ -46,7 +54,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <Snackbar
         open={toast.open}
-        autoHideDuration={AUTO_HIDE_MS}
+        autoHideDuration={toast.autoHideDuration}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >

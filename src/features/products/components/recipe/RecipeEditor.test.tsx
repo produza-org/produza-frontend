@@ -7,6 +7,10 @@ import type { Product } from '@/features/products/types/product';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { RecipeEditor } from './RecipeEditor';
 
+vi.mock('@/features/groupings/api', () => ({
+  listAllRawMaterialGroups: vi.fn().mockResolvedValue([]),
+}));
+
 const product: Product = {
   id: 'p-1',
   name: 'POTE 1,5L COCO BRANCO',
@@ -78,18 +82,34 @@ describe('RecipeEditor', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps save disabled when raw-material proportion sum is not 1', () => {
-    renderEditor();
+  it('keeps save enabled and shows errors until a complete raw-material line exists', async () => {
+    const onSubmit = vi.fn();
+    renderEditor(onSubmit);
+
+    const saveButton = screen.getByRole('button', { name: 'Save recipe' });
+    expect(saveButton).toBeEnabled();
+    fireEvent.click(saveButton);
+    expect(
+      await screen.findByText(
+        'Add at least one complete raw material line or group.'
+      )
+    ).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
-
-    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
     expect(screen.getByText(/Σ =/)).toBeInTheDocument();
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+    fireEvent.click(saveButton);
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalled();
+    });
   });
+
 
   it('shows raw material, component, and packaging blocks', () => {
     renderEditor();
@@ -98,6 +118,7 @@ describe('RecipeEditor', () => {
     expect(screen.getByText('Component')).toBeInTheDocument();
     expect(screen.getByText('Packaging')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: 'Add group' })).toHaveLength(2);
   });
 
   it('strips empty rows and keeps optional component/packaging out of the required sum', async () => {
@@ -137,6 +158,7 @@ describe('RecipeEditor', () => {
             sortOrder: 1,
           },
         ],
+        groups: [],
       });
     });
   });
@@ -156,9 +178,10 @@ describe('RecipeEditor', () => {
 
     const proportions = screen.getAllByLabelText('Proportion');
     fireEvent.change(proportions[0], { target: { value: '1' } });
-    fireEvent.change(proportions[1], { target: { value: '0.5' } });
+    fireEvent.change(proportions[1], { target: { value: '1' } });
     fireEvent.change(proportions[2], { target: { value: '1' } });
 
+    expect(screen.getByText('Component proportion sum')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Save recipe' }));
 
     await waitFor(() => {
@@ -173,7 +196,7 @@ describe('RecipeEditor', () => {
           {
             rawMaterialId: 'm-2',
             category: 'COMPONENTE',
-            proportion: 0.5,
+            proportion: 1,
             sortOrder: 1,
           },
           {
@@ -183,8 +206,47 @@ describe('RecipeEditor', () => {
             sortOrder: 2,
           },
         ],
+        groups: [],
       });
     });
+  });
+
+  it('shows field errors when component proportion sum is not 1', async () => {
+    const onSubmit = vi.fn();
+    renderEditor(onSubmit);
+
+    const addButtons = screen.getAllByRole('button', { name: 'Add line' });
+    fireEvent.click(addButtons[0]);
+    fireEvent.click(addButtons[1]);
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+    await selectMaterial(1, 'MP-002 — ACUCAR');
+
+    const proportions = screen.getAllByLabelText('Proportion');
+    fireEvent.change(proportions[0], { target: { value: '1' } });
+    fireEvent.change(proportions[1], { target: { value: '0.5' } });
+
+    expect(screen.getByText('Component proportion sum')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Save recipe' }));
+    expect(
+      await screen.findByText('Component proportions must sum to 1.')
+    ).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('limits packaging material options to UNID units', async () => {
+    renderEditor();
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[2]);
+
+    const materialInput = screen.getByRole('combobox', { name: 'Raw material' });
+    fireEvent.change(materialInput, { target: { value: 'AGUA' } });
+    expect(screen.queryByRole('option', { name: 'MP-006 — AGUA' })).not.toBeInTheDocument();
+
+    fireEvent.change(materialInput, { target: { value: 'POTE' } });
+    expect(
+      await screen.findByRole('option', { name: 'MP-EMB-POTE — POTE 1,5L' })
+    ).toBeInTheDocument();
   });
 
   it('lets the user change unit via searchable select after picking a material', async () => {

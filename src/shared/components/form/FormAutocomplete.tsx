@@ -12,6 +12,9 @@ type FormAutocompleteBaseProps = {
   placeholder?: string;
   noOptionsText?: string;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
+  paperMinWidth?: number | string;
 };
 
 export type FormAutocompleteProps = FormAutocompleteBaseProps &
@@ -64,7 +67,21 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
     placeholder,
     noOptionsText,
     disabled = false,
+    error = false,
+    helperText,
+    paperMinWidth,
   } = props;
+
+  const paperSlotProps =
+    paperMinWidth != null
+      ? {
+          paper: {
+            sx: {
+              minWidth: paperMinWidth,
+            },
+          },
+        }
+      : undefined;
 
   if (props.multiple) {
     const selected = resolveSelectedMultiple(options, props.value);
@@ -97,6 +114,7 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
             noOptionsText={noOptionsText}
             disabled={disabled}
             fullWidth
+            slotProps={paperSlotProps}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -104,6 +122,8 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
                 placeholder={placeholder}
                 variant="standard"
                 disabled={disabled}
+                error={error}
+                helperText={helperText}
                 InputProps={{
                   ...params.InputProps,
                   disableUnderline: true,
@@ -143,6 +163,7 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
           noOptionsText={noOptionsText}
           disabled={disabled}
           fullWidth
+          slotProps={paperSlotProps}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -150,6 +171,8 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
               placeholder={placeholder}
               variant="standard"
               disabled={disabled}
+              error={error}
+              helperText={helperText}
               InputProps={{
                 ...params.InputProps,
                 disableUnderline: true,

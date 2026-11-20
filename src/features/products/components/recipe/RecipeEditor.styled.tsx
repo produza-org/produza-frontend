@@ -73,11 +73,13 @@ export const CategoryTitle = styled('h3')(({ theme }) => ({
   color: theme.palette.produza.slate500,
 }));
 
-export const AddLineRow = styled(Box)({
+export const AddLineRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
+  flexWrap: 'wrap',
+  gap: theme.spacing(2),
   width: '100%',
-});
+}));
 
 export const AddLineButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
@@ -96,6 +98,26 @@ export const LineRows = styled(Box)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
+export const GroupSessionRoot = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  borderRadius: 10,
+  backgroundColor: theme.palette.produza.surfaceContainerLowest,
+  border: `1px solid ${theme.palette.produza.outlineVariant}80`,
+}));
+
+export const GroupSessionHeader = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: theme.spacing(2),
+  alignItems: 'end',
+  [theme.breakpoints.up('md')]: {
+    gridTemplateColumns: 'minmax(0, 1fr) 40px',
+  },
+}));
+
 export const LineRowRoot = styled(Box)(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr',
@@ -106,7 +128,7 @@ export const LineRowRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.produza.surfaceContainerLowest,
   border: `1px solid ${theme.palette.produza.outlineVariant}4D`,
   [theme.breakpoints.up('md')]: {
-    gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr) 96px 40px',
+    gridTemplateColumns: 'minmax(0, 2fr) 96px minmax(0, 1fr) 40px',
   },
 }));
 

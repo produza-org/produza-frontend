@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
@@ -8,6 +8,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { FormSelectField, FormTextField } from '@/shared/components/form';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import type { Product } from '@/features/products/types/product';
 import {
   CancelButton,
@@ -25,6 +29,10 @@ import {
   parseDecimalInput,
   sanitizeDecimalInput,
 } from '@/features/production-orders/utils/format';
+import {
+  PRODUCTION_ORDER_FIELD_ORDER,
+  validateProductionOrderForm,
+} from '@/features/production-orders/utils/form/validate-production-order';
 import { listProductsWithRecipe } from '@/features/production-orders/utils/products-with-recipe';
 
 export type ProductionOrderFormValues = {
@@ -50,7 +58,6 @@ type ProductionOrderFormProps = {
   onCancel: () => void;
   initialValues?: Partial<ProductionOrderFormValues>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
 };
 
 const defaultValues: ProductionOrderFormValues = {
@@ -62,16 +69,16 @@ const defaultValues: ProductionOrderFormValues = {
   notes: '',
 };
 
-export function ProductionOrderForm({
+function ProductionOrderFormFields({
   onSubmit,
   onCancel,
   initialValues,
   isSubmitting = false,
-  errorMessage = null,
 }: ProductionOrderFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { control, handleSubmit } = useForm<ProductionOrderFormValues>({
+  const { getError, clearField, submitWithValidation } = useFormValidation();
+  const { control, getValues } = useForm<ProductionOrderFormValues>({
     defaultValues: { ...defaultValues, ...initialValues },
   });
   const [products, setProducts] = useState<Product[]>([]);
@@ -121,54 +128,42 @@ export function ProductionOrderForm({
     [products, t]
   );
 
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('productionOrders.errors.unexpected')
-      : errorMessage;
-
   const displayProductsError =
     productsError === 'UNEXPECTED'
       ? t('productionOrders.errors.unexpected')
       : productsError;
 
-  const submitForm = handleSubmit((values) => {
-    const qtdAProduzir = parseDecimalInput(values.qtdDisplay);
-    const startDate = values.startDate.trim();
-    const plannedEndDate = values.plannedEndDate.trim();
-
-    if (
-      !values.number.trim() ||
-      !values.productId ||
-      !Number.isFinite(qtdAProduzir) ||
-      !(qtdAProduzir > 0)
-    ) {
-      return;
-    }
-
-    if (startDate && plannedEndDate && startDate > plannedEndDate) {
-      return;
-    }
-
-    void onSubmit({
-      number: values.number.trim(),
-      productId: values.productId,
-      qtdAProduzir,
-      ...(startDate ? { startDate } : {}),
-      ...(plannedEndDate ? { plannedEndDate } : {}),
-      ...(values.notes.trim() ? { notes: values.notes.trim() } : {}),
-    });
-  });
+  function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateProductionOrderForm(getValues(), {
+          numberRequired: t('productionOrders.form.errors.numberRequired'),
+          productRequired: t('productionOrders.form.errors.productRequired'),
+          quantityInvalid: t('productionOrders.form.errors.quantityInvalid'),
+          dateOrderInvalid: t('productionOrders.form.errors.dateOrderInvalid'),
+        }),
+      () => {
+        const values = getValues();
+        const startDate = values.startDate.trim();
+        const plannedEndDate = values.plannedEndDate.trim();
+        void onSubmit({
+          number: values.number.trim(),
+          productId: values.productId,
+          qtdAProduzir: parseDecimalInput(values.qtdDisplay),
+          ...(startDate ? { startDate } : {}),
+          ...(plannedEndDate ? { plannedEndDate } : {}),
+          ...(values.notes.trim() ? { notes: values.notes.trim() } : {}),
+        });
+      },
+      [...PRODUCTION_ORDER_FIELD_ORDER]
+    );
+  }
 
   return (
     <FormCard>
       <FormCardAccent />
-      <FormBody onSubmit={submitForm} noValidate>
-        {displayError ? (
-          <Alert severity="error" role="alert">
-            {displayError}
-          </Alert>
-        ) : null}
-
+      <FormBody onSubmit={handleFormSubmit} noValidate>
         {displayProductsError ? (
           <Alert severity="error" role="alert">
             {displayProductsError}
@@ -200,7 +195,12 @@ export function ProductionOrderForm({
                 label={t('productionOrders.form.numberLabel')}
                 placeholder={t('productionOrders.form.numberPlaceholder')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('production-order-number');
+                  field.onChange(value);
+                }}
+                error={Boolean(getError('production-order-number'))}
+                helperText={getError('production-order-number')}
               />
             )}
           />
@@ -212,8 +212,13 @@ export function ProductionOrderForm({
                 id="production-order-product"
                 label={t('productionOrders.form.productLabel')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('production-order-product');
+                  field.onChange(value);
+                }}
                 options={productOptions}
+                error={Boolean(getError('production-order-product'))}
+                helperText={getError('production-order-product')}
               />
             )}
           />
@@ -229,8 +234,13 @@ export function ProductionOrderForm({
                 label={t('productionOrders.form.qLabel')}
                 placeholder={t('productionOrders.form.qPlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(sanitizeDecimalInput(value))}
+                onChange={(value) => {
+                  clearField('production-order-q');
+                  field.onChange(sanitizeDecimalInput(value));
+                }}
                 inputMode="decimal"
+                error={Boolean(getError('production-order-q'))}
+                helperText={getError('production-order-q')}
               />
             )}
           />
@@ -243,7 +253,10 @@ export function ProductionOrderForm({
                 label={t('productionOrders.form.startDateLabel')}
                 placeholder={t('productionOrders.form.datePlaceholder')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('production-order-planned-end-date');
+                  field.onChange(value);
+                }}
                 type="date"
               />
             )}
@@ -260,8 +273,13 @@ export function ProductionOrderForm({
                 label={t('productionOrders.form.plannedEndDateLabel')}
                 placeholder={t('productionOrders.form.datePlaceholder')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('production-order-planned-end-date');
+                  field.onChange(value);
+                }}
                 type="date"
+                error={Boolean(getError('production-order-planned-end-date'))}
+                helperText={getError('production-order-planned-end-date')}
               />
             )}
           />
@@ -303,7 +321,7 @@ export function ProductionOrderForm({
             variant="contained"
             disableElevation
             startIcon={<SaveOutlined />}
-            disabled={isSubmitting || isLoadingProducts || products.length === 0}
+            disabled={isSubmitting || isLoadingProducts}
           >
             {isSubmitting
               ? t('productionOrders.form.saving')
@@ -312,5 +330,13 @@ export function ProductionOrderForm({
         </FormActions>
       </FormBody>
     </FormCard>
+  );
+}
+
+export function ProductionOrderForm(props: ProductionOrderFormProps) {
+  return (
+    <FormValidationProvider>
+      <ProductionOrderFormFields {...props} />
+    </FormValidationProvider>
   );
 }

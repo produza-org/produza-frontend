@@ -14,6 +14,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '@/shared/components/dialog';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import { GroupingCompositionPanel } from '@/features/groupings/components/composition/GroupingCompositionPanel';
 import {
   EditorBody,
@@ -24,10 +28,13 @@ import { GroupingBasicsForm } from '@/features/groupings/components/form/Groupin
 import type { GroupingBasicsSubmitValues } from '@/features/groupings/types/grouping-form';
 import type { RawMaterialGroupCreateInput } from '@/features/groupings/types/grouping';
 import {
-  canSaveCompositionDraft,
   toGroupingLineInputs,
   type GroupingDraftLine,
 } from '@/features/groupings/utils/composition/draft-lines';
+import {
+  getGroupingCompositionFieldOrder,
+  validateGroupingComposition,
+} from '@/features/groupings/utils/composition/validate-composition';
 import { toBasicsFormValues } from '@/features/groupings/utils/form/general-info';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import {
@@ -47,17 +54,107 @@ type GroupingCreateWizardProps = {
   onCancel: () => void;
   onSave: (input: GroupingCreateWizardSaveInput) => void | Promise<void>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
   initialBasics?: GroupingBasicsSubmitValues;
   initialLines?: GroupingDraftLine[];
 };
+
+function CompositionStep({
+  materials,
+  generalValues,
+  compositionLines,
+  setCompositionLines,
+  isSubmitting,
+  onBack,
+  onCancelRequest,
+  onSave,
+}: {
+  materials: RawMaterial[];
+  generalValues: GroupingBasicsSubmitValues;
+  compositionLines: GroupingDraftLine[];
+  setCompositionLines: (lines: GroupingDraftLine[]) => void;
+  isSubmitting: boolean;
+  onBack: () => void;
+  onCancelRequest: () => void;
+  onSave: (input: GroupingCreateWizardSaveInput) => void | Promise<void>;
+}) {
+  const { t } = useTranslation();
+  const { submitWithValidation } = useFormValidation();
+  const fieldOrder = useMemo(
+    () => getGroupingCompositionFieldOrder(compositionLines),
+    [compositionLines]
+  );
+
+  function handleSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateGroupingComposition(compositionLines, {
+          linesRequired: t('groupings.composition.errors.linesRequired'),
+          quantityInvalid: t('groupings.composition.errors.quantityInvalid'),
+        }),
+      () => {
+        void onSave({
+          name: generalValues.name,
+          code: generalValues.code,
+          ...(generalValues.description
+            ? { description: generalValues.description }
+            : {}),
+          lines: toGroupingLineInputs(compositionLines),
+        });
+      },
+      fieldOrder
+    );
+  }
+
+  return (
+    <EditorCard>
+      <EditorCardAccent />
+      <EditorBody onSubmit={handleSave} noValidate>
+        <GroupingCompositionPanel
+          materials={materials}
+          lines={compositionLines}
+          onChange={setCompositionLines}
+        />
+
+        <WizardActions>
+          <SecondaryButton
+            type="button"
+            onClick={onBack}
+            disabled={isSubmitting}
+            startIcon={<ArrowBack />}
+          >
+            {t('groupings.createWizard.back')}
+          </SecondaryButton>
+          <SecondaryButton
+            type="button"
+            onClick={onCancelRequest}
+            disabled={isSubmitting}
+          >
+            {t('groupings.form.cancel')}
+          </SecondaryButton>
+          <PrimaryButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            disableElevation
+            startIcon={<SaveOutlined />}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? t('groupings.createWizard.saving')
+              : t('groupings.createWizard.save')}
+          </PrimaryButton>
+        </WizardActions>
+      </EditorBody>
+    </EditorCard>
+  );
+}
 
 export function GroupingCreateWizard({
   materials,
   onCancel,
   onSave,
   isSubmitting = false,
-  errorMessage = null,
   initialBasics,
   initialLines = [],
 }: GroupingCreateWizardProps) {
@@ -99,11 +196,6 @@ export function GroupingCreateWizard({
         JSON.stringify(initialSnapshot.current.basics)
     : step1Dirty || generalValues !== null || compositionLines.length > 0;
 
-  const saveEnabled =
-    Boolean(generalValues) &&
-    canSaveCompositionDraft(compositionLines) &&
-    !isSubmitting;
-
   const handleCancelRequest = useCallback(() => {
     if (isDirty) {
       setDiscardOpen(true);
@@ -121,24 +213,6 @@ export function GroupingCreateWizard({
     setActiveStep(0);
     setStep1Key((value) => value + 1);
   }, []);
-
-  const handleSave = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (!generalValues || !saveEnabled) {
-        return;
-      }
-      void onSave({
-        name: generalValues.name,
-        code: generalValues.code,
-        ...(generalValues.description
-          ? { description: generalValues.description }
-          : {}),
-        lines: toGroupingLineInputs(compositionLines),
-      });
-    },
-    [compositionLines, generalValues, onSave, saveEnabled]
-  );
 
   return (
     <>
@@ -177,49 +251,20 @@ export function GroupingCreateWizard({
               onDirtyChange={setStep1Dirty}
               isSubmitting={isSubmitting}
             />
-          ) : (
-            <EditorCard>
-              <EditorCardAccent />
-              <EditorBody onSubmit={handleSave} noValidate>
-                <GroupingCompositionPanel
-                  materials={materials}
-                  lines={compositionLines}
-                  onChange={setCompositionLines}
-                  errorMessage={errorMessage}
-                />
-
-                <WizardActions>
-                  <SecondaryButton
-                    type="button"
-                    onClick={handleBack}
-                    disabled={isSubmitting}
-                    startIcon={<ArrowBack />}
-                  >
-                    {t('groupings.createWizard.back')}
-                  </SecondaryButton>
-                  <SecondaryButton
-                    type="button"
-                    onClick={handleCancelRequest}
-                    disabled={isSubmitting}
-                  >
-                    {t('groupings.form.cancel')}
-                  </SecondaryButton>
-                  <PrimaryButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    startIcon={<SaveOutlined />}
-                    disabled={!saveEnabled}
-                  >
-                    {isSubmitting
-                      ? t('groupings.createWizard.saving')
-                      : t('groupings.createWizard.save')}
-                  </PrimaryButton>
-                </WizardActions>
-              </EditorBody>
-            </EditorCard>
-          )}
+          ) : generalValues ? (
+            <FormValidationProvider>
+              <CompositionStep
+                materials={materials}
+                generalValues={generalValues}
+                compositionLines={compositionLines}
+                setCompositionLines={setCompositionLines}
+                isSubmitting={isSubmitting}
+                onBack={handleBack}
+                onCancelRequest={handleCancelRequest}
+                onSave={onSave}
+              />
+            </FormValidationProvider>
+          ) : null}
         </StepPanel>
       </WizardRoot>
 

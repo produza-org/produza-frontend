@@ -6,6 +6,10 @@ import { renderWithTheme } from '@/test/renderWithTheme';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { ProductCreateWizard } from './ProductCreateWizard';
 
+vi.mock('@/features/groupings/api', () => ({
+  listAllRawMaterialGroups: vi.fn().mockResolvedValue([]),
+}));
+
 const materials: RawMaterial[] = [
   {
     id: 'm-1',
@@ -64,35 +68,49 @@ describe('ProductCreateWizard', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps Next disabled until step 1 is valid', () => {
+  it('keeps Next enabled and blocks step 1 until general info is valid', async () => {
     renderWizard();
 
     const nextButton = screen.getByRole('button', { name: 'Next' });
-    expect(nextButton).toBeDisabled();
+    expect(nextButton).toBeEnabled();
+    fireEvent.click(nextButton);
+    expect(await screen.findByText('Enter the product name.')).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText('Product name'), {
       target: { value: 'POTE' },
     });
     fireEvent.change(screen.getByLabelText('Final size'), { target: { value: '1.5' } });
-    expect(nextButton).toBeDisabled();
-
     fireEvent.change(screen.getByLabelText('Yield'), { target: { value: '0.75' } });
-    expect(nextButton).toBeEnabled();
+    fireEvent.click(nextButton);
+    await screen.findByText(/Add raw materials until/);
   });
 
-  it('keeps final Save disabled until recipe draft is valid', async () => {
-    renderWizard();
+  it('keeps final Save enabled and shows recipe field errors until valid', async () => {
+    const onSave = vi.fn();
+    renderWizard(onSave);
     await goToRecipeStep();
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    expect(saveButton).toBeDisabled();
+    expect(saveButton).toBeEnabled();
+    fireEvent.click(saveButton);
+    expect(
+      await screen.findByText(
+        'Add at least one complete raw material line or group.'
+      )
+    ).toBeInTheDocument();
+    expect(onSave).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
-    expect(saveButton).toBeDisabled();
+    await selectMaterial(0, 'MP-006 — AGUA');
+    fireEvent.click(saveButton);
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalled();
+    });
   });
+
 
   it('shows optional component and packaging sections on step 2', async () => {
     renderWizard();
@@ -161,6 +179,7 @@ describe('ProductCreateWizard', () => {
               sortOrder: 1,
             },
           ],
+          groups: [],
         },
       });
     });

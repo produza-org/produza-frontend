@@ -75,7 +75,7 @@ describe('ToastProvider', () => {
     expect(screen.queryByText('First toast')).not.toBeInTheDocument();
   });
 
-  it('auto-hides the toast after the duration', async () => {
+  it('auto-hides success toasts after 4 seconds', async () => {
     vi.useFakeTimers();
 
     renderWithTheme(
@@ -95,6 +95,87 @@ describe('ToastProvider', () => {
     });
 
     expect(screen.queryByText('Saved successfully')).not.toBeInTheDocument();
+  });
+
+  it('auto-hides error toasts after 7 seconds by default', async () => {
+    vi.useFakeTimers();
+
+    function ErrorToastProbe() {
+      const { enqueueToast } = useToast();
+      return (
+        <Button
+          type="button"
+          onClick={() =>
+            enqueueToast({ severity: 'error', message: 'Request failed' })
+          }
+        >
+          Show error
+        </Button>
+      );
+    }
+
+    renderWithTheme(
+      <ToastProvider>
+        <ErrorToastProbe />
+      </ToastProvider>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show error' }));
+    expect(screen.getByText('Request failed')).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(6999);
+    });
+    expect(screen.getByText('Request failed')).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(1);
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(screen.queryByText('Request failed')).not.toBeInTheDocument();
+  });
+
+  it('respects a custom autoHideDuration', async () => {
+    vi.useFakeTimers();
+
+    function CustomToastProbe() {
+      const { enqueueToast } = useToast();
+      return (
+        <Button
+          type="button"
+          onClick={() =>
+            enqueueToast({
+              severity: 'error',
+              message: 'Custom duration',
+              autoHideDuration: 1000,
+            })
+          }
+        >
+          Show custom
+        </Button>
+      );
+    }
+
+    renderWithTheme(
+      <ToastProvider>
+        <CustomToastProbe />
+      </ToastProvider>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show custom' }));
+    expect(screen.getByText('Custom duration')).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(1000);
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+    });
+
+    expect(screen.queryByText('Custom duration')).not.toBeInTheDocument();
   });
 
   it('closes when the alert close control is clicked', async () => {

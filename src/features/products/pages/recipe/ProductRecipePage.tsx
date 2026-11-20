@@ -29,7 +29,6 @@ export function ProductRecipePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [editorKey, setEditorKey] = useState(0);
 
   useEffect(() => {
@@ -94,7 +93,6 @@ export function ProductRecipePage() {
     async (input: RecipeUpsertInput) => {
       if (!id) return;
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         const saved = await upsertProductRecipe(id, input);
         setRecipe(saved);
@@ -108,10 +106,8 @@ export function ProductRecipePage() {
         if (error instanceof ApiError) {
           const detail = error.body.details?.[0]?.message;
           const message = detail ? `${error.message}: ${detail}` : error.message;
-          setErrorMessage(message);
           enqueueToast({ severity: 'error', message });
         } else {
-          setErrorMessage('UNEXPECTED');
           enqueueToast({
             severity: 'error',
             message: t('products.recipe.errors.unexpected'),
@@ -166,7 +162,6 @@ export function ProductRecipePage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

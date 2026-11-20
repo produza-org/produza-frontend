@@ -1,0 +1,33 @@
+---
+description: Field-level validation for create/edit registration forms
+alwaysApply: true
+---
+
+# Form validation (cadastros)
+
+Every new or changed **create/edit registration form** in the panel must ship with field-level validation. List **filters are excluded**.
+
+Related: `ux-feedback.mdc` (API toasts), `design-system.mdc` (Form* components).
+
+## Required pattern
+
+1. Wrap the form (or wizard step) in **`FormValidationProvider`** from `@/shared/form-validation`.
+2. Put domain rules in a pure feature **`validate*`** helper that returns `FieldErrors` (`Record<fieldId, message>`). Keep messages via i18n at the call site.
+3. On Save/Next click, call **`submitWithValidation(validate, onValid, fieldOrder)`** so invalid submits set errors and **scroll/focus** the first bad field.
+4. Bind shared Form* components with `error` + `helperText` from `getError(fieldId)`; call **`clearField(fieldId)`** (or `clearErrors`) when the user edits that value.
+5. Field ids must match the control `id` / `name` used by `scrollToFirstError`.
+
+## Buttons
+
+- Save / Next stay **enabled** except while `isSubmitting` (and unavoidable loading gates such as product list fetch).
+- Do **not** disable primary actions because the form is incomplete or invalid — validate on click instead.
+
+## What not to do
+
+- Do not put field validation messages in toasts.
+- Do not gate cadastro Save/Next on helpers like `isValid` / `canSave*` for the `disabled` prop.
+- Do not add this pattern to list filter bars.
+
+## API errors
+
+Mutation failures stay in **toasts** (`useToast`), not on fields. See `ux-feedback.mdc` for error toast duration defaults.

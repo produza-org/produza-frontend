@@ -16,6 +16,18 @@ export const StyledSelectWrapper = styled(Box)(({ theme }) => ({
     '&.Mui-focused': {
       borderBottomColor: theme.palette.produza.primary,
     },
+    '&.Mui-error': {
+      borderBottomColor: theme.palette.error.main,
+    },
+    '&.Mui-error.Mui-focused': {
+      borderBottomColor: theme.palette.error.main,
+    },
+  },
+  '& .MuiFormHelperText-root.Mui-error': {
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: theme.spacing(0.75),
+    color: theme.palette.error.main,
   },
   '& .MuiSelect-select': {
     padding: `${theme.spacing(2)} ${theme.spacing(4)} ${theme.spacing(2)} ${theme.spacing(2)} !important`,

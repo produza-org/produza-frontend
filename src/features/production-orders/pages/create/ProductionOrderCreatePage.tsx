@@ -20,7 +20,6 @@ export function ProductionOrderCreatePage() {
   const { enqueueToast } = useToast();
   const { createProductionOrder } = useProductionOrdersContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleCancel = useCallback(() => {
     navigate('/production-orders');
@@ -29,7 +28,6 @@ export function ProductionOrderCreatePage() {
   const handleSubmit = useCallback(
     async (values: ProductionOrderFormSubmitValues) => {
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         const created = await createProductionOrder(values);
         enqueueToast({
@@ -42,9 +40,6 @@ export function ProductionOrderCreatePage() {
           error instanceof ApiError
             ? error.message
             : t('productionOrders.errors.unexpected');
-        setErrorMessage(
-          error instanceof ApiError ? error.message : 'UNEXPECTED'
-        );
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -64,7 +59,6 @@ export function ProductionOrderCreatePage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

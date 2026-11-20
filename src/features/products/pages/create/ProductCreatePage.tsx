@@ -27,7 +27,6 @@ export function ProductCreatePage() {
   const [materials, setMaterials] = useState<RawMaterial[]>([]);
   const [isLoadingMaterials, setIsLoadingMaterials] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [createdProductId, setCreatedProductId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,7 +64,6 @@ export function ProductCreatePage() {
   const handleSave = useCallback(
     async (input: ProductCreateWizardSaveInput) => {
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         let productId = createdProductId;
         if (!productId) {
@@ -85,7 +83,6 @@ export function ProductCreatePage() {
           error instanceof ApiError
             ? error.message
             : t('products.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -114,7 +111,6 @@ export function ProductCreatePage() {
           onCancel={handleCancel}
           onSave={handleSave}
           isSubmitting={isSubmitting}
-          errorMessage={errorMessage}
         />
       )}
     </PageRoot>

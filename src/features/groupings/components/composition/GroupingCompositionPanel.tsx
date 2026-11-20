@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
-import Alert from '@mui/material/Alert';
+import FormHelperText from '@mui/material/FormHelperText';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -16,6 +16,7 @@ import {
   MaterialCode,
   PanelRoot,
   PanelToolbar,
+  QtyErrorText,
   QtyInput,
   RemoveButton,
   TableScroll,
@@ -31,35 +32,36 @@ import {
   type GroupingDraftLine,
 } from '@/features/groupings/utils/composition/draft-lines';
 import {
+  GROUPING_COMPOSITION_ROOT_ID,
+  groupingQtyFieldId,
+} from '@/features/groupings/utils/composition/validate-composition';
+import {
   formatCurrencyBrl,
   sanitizeDecimalInput,
 } from '@/features/groupings/utils/format';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
+import { useFormValidation } from '@/shared/form-validation';
 
 type GroupingCompositionPanelProps = {
   materials: RawMaterial[];
   lines: GroupingDraftLine[];
   onChange: (lines: GroupingDraftLine[]) => void;
-  errorMessage?: string | null;
 };
 
 export function GroupingCompositionPanel({
   materials,
   lines,
   onChange,
-  errorMessage = null,
 }: GroupingCompositionPanelProps) {
   const { t } = useTranslation();
+  const { getError, clearField, clearErrors } = useFormValidation();
   const [pickerOpen, setPickerOpen] = useState(false);
-
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('groupings.errors.unexpected')
-      : errorMessage;
+  const rootError = getError(GROUPING_COMPOSITION_ROOT_ID);
 
   const totalCost = getDraftTotalCost(lines);
 
   function updateQuantity(key: string, quantityDisplay: string) {
+    clearField(groupingQtyFieldId(key));
     onChange(
       lines.map((line) =>
         line.key === key
@@ -70,17 +72,12 @@ export function GroupingCompositionPanel({
   }
 
   function removeLine(key: string) {
+    clearErrors();
     onChange(lines.filter((line) => line.key !== key));
   }
 
   return (
-    <PanelRoot>
-      {displayError ? (
-        <Alert severity="error" role="alert">
-          {displayError}
-        </Alert>
-      ) : null}
-
+    <PanelRoot id={GROUPING_COMPOSITION_ROOT_ID} tabIndex={-1}>
       <PanelToolbar>
         <TotalLabel>{t('groupings.composition.hint')}</TotalLabel>
         <AddItemButton
@@ -93,6 +90,8 @@ export function GroupingCompositionPanel({
           {t('groupings.composition.addItem')}
         </AddItemButton>
       </PanelToolbar>
+
+      {rootError ? <FormHelperText error>{rootError}</FormHelperText> : null}
 
       <TableShell>
         <TableScroll>
@@ -123,42 +122,49 @@ export function GroupingCompositionPanel({
                   </BodyCell>
                 </TableRow>
               ) : (
-                lines.map((line) => (
-                  <TableRow key={line.key}>
-                    <BodyCell>
-                      <div>{line.name}</div>
-                      <MaterialCode>{line.code}</MaterialCode>
-                    </BodyCell>
-                    <BodyCell>{line.unit}</BodyCell>
-                    <BodyCell sx={{ textAlign: 'right' }}>
-                      <QtyInput
-                        aria-label={t('groupings.composition.qtyAria', {
-                          name: line.name,
-                        })}
-                        value={line.quantityDisplay}
-                        onChange={(event) =>
-                          updateQuantity(line.key, event.target.value)
-                        }
-                        inputMode="decimal"
-                      />
-                    </BodyCell>
-                    <BodyCell sx={{ textAlign: 'right' }}>
-                      {formatCurrencyBrl(line.unitCost)}
-                    </BodyCell>
-                    <BodyCell sx={{ textAlign: 'right' }}>
-                      {formatCurrencyBrl(getLineSubtotal(line))}
-                    </BodyCell>
-                    <BodyCell sx={{ textAlign: 'center' }}>
-                      <RemoveButton
-                        size="small"
-                        aria-label={t('groupings.composition.removeLine')}
-                        onClick={() => removeLine(line.key)}
-                      >
-                        <DeleteOutline fontSize="small" />
-                      </RemoveButton>
-                    </BodyCell>
-                  </TableRow>
-                ))
+                lines.map((line) => {
+                  const qtyId = groupingQtyFieldId(line.key);
+                  const qtyError = getError(qtyId);
+                  return (
+                    <TableRow key={line.key}>
+                      <BodyCell>
+                        <div>{line.name}</div>
+                        <MaterialCode>{line.code}</MaterialCode>
+                      </BodyCell>
+                      <BodyCell>{line.unit}</BodyCell>
+                      <BodyCell sx={{ textAlign: 'right' }}>
+                        <QtyInput
+                          id={qtyId}
+                          aria-label={t('groupings.composition.qtyAria', {
+                            name: line.name,
+                          })}
+                          value={line.quantityDisplay}
+                          onChange={(event) =>
+                            updateQuantity(line.key, event.target.value)
+                          }
+                          inputMode="decimal"
+                          $error={Boolean(qtyError)}
+                        />
+                        {qtyError ? <QtyErrorText>{qtyError}</QtyErrorText> : null}
+                      </BodyCell>
+                      <BodyCell sx={{ textAlign: 'right' }}>
+                        {formatCurrencyBrl(line.unitCost)}
+                      </BodyCell>
+                      <BodyCell sx={{ textAlign: 'right' }}>
+                        {formatCurrencyBrl(getLineSubtotal(line))}
+                      </BodyCell>
+                      <BodyCell sx={{ textAlign: 'center' }}>
+                        <RemoveButton
+                          size="small"
+                          aria-label={t('groupings.composition.removeLine')}
+                          onClick={() => removeLine(line.key)}
+                        >
+                          <DeleteOutline fontSize="small" />
+                        </RemoveButton>
+                      </BodyCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </DataTable>
@@ -175,6 +181,7 @@ export function GroupingCompositionPanel({
         onClose={() => setPickerOpen(false)}
         materials={materials}
         onConfirm={(selected) => {
+          clearField(GROUPING_COMPOSITION_ROOT_ID);
           onChange(mergeDraftLines(lines, selected));
           setPickerOpen(false);
         }}

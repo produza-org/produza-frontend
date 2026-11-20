@@ -1,12 +1,15 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type FormEvent } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
-import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import { FormSelectField, FormTextField } from '@/shared/components/form';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import { PRODUCT_FINAL_SIZE_UNIT_OPTIONS } from '@/features/products/constants';
 import {
   CancelButton,
@@ -25,7 +28,10 @@ import type {
   ProductFormSubmitValues,
   ProductFormValues,
 } from '@/features/products/types/product-form';
-import { isGeneralInfoValid } from '@/features/products/utils/form/general-info';
+import {
+  PRODUCT_GENERAL_FIELD_ORDER,
+  validateGeneralInfo,
+} from '@/features/products/utils/form/validate-general-info';
 import {
   computeExpansionFactor,
   formatDecimal,
@@ -40,7 +46,6 @@ type ProductFormProps = {
   onCancel: () => void;
   initialValues?: Partial<ProductFormValues>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
   mode?: 'default' | 'step';
   onDirtyChange?: (isDirty: boolean) => void;
 };
@@ -52,30 +57,24 @@ const defaultValues: ProductFormValues = {
   yieldDisplay: '',
 };
 
-export function ProductForm({
+function ProductFormFields({
   onSubmit,
   onCancel,
   initialValues,
   isSubmitting = false,
-  errorMessage = null,
   mode = 'default',
   onDirtyChange,
 }: ProductFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { control, handleSubmit } = useForm<ProductFormValues>({
+  const { getError, clearField, submitWithValidation } = useFormValidation();
+  const { control, getValues } = useForm<ProductFormValues>({
     defaultValues: { ...defaultValues, ...initialValues },
   });
 
   const name = useWatch({ control, name: 'name' });
   const finalSizeDisplay = useWatch({ control, name: 'finalSizeDisplay' });
   const yieldDisplay = useWatch({ control, name: 'yieldDisplay' });
-
-  const isStepValid = isGeneralInfoValid({
-    name: name ?? '',
-    finalSizeDisplay: finalSizeDisplay ?? '',
-    yieldDisplay: yieldDisplay ?? '',
-  });
 
   useEffect(() => {
     if (!onDirtyChange) {
@@ -106,46 +105,35 @@ export function ProductForm({
     [t]
   );
 
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('products.errors.unexpected')
-      : errorMessage;
-
-  const submitForm = handleSubmit((values) => {
-    const finalSize = parseDecimalInput(values.finalSizeDisplay);
-    const yieldValue = parseDecimalInput(values.yieldDisplay);
-
-    if (
-      !values.name.trim() ||
-      !Number.isFinite(finalSize) ||
-      finalSize <= 0 ||
-      !Number.isFinite(yieldValue) ||
-      !(yieldValue > 0)
-    ) {
-      return;
-    }
-
-    void onSubmit({
-      name: values.name.trim(),
-      finalSize,
-      finalSizeUnit: values.finalSizeUnit,
-      yield: yieldValue,
-    });
-  });
-
   const isStepMode = mode === 'step';
-  const primaryDisabled = isSubmitting || (isStepMode && !isStepValid);
+
+  function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateGeneralInfo(getValues(), {
+          nameRequired: t('products.form.errors.nameRequired'),
+          finalSizeInvalid: t('products.form.errors.finalSizeInvalid'),
+          unitRequired: t('products.form.errors.unitRequired'),
+          yieldInvalid: t('products.form.errors.yieldInvalid'),
+        }),
+      () => {
+        const values = getValues();
+        void onSubmit({
+          name: values.name.trim(),
+          finalSize: parseDecimalInput(values.finalSizeDisplay),
+          finalSizeUnit: values.finalSizeUnit,
+          yield: parseDecimalInput(values.yieldDisplay),
+        });
+      },
+      [...PRODUCT_GENERAL_FIELD_ORDER]
+    );
+  }
 
   return (
     <FormCard>
       <FormCardAccent />
-      <FormBody onSubmit={submitForm} noValidate>
-        {displayError ? (
-          <Alert severity="error" role="alert">
-            {displayError}
-          </Alert>
-        ) : null}
-
+      <FormBody onSubmit={handleFormSubmit} noValidate>
         <Controller
           name="name"
           control={control}
@@ -155,7 +143,12 @@ export function ProductForm({
               label={t('products.form.nameLabel')}
               placeholder={t('products.form.namePlaceholder')}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(value) => {
+                clearField('product-name');
+                field.onChange(value);
+              }}
+              error={Boolean(getError('product-name'))}
+              helperText={getError('product-name')}
             />
           )}
         />
@@ -170,8 +163,13 @@ export function ProductForm({
                 label={t('products.form.finalSizeLabel')}
                 placeholder={t('products.form.finalSizePlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(sanitizeDecimalInput(value))}
+                onChange={(value) => {
+                  clearField('product-final-size');
+                  field.onChange(sanitizeDecimalInput(value));
+                }}
                 inputMode="decimal"
+                error={Boolean(getError('product-final-size'))}
+                helperText={getError('product-final-size')}
               />
             )}
           />
@@ -183,8 +181,13 @@ export function ProductForm({
                 id="product-final-size-unit"
                 label={t('products.form.finalSizeUnitLabel')}
                 value={field.value}
-                onChange={(value) => field.onChange(value as ProductFinalSizeUnit)}
+                onChange={(value) => {
+                  clearField('product-final-size-unit');
+                  field.onChange(value as ProductFinalSizeUnit);
+                }}
                 options={unitOptions}
+                error={Boolean(getError('product-final-size-unit'))}
+                helperText={getError('product-final-size-unit')}
               />
             )}
           />
@@ -200,8 +203,13 @@ export function ProductForm({
                 label={t('products.form.yieldLabel')}
                 placeholder={t('products.form.yieldPlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(sanitizeDecimalInput(value))}
+                onChange={(value) => {
+                  clearField('product-yield');
+                  field.onChange(sanitizeDecimalInput(value));
+                }}
                 inputMode="decimal"
+                error={Boolean(getError('product-yield'))}
+                helperText={getError('product-yield')}
               />
             )}
           />
@@ -233,7 +241,7 @@ export function ProductForm({
             disableElevation
             startIcon={isStepMode ? undefined : <SaveOutlined />}
             endIcon={isStepMode ? <ArrowForward /> : undefined}
-            disabled={primaryDisabled}
+            disabled={isSubmitting}
           >
             {isStepMode
               ? t('products.createWizard.next')
@@ -244,5 +252,13 @@ export function ProductForm({
         </FormActions>
       </FormBody>
     </FormCard>
+  );
+}
+
+export function ProductForm(props: ProductFormProps) {
+  return (
+    <FormValidationProvider>
+      <ProductFormFields {...props} />
+    </FormValidationProvider>
   );
 }

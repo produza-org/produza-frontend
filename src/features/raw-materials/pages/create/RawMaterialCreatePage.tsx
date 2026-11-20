@@ -20,7 +20,6 @@ export function RawMaterialCreatePage() {
   const { enqueueToast } = useToast();
   const { createRawMaterial } = useRawMaterialsContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleCancel = useCallback(() => {
     navigate('/raw-materials');
@@ -29,7 +28,6 @@ export function RawMaterialCreatePage() {
   const handleSubmit = useCallback(
     async (values: RawMaterialFormSubmitValues) => {
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         await createRawMaterial(values);
         enqueueToast({
@@ -42,7 +40,6 @@ export function RawMaterialCreatePage() {
           error instanceof ApiError
             ? error.message
             : t('rawMaterials.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -62,7 +59,6 @@ export function RawMaterialCreatePage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

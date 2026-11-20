@@ -1,15 +1,18 @@
-import { useMemo } from 'react';
+import { useMemo, type FormEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
-import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import {
   FormCurrencyField,
   FormSelectField,
   FormTextField,
 } from '@/shared/components/form';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import {
   handleCurrencyInputChange,
   parseCurrencyBrlInput,
@@ -29,10 +32,11 @@ import {
   ValidationAlertTitle,
 } from '@/features/raw-materials/components/form/RawMaterialForm.styled';
 import type { RawMaterialUnit } from '@/features/raw-materials/types/raw-material';
+import { formatRawMaterialCode } from '@/features/raw-materials/utils/create/raw-material-code';
 import {
-  formatRawMaterialCode,
-  isValidRawMaterialCode,
-} from '@/features/raw-materials/utils/create/raw-material-code';
+  RAW_MATERIAL_FIELD_ORDER,
+  validateRawMaterialForm,
+} from '@/features/raw-materials/utils/form/validate-raw-material';
 
 export type RawMaterialFormValues = {
   name: string;
@@ -57,7 +61,6 @@ type RawMaterialFormProps = {
   onCancel: () => void;
   initialValues?: Partial<RawMaterialFormValues>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
 };
 
 const defaultValues: RawMaterialFormValues = {
@@ -69,16 +72,16 @@ const defaultValues: RawMaterialFormValues = {
   minStock: '',
 };
 
-export function RawMaterialForm({
+function RawMaterialFormFields({
   onSubmit,
   onCancel,
   initialValues,
   isSubmitting = false,
-  errorMessage = null,
 }: RawMaterialFormProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { control, handleSubmit } = useForm<RawMaterialFormValues>({
+  const { getError, clearField, submitWithValidation } = useFormValidation();
+  const { control, getValues } = useForm<RawMaterialFormValues>({
     defaultValues: { ...defaultValues, ...initialValues },
   });
 
@@ -91,40 +94,37 @@ export function RawMaterialForm({
     [t]
   );
 
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('rawMaterials.errors.unexpected')
-      : errorMessage;
-
-  const submitForm = handleSubmit((values) => {
-    if (!isValidRawMaterialCode(values.code)) return;
-
-    const unitCost = parseCurrencyBrlInput(values.unitCostDisplay);
-    const quantity = parseInt(values.stockQuantity, 10);
-    const minStock = parseInt(values.minStock, 10);
-
-    if (!values.name.trim() || unitCost <= 0 || quantity <= 0 || minStock <= 0) return;
-
-    void onSubmit({
-      name: values.name.trim(),
-      code: values.code,
-      unit: values.unit,
-      unitCost,
-      stockQuantity: quantity,
-      minStock,
-    });
-  });
+  function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateRawMaterialForm(getValues(), {
+          nameRequired: t('rawMaterials.form.errors.nameRequired'),
+          codeInvalid: t('rawMaterials.form.errors.codeInvalid'),
+          unitRequired: t('rawMaterials.form.errors.unitRequired'),
+          unitCostInvalid: t('rawMaterials.form.errors.unitCostInvalid'),
+          stockInvalid: t('rawMaterials.form.errors.stockInvalid'),
+          minStockInvalid: t('rawMaterials.form.errors.minStockInvalid'),
+        }),
+      () => {
+        const values = getValues();
+        void onSubmit({
+          name: values.name.trim(),
+          code: values.code,
+          unit: values.unit,
+          unitCost: parseCurrencyBrlInput(values.unitCostDisplay),
+          stockQuantity: parseInt(values.stockQuantity, 10),
+          minStock: parseInt(values.minStock, 10),
+        });
+      },
+      [...RAW_MATERIAL_FIELD_ORDER]
+    );
+  }
 
   return (
     <FormCard>
       <FormCardAccent />
-      <FormBody onSubmit={submitForm} noValidate>
-        {displayError ? (
-          <Alert severity="error" role="alert">
-            {displayError}
-          </Alert>
-        ) : null}
-
+      <FormBody onSubmit={handleFormSubmit} noValidate>
         <Controller
           name="name"
           control={control}
@@ -134,7 +134,12 @@ export function RawMaterialForm({
               label={t('rawMaterials.form.nameLabel')}
               placeholder={t('rawMaterials.form.namePlaceholder')}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(value) => {
+                clearField('material-name');
+                field.onChange(value);
+              }}
+              error={Boolean(getError('material-name'))}
+              helperText={getError('material-name')}
             />
           )}
         />
@@ -149,7 +154,12 @@ export function RawMaterialForm({
                 label={t('rawMaterials.form.codeLabel')}
                 placeholder={t('rawMaterials.form.codePlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(formatRawMaterialCode(value))}
+                onChange={(value) => {
+                  clearField('material-code');
+                  field.onChange(formatRawMaterialCode(value));
+                }}
+                error={Boolean(getError('material-code'))}
+                helperText={getError('material-code')}
               />
             )}
           />
@@ -161,8 +171,13 @@ export function RawMaterialForm({
                 id="unit-measure"
                 label={t('rawMaterials.form.unitLabel')}
                 value={field.value}
-                onChange={(value) => field.onChange(value as RawMaterialUnit)}
+                onChange={(value) => {
+                  clearField('unit-measure');
+                  field.onChange(value as RawMaterialUnit);
+                }}
                 options={unitOptions}
+                error={Boolean(getError('unit-measure'))}
+                helperText={getError('unit-measure')}
               />
             )}
           />
@@ -177,7 +192,12 @@ export function RawMaterialForm({
               label={t('rawMaterials.form.unitPriceLabel')}
               placeholder={t('rawMaterials.form.unitPricePlaceholder')}
               value={field.value}
-              onChange={(value) => field.onChange(handleCurrencyInputChange(value))}
+              onChange={(value) => {
+                clearField('unit-price');
+                field.onChange(handleCurrencyInputChange(value));
+              }}
+              error={Boolean(getError('unit-price'))}
+              helperText={getError('unit-price')}
             />
           )}
         />
@@ -192,8 +212,13 @@ export function RawMaterialForm({
                 label={t('rawMaterials.form.stockQtyLabel')}
                 placeholder={t('rawMaterials.form.stockQtyPlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(sanitizeIntegerInput(value))}
+                onChange={(value) => {
+                  clearField('stock-qty');
+                  field.onChange(sanitizeIntegerInput(value));
+                }}
                 inputMode="numeric"
+                error={Boolean(getError('stock-qty'))}
+                helperText={getError('stock-qty')}
               />
             )}
           />
@@ -206,8 +231,13 @@ export function RawMaterialForm({
                 label={t('rawMaterials.form.minStockLabel')}
                 placeholder={t('rawMaterials.form.minStockPlaceholder')}
                 value={field.value}
-                onChange={(value) => field.onChange(sanitizeIntegerInput(value))}
+                onChange={(value) => {
+                  clearField('min-stock');
+                  field.onChange(sanitizeIntegerInput(value));
+                }}
                 inputMode="numeric"
+                error={Boolean(getError('min-stock'))}
+                helperText={getError('min-stock')}
               />
             )}
           />
@@ -237,5 +267,13 @@ export function RawMaterialForm({
         </FormActions>
       </FormBody>
     </FormCard>
+  );
+}
+
+export function RawMaterialForm(props: RawMaterialFormProps) {
+  return (
+    <FormValidationProvider>
+      <RawMaterialFormFields {...props} />
+    </FormValidationProvider>
   );
 }
