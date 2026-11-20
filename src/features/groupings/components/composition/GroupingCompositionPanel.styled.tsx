@@ -80,10 +80,12 @@ export const BodyCell = styled(TableCell)(({ theme }) => ({
   paddingBottom: theme.spacing(1.5),
 }));
 
-export const QtyInput = styled('input')(({ theme }) => ({
+export const QtyInput = styled('input')<{ $error?: boolean }>(({ theme, $error }) => ({
   width: '100%',
   maxWidth: 96,
-  border: `1px solid ${theme.palette.produza.outlineVariant}80`,
+  border: `1px solid ${
+    $error ? theme.palette.error.main : `${theme.palette.produza.outlineVariant}80`
+  }`,
   borderRadius: 8,
   padding: theme.spacing(1),
   fontSize: 13,
@@ -93,8 +95,15 @@ export const QtyInput = styled('input')(({ theme }) => ({
   backgroundColor: theme.palette.produza.surfaceContainerLowest,
   outline: 'none',
   '&:focus': {
-    borderColor: theme.palette.produza.primary,
+    borderColor: $error ? theme.palette.error.main : theme.palette.produza.primary,
   },
+}));
+
+export const QtyErrorText = styled('span')(({ theme }) => ({
+  display: 'block',
+  marginTop: theme.spacing(0.5),
+  fontSize: 12,
+  color: theme.palette.error.main,
 }));
 
 export const RemoveButton = styled(IconButton)(({ theme }) => ({

@@ -14,6 +14,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ConfirmModal } from '@/shared/components/dialog';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import { ProductForm } from '@/features/products/components/form/ProductForm';
 import { RecipeDraftPanel } from '@/features/products/components/recipe/RecipeDraftPanel';
 import {
@@ -27,11 +31,14 @@ import {
   toRecipeProductMeta,
 } from '@/features/products/utils/form/general-info';
 import {
-  canSaveRecipeDraft,
   createEmptyRecipeDraft,
   toRecipeUpsertInput,
   type RecipeDraft,
 } from '@/features/products/utils/recipe/draft-lines';
+import {
+  getRecipeDraftFieldOrder,
+  validateRecipeDraft,
+} from '@/features/products/utils/recipe/validate-recipe-draft';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import type { RecipeUpsertInput } from '@/features/products/types/recipe';
 import {
@@ -54,15 +61,112 @@ type ProductCreateWizardProps = {
   onCancel: () => void;
   onSave: (input: ProductCreateWizardSaveInput) => void | Promise<void>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
 };
+
+function RecipeStep({
+  materials,
+  generalValues,
+  recipeDraft,
+  setRecipeDraft,
+  isSubmitting,
+  onBack,
+  onCancelRequest,
+  onSave,
+}: {
+  materials: RawMaterial[];
+  generalValues: ProductFormSubmitValues;
+  recipeDraft: RecipeDraft;
+  setRecipeDraft: (draft: RecipeDraft) => void;
+  isSubmitting: boolean;
+  onBack: () => void;
+  onCancelRequest: () => void;
+  onSave: (input: ProductCreateWizardSaveInput) => void | Promise<void>;
+}) {
+  const { t } = useTranslation();
+  const { submitWithValidation, clearErrors } = useFormValidation();
+  const productMeta = toRecipeProductMeta(generalValues);
+  const fieldOrder = useMemo(
+    () => getRecipeDraftFieldOrder(recipeDraft),
+    [recipeDraft]
+  );
+
+  function handleSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateRecipeDraft(recipeDraft, {
+          rawMaterialRequired: t('products.recipe.errors.rawMaterialRequired'),
+          materialRequired: t('products.recipe.errors.materialRequired'),
+          proportionRequired: t('products.recipe.errors.proportionRequired'),
+          proportionNegative: t('products.recipe.errors.negativeProportion'),
+          duplicateMaterial: t('products.recipe.errors.duplicateMaterial'),
+          componentSumInvalid: t('products.recipe.errors.componentSumInvalid'),
+          groupRequired: t('products.recipe.errors.groupRequired'),
+        }),
+      () => {
+        void onSave({
+          general: generalValues,
+          recipe: toRecipeUpsertInput(recipeDraft),
+        });
+      },
+      fieldOrder
+    );
+  }
+
+  return (
+    <EditorCard>
+      <EditorCardAccent />
+      <EditorBody onSubmit={handleSave} noValidate>
+        <RecipeDraftPanel
+          productMeta={productMeta}
+          materials={materials}
+          draft={recipeDraft}
+          onChange={(next) => {
+            clearErrors();
+            setRecipeDraft(next);
+          }}
+          stepHint={t('products.createWizard.recipeHint')}
+        />
+
+        <WizardActions>
+          <SecondaryButton
+            type="button"
+            onClick={onBack}
+            disabled={isSubmitting}
+            startIcon={<ArrowBack />}
+          >
+            {t('products.createWizard.back')}
+          </SecondaryButton>
+          <SecondaryButton
+            type="button"
+            onClick={onCancelRequest}
+            disabled={isSubmitting}
+          >
+            {t('products.form.cancel')}
+          </SecondaryButton>
+          <PrimaryButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            disableElevation
+            startIcon={<SaveOutlined />}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? t('products.createWizard.saving')
+              : t('products.createWizard.save')}
+          </PrimaryButton>
+        </WizardActions>
+      </EditorBody>
+    </EditorCard>
+  );
+}
 
 export function ProductCreateWizard({
   materials,
   onCancel,
   onSave,
   isSubmitting = false,
-  errorMessage = null,
 }: ProductCreateWizardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -90,19 +194,11 @@ export function ProductCreateWizard({
     stepTitleRef.current?.focus();
   }, [activeStep]);
 
-  const productMeta = useMemo(
-    () => (generalValues ? toRecipeProductMeta(generalValues) : null),
-    [generalValues]
-  );
-
   const isDirty =
     step1Dirty ||
     generalValues !== null ||
     recipeDraft.lines.length > 0 ||
     recipeDraft.groups.length > 0;
-
-  const saveEnabled =
-    Boolean(generalValues) && canSaveRecipeDraft(recipeDraft) && !isSubmitting;
 
   const handleCancelRequest = useCallback(() => {
     if (isDirty) {
@@ -121,20 +217,6 @@ export function ProductCreateWizard({
     setActiveStep(0);
     setStep1Key((value) => value + 1);
   }, []);
-
-  const handleSave = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (!generalValues || !saveEnabled) {
-        return;
-      }
-      void onSave({
-        general: generalValues,
-        recipe: toRecipeUpsertInput(recipeDraft),
-      });
-    },
-    [generalValues, onSave, recipeDraft, saveEnabled]
-  );
 
   return (
     <>
@@ -174,50 +256,19 @@ export function ProductCreateWizard({
               onDirtyChange={setStep1Dirty}
               isSubmitting={isSubmitting}
             />
-          ) : productMeta ? (
-            <EditorCard>
-              <EditorCardAccent />
-              <EditorBody onSubmit={handleSave} noValidate>
-                <RecipeDraftPanel
-                  productMeta={productMeta}
-                  materials={materials}
-                  draft={recipeDraft}
-                  onChange={setRecipeDraft}
-                  errorMessage={errorMessage}
-                  stepHint={t('products.createWizard.recipeHint')}
-                />
-
-                <WizardActions>
-                  <SecondaryButton
-                    type="button"
-                    onClick={handleBack}
-                    disabled={isSubmitting}
-                    startIcon={<ArrowBack />}
-                  >
-                    {t('products.createWizard.back')}
-                  </SecondaryButton>
-                  <SecondaryButton
-                    type="button"
-                    onClick={handleCancelRequest}
-                    disabled={isSubmitting}
-                  >
-                    {t('products.form.cancel')}
-                  </SecondaryButton>
-                  <PrimaryButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    startIcon={<SaveOutlined />}
-                    disabled={!saveEnabled}
-                  >
-                    {isSubmitting
-                      ? t('products.createWizard.saving')
-                      : t('products.createWizard.save')}
-                  </PrimaryButton>
-                </WizardActions>
-              </EditorBody>
-            </EditorCard>
+          ) : generalValues ? (
+            <FormValidationProvider>
+              <RecipeStep
+                materials={materials}
+                generalValues={generalValues}
+                recipeDraft={recipeDraft}
+                setRecipeDraft={setRecipeDraft}
+                isSubmitting={isSubmitting}
+                onBack={handleBack}
+                onCancelRequest={handleCancelRequest}
+                onSave={onSave}
+              />
+            </FormValidationProvider>
           ) : null}
         </StepPanel>
       </WizardRoot>

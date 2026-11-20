@@ -58,7 +58,6 @@ export function GroupingEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const cachedItem = useMemo(
     () => (id ? items.find((entry) => entry.id === id) ?? null : null),
@@ -119,7 +118,6 @@ export function GroupingEditPage() {
         return;
       }
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         await updateGrouping(id, input);
         enqueueToast({
@@ -132,7 +130,6 @@ export function GroupingEditPage() {
           error instanceof ApiError
             ? error.message
             : t('groupings.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -182,7 +179,6 @@ export function GroupingEditPage() {
         onCancel={handleCancel}
         onSave={handleSave}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

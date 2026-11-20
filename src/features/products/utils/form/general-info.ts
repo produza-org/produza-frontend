@@ -32,6 +32,10 @@ export function isGeneralInfoValid(values: {
   );
 }
 
+export { validateGeneralInfo } from '@/features/products/utils/form/validate-general-info';
+export type { ProductGeneralMessages } from '@/features/products/utils/form/validate-general-info';
+
+
 export function toProductFormValues(
   values: ProductFormSubmitValues
 ): ProductFormValues {

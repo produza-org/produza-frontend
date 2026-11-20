@@ -12,6 +12,8 @@ type FormAutocompleteBaseProps = {
   placeholder?: string;
   noOptionsText?: string;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
   paperMinWidth?: number | string;
 };
 
@@ -65,6 +67,8 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
     placeholder,
     noOptionsText,
     disabled = false,
+    error = false,
+    helperText,
     paperMinWidth,
   } = props;
 
@@ -118,6 +122,8 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
                 placeholder={placeholder}
                 variant="standard"
                 disabled={disabled}
+                error={error}
+                helperText={helperText}
                 InputProps={{
                   ...params.InputProps,
                   disableUnderline: true,
@@ -165,6 +171,8 @@ export function FormAutocomplete(props: FormAutocompleteProps) {
               placeholder={placeholder}
               variant="standard"
               disabled={disabled}
+              error={error}
+              helperText={helperText}
               InputProps={{
                 ...params.InputProps,
                 disableUnderline: true,

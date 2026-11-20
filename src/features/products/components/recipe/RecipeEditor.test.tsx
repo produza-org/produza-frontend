@@ -82,22 +82,34 @@ describe('RecipeEditor', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps save disabled until a complete raw-material line exists', async () => {
-    renderEditor();
+  it('keeps save enabled and shows errors until a complete raw-material line exists', async () => {
+    const onSubmit = vi.fn();
+    renderEditor(onSubmit);
+
+    const saveButton = screen.getByRole('button', { name: 'Save recipe' });
+    expect(saveButton).toBeEnabled();
+    fireEvent.click(saveButton);
+    expect(
+      await screen.findByText(
+        'Add at least one complete raw material line or group.'
+      )
+    ).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
     fireEvent.change(screen.getByLabelText('Proportion'), {
       target: { value: '0.4' },
     });
-
-    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
     expect(screen.getByText(/Σ =/)).toBeInTheDocument();
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
 
     await selectMaterial(0, 'MP-006 — AGUA');
-
-    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeEnabled();
+    fireEvent.click(saveButton);
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalled();
+    });
   });
+
 
   it('shows raw material, component, and packaging blocks', () => {
     renderEditor();
@@ -199,8 +211,9 @@ describe('RecipeEditor', () => {
     });
   });
 
-  it('keeps save disabled when component proportion sum is not 1', async () => {
-    renderEditor();
+  it('shows field errors when component proportion sum is not 1', async () => {
+    const onSubmit = vi.fn();
+    renderEditor(onSubmit);
 
     const addButtons = screen.getAllByRole('button', { name: 'Add line' });
     fireEvent.click(addButtons[0]);
@@ -213,8 +226,12 @@ describe('RecipeEditor', () => {
     fireEvent.change(proportions[0], { target: { value: '1' } });
     fireEvent.change(proportions[1], { target: { value: '0.5' } });
 
-    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
     expect(screen.getByText('Component proportion sum')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Save recipe' }));
+    expect(
+      await screen.findByText('Component proportions must sum to 1.')
+    ).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('limits packaging material options to UNID units', async () => {

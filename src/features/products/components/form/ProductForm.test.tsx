@@ -83,7 +83,7 @@ describe('ProductForm', () => {
     expect(screen.getByLabelText('Expansion factor')).toHaveValue('1,333333');
   });
 
-  it('keeps Next disabled in step mode until general info is valid', async () => {
+  it('keeps Next enabled and shows field errors until general info is valid', async () => {
     const onSubmit = vi.fn();
     renderWithTheme(
       <I18nextProvider i18n={i18n}>
@@ -92,24 +92,18 @@ describe('ProductForm', () => {
     );
 
     const nextButton = screen.getByRole('button', { name: 'Next' });
-    expect(nextButton).toBeDisabled();
+    expect(nextButton).toBeEnabled();
     expect(nextButton).toHaveTextContent('Next');
-    expect(nextButton.className).toMatch(/Mui-disabled/);
-    const disabledStyles = window.getComputedStyle(nextButton);
-    expect(disabledStyles.color).toBe('rgb(255, 255, 255)');
-    expect(disabledStyles.webkitTextFillColor).toBe('rgb(255, 255, 255)');
-    expect(disabledStyles.opacity).toBe('1');
+
+    fireEvent.click(nextButton);
+    expect(await screen.findByText('Enter the product name.')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
 
     fireEvent.change(screen.getByLabelText('Product name'), {
       target: { value: 'POTE 1,5L COCO BRANCO' },
     });
-    expect(nextButton).toBeDisabled();
-
     fireEvent.change(screen.getByLabelText('Final size'), { target: { value: '1.5' } });
-    expect(nextButton).toBeDisabled();
-
     fireEvent.change(screen.getByLabelText('Yield'), { target: { value: '0.75' } });
-    expect(nextButton).toBeEnabled();
 
     fireEvent.click(nextButton);
     await waitFor(() => {
@@ -122,4 +116,5 @@ describe('ProductForm', () => {
     });
   });
 });
+
 

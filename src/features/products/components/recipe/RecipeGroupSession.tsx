@@ -11,7 +11,9 @@ import {
   RemoveLineButton,
 } from '@/features/products/components/recipe/RecipeEditor.styled';
 import type { RecipeDraftGroup, RecipeDraftLine } from '@/features/products/utils/recipe/draft-lines';
+import { recipeGroupFieldId } from '@/features/products/utils/recipe/validate-recipe-draft';
 import { FormAutocomplete } from '@/shared/components/form';
+import { useFormValidation } from '@/shared/form-validation';
 
 type RecipeGroupSessionProps = {
   group: RecipeDraftGroup;
@@ -39,6 +41,8 @@ export function RecipeGroupSession({
   onSelectGrouping,
 }: RecipeGroupSessionProps) {
   const { t } = useTranslation();
+  const { getError, clearField } = useFormValidation();
+  const groupFieldId = recipeGroupFieldId(group.key);
 
   const options = groupings
     .filter((item) => item.status === 'active')
@@ -69,10 +73,11 @@ export function RecipeGroupSession({
           />
         ) : (
           <FormAutocomplete
-            id={`recipe-group-${group.key}`}
+            id={groupFieldId}
             label={t('products.recipe.groupLabel')}
             value={selectedId}
             onChange={(value) => {
+              clearField(groupFieldId);
               if (!value) {
                 onChangeGroup({
                   ...group,
@@ -87,6 +92,8 @@ export function RecipeGroupSession({
             options={groupingOptions}
             placeholder={t('products.recipe.groupPlaceholder')}
             noOptionsText={t('products.recipe.groupNoOptions')}
+            error={Boolean(getError(groupFieldId))}
+            helperText={getError(groupFieldId)}
           />
         )}
         <RemoveLineButton

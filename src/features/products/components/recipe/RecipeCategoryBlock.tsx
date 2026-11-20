@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import AddOutlined from '@mui/icons-material/AddOutlined';
+import FormHelperText from '@mui/material/FormHelperText';
 import { useTranslation } from 'react-i18next';
 import type { RawMaterialGroup } from '@/features/groupings/types/grouping';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
@@ -9,8 +10,10 @@ import type {
   RecipeDraftLine,
 } from '@/features/products/utils/recipe/draft-lines';
 import { materialsForRecipeCategory } from '@/features/products/utils/recipe/materials-for-category';
+import { recipeCategoryFieldId } from '@/features/products/utils/recipe/validate-recipe-draft';
 import { RecipeGroupSession } from '@/features/products/components/recipe/RecipeGroupSession';
 import { RecipeLineRow } from '@/features/products/components/recipe/RecipeLineRow';
+import { useFormValidation } from '@/shared/form-validation';
 import {
   AddLineButton,
   AddLineRow,
@@ -63,17 +66,23 @@ export function RecipeCategoryBlock({
   onRemoveGroupLine,
 }: RecipeCategoryBlockProps) {
   const { t } = useTranslation();
+  const { getError } = useFormValidation();
   const canAddGroup = GROUPABLE_CATEGORIES.includes(category);
+  const categoryFieldId = recipeCategoryFieldId(category);
+  const categoryError = getError(categoryFieldId);
   const categoryMaterials = useMemo(
     () => materialsForRecipeCategory(category, materials),
     [category, materials]
   );
 
   return (
-    <CategoryBlockRoot>
+    <CategoryBlockRoot id={categoryFieldId} tabIndex={-1}>
       <CategoryHeader>
         <CategoryTitle>{t(`products.recipe.categories.${category}`)}</CategoryTitle>
       </CategoryHeader>
+      {categoryError ? (
+        <FormHelperText error>{categoryError}</FormHelperText>
+      ) : null}
 
       <LineRows>
         {lines.map((line) => (

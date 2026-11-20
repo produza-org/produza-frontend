@@ -31,7 +31,6 @@ export function ProductEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const cachedItem = useMemo(
     () => (id ? items.find((entry) => entry.id === id) ?? null : null),
@@ -101,7 +100,6 @@ export function ProductEditPage() {
     async (values: ProductFormSubmitValues) => {
       if (!id) return;
       setIsSubmitting(true);
-      setErrorMessage(null);
       try {
         await updateProduct(id, values);
         enqueueToast({
@@ -114,7 +112,6 @@ export function ProductEditPage() {
           error instanceof ApiError
             ? error.message
             : t('products.errors.unexpected');
-        setErrorMessage(error instanceof ApiError ? error.message : 'UNEXPECTED');
         enqueueToast({ severity: 'error', message });
       } finally {
         setIsSubmitting(false);
@@ -176,7 +173,6 @@ export function ProductEditPage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        errorMessage={errorMessage}
       />
     </PageRoot>
   );

@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, type FormEvent } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import Alert from '@mui/material/Alert';
 import { FormTextField } from '@/shared/components/form';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '@/shared/form-validation';
 import {
   CancelButton,
   FormActions,
@@ -17,17 +20,17 @@ import type {
   GroupingBasicsFormValues,
   GroupingBasicsSubmitValues,
 } from '@/features/groupings/types/grouping-form';
+import { toBasicsSubmitValues } from '@/features/groupings/utils/form/general-info';
 import {
-  isBasicsValid,
-  toBasicsSubmitValues,
-} from '@/features/groupings/utils/form/general-info';
+  GROUPING_BASICS_FIELD_ORDER,
+  validateGroupingBasics,
+} from '@/features/groupings/utils/form/validate-basics';
 
 type GroupingBasicsFormProps = {
   onSubmit: (values: GroupingBasicsSubmitValues) => void | Promise<void>;
   onCancel: () => void;
   initialValues?: Partial<GroupingBasicsFormValues>;
   isSubmitting?: boolean;
-  errorMessage?: string | null;
   onDirtyChange?: (isDirty: boolean) => void;
 };
 
@@ -37,28 +40,22 @@ const defaultValues: GroupingBasicsFormValues = {
   description: '',
 };
 
-export function GroupingBasicsForm({
+function GroupingBasicsFormFields({
   onSubmit,
   onCancel,
   initialValues,
   isSubmitting = false,
-  errorMessage = null,
   onDirtyChange,
 }: GroupingBasicsFormProps) {
   const { t } = useTranslation();
-  const { control, handleSubmit } = useForm<GroupingBasicsFormValues>({
+  const { getError, clearField, submitWithValidation } = useFormValidation();
+  const { control, getValues } = useForm<GroupingBasicsFormValues>({
     defaultValues: { ...defaultValues, ...initialValues },
   });
 
   const name = useWatch({ control, name: 'name' });
   const code = useWatch({ control, name: 'code' });
   const description = useWatch({ control, name: 'description' });
-
-  const isStepValid = isBasicsValid({
-    name: name ?? '',
-    code: code ?? '',
-    description: description ?? '',
-  });
 
   useEffect(() => {
     if (!onDirtyChange) {
@@ -71,28 +68,25 @@ export function GroupingBasicsForm({
     );
   }, [code, description, name, onDirtyChange]);
 
-  const displayError =
-    errorMessage === 'UNEXPECTED'
-      ? t('groupings.errors.unexpected')
-      : errorMessage;
-
-  const submitForm = handleSubmit((values) => {
-    if (!isBasicsValid(values)) {
-      return;
-    }
-    void onSubmit(toBasicsSubmitValues(values));
-  });
+  function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitWithValidation(
+      () =>
+        validateGroupingBasics(getValues(), {
+          nameRequired: t('groupings.form.errors.nameRequired'),
+          codeRequired: t('groupings.form.errors.codeRequired'),
+        }),
+      () => {
+        void onSubmit(toBasicsSubmitValues(getValues()));
+      },
+      [...GROUPING_BASICS_FIELD_ORDER]
+    );
+  }
 
   return (
     <FormCard>
       <FormCardAccent />
-      <FormBody onSubmit={submitForm} noValidate>
-        {displayError ? (
-          <Alert severity="error" role="alert">
-            {displayError}
-          </Alert>
-        ) : null}
-
+      <FormBody onSubmit={handleFormSubmit} noValidate>
         <FormRow>
           <Controller
             name="name"
@@ -103,7 +97,12 @@ export function GroupingBasicsForm({
                 label={t('groupings.form.nameLabel')}
                 placeholder={t('groupings.form.namePlaceholder')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('grouping-name');
+                  field.onChange(value);
+                }}
+                error={Boolean(getError('grouping-name'))}
+                helperText={getError('grouping-name')}
               />
             )}
           />
@@ -116,7 +115,12 @@ export function GroupingBasicsForm({
                 label={t('groupings.form.codeLabel')}
                 placeholder={t('groupings.form.codePlaceholder')}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  clearField('grouping-code');
+                  field.onChange(value);
+                }}
+                error={Boolean(getError('grouping-code'))}
+                helperText={getError('grouping-code')}
               />
             )}
           />
@@ -146,12 +150,20 @@ export function GroupingBasicsForm({
             color="primary"
             disableElevation
             endIcon={<ArrowForward />}
-            disabled={isSubmitting || !isStepValid}
+            disabled={isSubmitting}
           >
             {t('groupings.createWizard.next')}
           </SaveButton>
         </FormActions>
       </FormBody>
     </FormCard>
+  );
+}
+
+export function GroupingBasicsForm(props: GroupingBasicsFormProps) {
+  return (
+    <FormValidationProvider>
+      <GroupingBasicsFormFields {...props} />
+    </FormValidationProvider>
   );
 }

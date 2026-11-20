@@ -211,7 +211,15 @@
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving…",
-      "loading": "Loading raw material"
+      "loading": "Loading raw material",
+      "errors": {
+        "nameRequired": "Enter the raw material name.",
+        "codeInvalid": "Use a valid code in the AAAA-000 format.",
+        "unitRequired": "Select a unit of measure.",
+        "unitCostInvalid": "Enter a unit price greater than zero.",
+        "stockInvalid": "Enter a stock quantity greater than zero.",
+        "minStockInvalid": "Enter a minimum stock greater than zero."
+      }
     },
     "units": {
       "kg": "Kilogram (kg)",
@@ -319,7 +327,13 @@
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving…",
-      "loading": "Loading product"
+      "loading": "Loading product",
+      "errors": {
+        "nameRequired": "Enter the product name.",
+        "finalSizeInvalid": "Enter a final size greater than zero.",
+        "unitRequired": "Select a final size unit.",
+        "yieldInvalid": "Enter a yield greater than zero."
+      }
     },
     "createWizard": {
       "steps": {
@@ -391,7 +405,12 @@
       "errors": {
         "unexpected": "Something went wrong. Please try again.",
         "duplicateMaterial": "Each raw material can appear only once.",
-        "negativeProportion": "Proportion cannot be negative."
+        "negativeProportion": "Proportion cannot be negative.",
+        "rawMaterialRequired": "Add at least one complete raw material line or group.",
+        "materialRequired": "Select a raw material.",
+        "proportionRequired": "Enter a proportion.",
+        "componentSumInvalid": "Component proportions must sum to 1.",
+        "groupRequired": "Select a material group."
       }
     },
     "drawer": {
@@ -476,7 +495,13 @@
       "validationText": "Q must be greater than zero. The product must already have a recipe. When both dates are set, start must be on or before the planned end.",
       "cancel": "Cancel",
       "save": "Create order",
-      "saving": "Creating…"
+      "saving": "Creating…",
+      "errors": {
+        "numberRequired": "Enter the order number.",
+        "productRequired": "Select a product with a recipe.",
+        "quantityInvalid": "Enter a quantity greater than zero.",
+        "dateOrderInvalid": "Planned end date must be on or after the start date."
+      }
     },
     "detail": {
       "title": "Production order {{number}}",
@@ -612,7 +637,11 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Optional notes about this grouping",
       "cancel": "Cancel",
-      "loading": "Loading grouping"
+      "loading": "Loading grouping",
+      "errors": {
+        "nameRequired": "Enter the grouping name.",
+        "codeRequired": "Enter the internal code."
+      }
     },
     "createWizard": {
       "steps": {
@@ -641,7 +670,11 @@
       "colActions": "Actions",
       "qtyAria": "Quantity for {{name}}",
       "removeLine": "Remove line",
-      "total": "Grouping total"
+      "total": "Grouping total",
+      "errors": {
+        "linesRequired": "Add at least one raw material to the composition.",
+        "quantityInvalid": "Enter a quantity greater than zero."
+      }
     },
     "picker": {
       "title": "Select raw materials",
