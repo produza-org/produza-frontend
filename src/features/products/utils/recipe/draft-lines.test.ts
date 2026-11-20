@@ -67,34 +67,23 @@ describe('draft-lines', () => {
     ]);
   });
 
-  it('disables save when raw-material proportion sum is not 1', () => {
+  it('disables save when there is no complete raw-material entry', () => {
     const lines: RecipeDraftLine[] = [
-      line({
-        key: '1',
-        category: 'MATERIA_PRIMA',
-        rawMaterialId: 'm-1',
-        proportionDisplay: '0.4',
-        unit: 'KG',
-      }),
+      createEmptyDraftLine('MATERIA_PRIMA'),
+      createEmptyDraftLine('COMPONENTE'),
+      createEmptyDraftLine('EMBALAGEM'),
     ];
 
     expect(canSaveRecipeDraft(lines)).toBe(false);
   });
 
-  it('allows save when raw-material sum is 1 and component/packaging are empty', () => {
+  it('allows save with one complete raw material even when proportion is not 1', () => {
     const lines: RecipeDraftLine[] = [
       line({
         key: '1',
         category: 'MATERIA_PRIMA',
         rawMaterialId: 'm-1',
         proportionDisplay: '0.4',
-        unit: 'KG',
-      }),
-      line({
-        key: '2',
-        category: 'MATERIA_PRIMA',
-        rawMaterialId: 'm-2',
-        proportionDisplay: '0.6',
         unit: 'KG',
       }),
       createEmptyDraftLine('COMPONENTE'),
@@ -102,6 +91,38 @@ describe('draft-lines', () => {
     ];
 
     expect(canSaveRecipeDraft(lines)).toBe(true);
+  });
+
+  it('allows save when raw materials come only from a MATERIA_PRIMA group', () => {
+    const draft: RecipeDraft = {
+      ...createEmptyRecipeDraft(),
+      groups: [
+        {
+          key: 'g-1',
+          category: 'MATERIA_PRIMA',
+          sourceGroupingId: 'catalog-grp-1',
+          name: 'BASE',
+          lines: [
+            line({
+              key: '1',
+              category: 'MATERIA_PRIMA',
+              rawMaterialId: 'm-1',
+              proportionDisplay: '10',
+              unit: 'KG',
+            }),
+            line({
+              key: '2',
+              category: 'MATERIA_PRIMA',
+              rawMaterialId: 'm-2',
+              proportionDisplay: '5',
+              unit: 'KG',
+            }),
+          ],
+        },
+      ],
+    };
+
+    expect(canSaveRecipeDraft(draft)).toBe(true);
   });
 
   it('requires component proportions to sum to 1 when component lines exist', () => {
