@@ -7,6 +7,10 @@ import type { Product } from '@/features/products/types/product';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { RecipeEditor } from './RecipeEditor';
 
+vi.mock('@/features/groupings/api', () => ({
+  listAllRawMaterialGroups: vi.fn().mockResolvedValue([]),
+}));
+
 const product: Product = {
   id: 'p-1',
   name: 'POTE 1,5L COCO BRANCO',
@@ -98,6 +102,7 @@ describe('RecipeEditor', () => {
     expect(screen.getByText('Component')).toBeInTheDocument();
     expect(screen.getByText('Packaging')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Add line' })).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: 'Add group' })).toHaveLength(2);
   });
 
   it('strips empty rows and keeps optional component/packaging out of the required sum', async () => {
@@ -137,6 +142,7 @@ describe('RecipeEditor', () => {
             sortOrder: 1,
           },
         ],
+        groups: [],
       });
     });
   });
@@ -184,6 +190,7 @@ describe('RecipeEditor', () => {
             sortOrder: 2,
           },
         ],
+        groups: [],
       });
     });
   });
