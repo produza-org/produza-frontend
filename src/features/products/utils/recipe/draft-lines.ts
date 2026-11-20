@@ -229,12 +229,19 @@ export function hasDuplicateMaterials(lines: RecipeDraftLine[]): boolean {
   return new Set(ids).size !== ids.length;
 }
 
+export function hasCompleteRawMaterialEntry(
+  draft: RecipeDraft | RecipeDraftLine[]
+): boolean {
+  const lines = Array.isArray(draft) ? draft : flattenRecipeDraftLines(draft);
+  return getCompleteRawMaterialLines(lines).length > 0;
+}
+
 export function canSaveRecipeDraft(
   draft: RecipeDraft | RecipeDraftLine[]
 ): boolean {
   const lines = Array.isArray(draft) ? draft : flattenRecipeDraftLines(draft);
   return (
-    isProportionSumValid(getDraftProportionSum(lines)) &&
+    hasCompleteRawMaterialEntry(lines) &&
     isComponentProportionSumValid(lines) &&
     !hasNegativeProportion(lines) &&
     !hasDuplicateMaterials(lines)

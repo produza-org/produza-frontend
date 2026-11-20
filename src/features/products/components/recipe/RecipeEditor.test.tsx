@@ -82,7 +82,7 @@ describe('RecipeEditor', () => {
     i18n.changeLanguage('en');
   });
 
-  it('keeps save disabled when raw-material proportion sum is not 1', () => {
+  it('keeps save disabled until a complete raw-material line exists', async () => {
     renderEditor();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Add line' })[0]);
@@ -93,6 +93,10 @@ describe('RecipeEditor', () => {
     expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled();
     expect(screen.getByText(/Σ =/)).toBeInTheDocument();
     expect(screen.queryByText(/Must equal 1/i)).not.toBeInTheDocument();
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+
+    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeEnabled();
   });
 
   it('shows raw material, component, and packaging blocks', () => {

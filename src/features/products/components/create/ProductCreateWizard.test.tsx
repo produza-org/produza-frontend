@@ -84,7 +84,7 @@ describe('ProductCreateWizard', () => {
     expect(nextButton).toBeEnabled();
   });
 
-  it('keeps final Save disabled until recipe draft is valid', async () => {
+  it('keeps final Save disabled until a complete raw-material line exists', async () => {
     renderWizard();
     await goToRecipeStep();
 
@@ -96,6 +96,9 @@ describe('ProductCreateWizard', () => {
       target: { value: '0.4' },
     });
     expect(saveButton).toBeDisabled();
+
+    await selectMaterial(0, 'MP-006 — AGUA');
+    expect(saveButton).toBeEnabled();
   });
 
   it('shows optional component and packaging sections on step 2', async () => {
