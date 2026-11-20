@@ -5,9 +5,9 @@ import type { Product } from '@/features/products/types/product';
 import type { Recipe, RecipeUpsertInput } from '@/features/products/types/recipe';
 import {
   canSaveRecipeDraft,
-  recipeLinesToDrafts,
-  toRecipeLineInputs,
-  type RecipeDraftLine,
+  recipeToDraft,
+  toRecipeUpsertInput,
+  type RecipeDraft,
 } from '@/features/products/utils/recipe/draft-lines';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { ConfirmModal } from '@/shared/components/dialog';
@@ -41,16 +41,12 @@ export function RecipeEditor({
   errorMessage = null,
 }: RecipeEditorProps) {
   const { t } = useTranslation();
-  const [lines, setLines] = useState<RecipeDraftLine[]>(() =>
-    recipe ? recipeLinesToDrafts(recipe.lines) : []
-  );
+  const [draft, setDraft] = useState<RecipeDraft>(() => recipeToDraft(recipe));
   const [discardOpen, setDiscardOpen] = useState(false);
-  const [initialSnapshot] = useState(() =>
-    JSON.stringify(recipe ? recipeLinesToDrafts(recipe.lines) : [])
-  );
+  const [initialSnapshot] = useState(() => JSON.stringify(recipeToDraft(recipe)));
 
-  const isDirty = JSON.stringify(lines) !== initialSnapshot;
-  const saveEnabled = canSaveRecipeDraft(lines) && !isSubmitting;
+  const isDirty = JSON.stringify(draft) !== initialSnapshot;
+  const saveEnabled = canSaveRecipeDraft(draft) && !isSubmitting;
 
   function handleCancel() {
     if (isDirty) {
@@ -65,7 +61,7 @@ export function RecipeEditor({
     if (!saveEnabled) {
       return;
     }
-    void onSubmit({ lines: toRecipeLineInputs(lines) });
+    void onSubmit(toRecipeUpsertInput(draft));
   }
 
   return (
@@ -81,8 +77,8 @@ export function RecipeEditor({
               finalSizeUnit: product.finalSizeUnit,
             }}
             materials={materials}
-            lines={lines}
-            onChange={setLines}
+            draft={draft}
+            onChange={setDraft}
             errorMessage={errorMessage}
             showEmptyHint={!recipe}
           />

@@ -28,8 +28,9 @@ import {
 } from '@/features/products/utils/form/general-info';
 import {
   canSaveRecipeDraft,
-  toRecipeLineInputs,
-  type RecipeDraftLine,
+  createEmptyRecipeDraft,
+  toRecipeUpsertInput,
+  type RecipeDraft,
 } from '@/features/products/utils/recipe/draft-lines';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import type { RecipeUpsertInput } from '@/features/products/types/recipe';
@@ -69,7 +70,9 @@ export function ProductCreateWizard({
   const [activeStep, setActiveStep] = useState(0);
   const [generalValues, setGeneralValues] =
     useState<ProductFormSubmitValues | null>(null);
-  const [recipeLines, setRecipeLines] = useState<RecipeDraftLine[]>([]);
+  const [recipeDraft, setRecipeDraft] = useState<RecipeDraft>(() =>
+    createEmptyRecipeDraft()
+  );
   const [discardOpen, setDiscardOpen] = useState(false);
   const [step1Key, setStep1Key] = useState(0);
   const [step1Dirty, setStep1Dirty] = useState(false);
@@ -93,10 +96,13 @@ export function ProductCreateWizard({
   );
 
   const isDirty =
-    step1Dirty || generalValues !== null || recipeLines.length > 0;
+    step1Dirty ||
+    generalValues !== null ||
+    recipeDraft.lines.length > 0 ||
+    recipeDraft.groups.length > 0;
 
   const saveEnabled =
-    Boolean(generalValues) && canSaveRecipeDraft(recipeLines) && !isSubmitting;
+    Boolean(generalValues) && canSaveRecipeDraft(recipeDraft) && !isSubmitting;
 
   const handleCancelRequest = useCallback(() => {
     if (isDirty) {
@@ -124,10 +130,10 @@ export function ProductCreateWizard({
       }
       void onSave({
         general: generalValues,
-        recipe: { lines: toRecipeLineInputs(recipeLines) },
+        recipe: toRecipeUpsertInput(recipeDraft),
       });
     },
-    [generalValues, onSave, recipeLines, saveEnabled]
+    [generalValues, onSave, recipeDraft, saveEnabled]
   );
 
   return (
@@ -175,8 +181,8 @@ export function ProductCreateWizard({
                 <RecipeDraftPanel
                   productMeta={productMeta}
                   materials={materials}
-                  lines={recipeLines}
-                  onChange={setRecipeLines}
+                  draft={recipeDraft}
+                  onChange={setRecipeDraft}
                   errorMessage={errorMessage}
                   stepHint={t('products.createWizard.recipeHint')}
                 />

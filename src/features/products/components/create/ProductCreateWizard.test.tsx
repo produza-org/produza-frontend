@@ -6,6 +6,10 @@ import { renderWithTheme } from '@/test/renderWithTheme';
 import type { RawMaterial } from '@/features/raw-materials/types/raw-material';
 import { ProductCreateWizard } from './ProductCreateWizard';
 
+vi.mock('@/features/groupings/api', () => ({
+  listAllRawMaterialGroups: vi.fn().mockResolvedValue([]),
+}));
+
 const materials: RawMaterial[] = [
   {
     id: 'm-1',
@@ -161,6 +165,7 @@ describe('ProductCreateWizard', () => {
               sortOrder: 1,
             },
           ],
+          groups: [],
         },
       });
     });

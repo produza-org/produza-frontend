@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   canSaveRecipeDraft,
   createEmptyDraftLine,
+  createEmptyRecipeDraft,
   stripIncompleteDraftLines,
   toRecipeLineInputs,
+  toRecipeUpsertInput,
+  type RecipeDraft,
   type RecipeDraftLine,
 } from '@/features/products/utils/recipe/draft-lines';
 
@@ -228,5 +231,101 @@ describe('draft-lines', () => {
     ];
 
     expect(canSaveRecipeDraft(lines)).toBe(false);
+  });
+
+  it('includes group lines in sum checks and upsert payload', () => {
+    const draft: RecipeDraft = {
+      ...createEmptyRecipeDraft(),
+      lines: [
+        line({
+          key: '1',
+          category: 'MATERIA_PRIMA',
+          rawMaterialId: 'm-1',
+          proportionDisplay: '1',
+          unit: 'KG',
+        }),
+      ],
+      groups: [
+        {
+          key: 'g-1',
+          category: 'COMPONENTE',
+          sourceGroupingId: 'catalog-grp-1',
+          name: 'BASE LEITE COCO',
+          lines: [
+            line({
+              key: '2',
+              category: 'COMPONENTE',
+              rawMaterialId: 'm-2',
+              proportionDisplay: '0.6',
+              unit: 'LITRO',
+            }),
+            line({
+              key: '3',
+              category: 'COMPONENTE',
+              rawMaterialId: 'm-3',
+              proportionDisplay: '0.4',
+              unit: 'LITRO',
+            }),
+          ],
+        },
+      ],
+    };
+
+    expect(canSaveRecipeDraft(draft)).toBe(true);
+    expect(toRecipeUpsertInput(draft)).toEqual({
+      lines: [
+        {
+          rawMaterialId: 'm-1',
+          category: 'MATERIA_PRIMA',
+          proportion: 1,
+          sortOrder: 0,
+        },
+      ],
+      groups: [
+        {
+          category: 'COMPONENTE',
+          name: 'BASE LEITE COCO',
+          sourceGroupingId: 'catalog-grp-1',
+          sortOrder: 0,
+          lines: [
+            { rawMaterialId: 'm-2', proportion: 0.6, sortOrder: 0 },
+            { rawMaterialId: 'm-3', proportion: 0.4, sortOrder: 1 },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('rejects duplicates across standalone and group lines', () => {
+    const draft: RecipeDraft = {
+      lines: [
+        line({
+          key: '1',
+          category: 'MATERIA_PRIMA',
+          rawMaterialId: 'm-1',
+          proportionDisplay: '1',
+          unit: 'KG',
+        }),
+      ],
+      groups: [
+        {
+          key: 'g-1',
+          category: 'MATERIA_PRIMA',
+          sourceGroupingId: null,
+          name: 'GROUP',
+          lines: [
+            line({
+              key: '2',
+              category: 'MATERIA_PRIMA',
+              rawMaterialId: 'm-1',
+              proportionDisplay: '0.5',
+              unit: 'KG',
+            }),
+          ],
+        },
+      ],
+    };
+
+    expect(canSaveRecipeDraft(draft)).toBe(false);
   });
 });
